@@ -1,4 +1,4 @@
-package com.nuguna.freview.servlet.like;
+package com.nuguna.freview.servlet.ddabong;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
