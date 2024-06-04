@@ -1,4 +1,4 @@
-package com.nuguna.freview.servlet.like;
+package com.nuguna.freview.servlet.ddabong;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @WebServlet
-public class LikeServlet extends HttpServlet {
+public class DdabongServlet extends HttpServlet {
 
   @Override
   public void init() throws ServletException {
