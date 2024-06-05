@@ -2,6 +2,7 @@ package com.nuguna.freview.dao.admin;
 
 import static com.nuguna.freview.config.DbConfig.*;
 
+import com.nuguna.freview.dto.StoreAndBoss;
 import com.nuguna.freview.entity.member.Member;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -19,6 +20,7 @@ public class AdminDAO {
   private final String SELECT_MEMBER_BY_ID = "SELECT * FROM member WHERE id = ?";
   private final String DELETE_MEMBER_BY_ID = "DELETE FROM member WHERE mid = ?";
   private final String SELECT_ADMIN_PW = "SELECT MPW FROM member WHERE gubun = 'A'";
+  private final String SELECT_STORE_BUSINESS_INFO = "SELECT s.store_name, s.business_number, m.mid, m.created_at FROM store_business_info s LEFT JOIN member m ON s.business_number = m.business_number";
 
   public List<Member> selectAllMember() {
     Connection conn = null;
@@ -103,6 +105,34 @@ public class AdminDAO {
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  public List<StoreAndBoss> selectStoreBusinessInfo() {
+    List<StoreAndBoss> list = new ArrayList<>();
+
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+
+    try {
+      conn = getConnection();
+      pstmt = conn.prepareStatement(SELECT_STORE_BUSINESS_INFO);
+      rs = pstmt.executeQuery();
+
+      while(rs.next()) {
+        StoreAndBoss storeAndBoss = new StoreAndBoss();
+        storeAndBoss.setStoreName(rs.getString(1));
+        storeAndBoss.setBusinessNumber(rs.getString(2));
+        storeAndBoss.setMid(rs.getString(3));
+        storeAndBoss.setBossCreatedAt(rs.getTimestamp(4));
+
+        list.add(storeAndBoss);
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+
+    return list;
   }
 
   private Connection getConnection() {
