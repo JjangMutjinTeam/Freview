@@ -17,6 +17,6 @@ public class StoreAndBoss {
   private String storeName;
   private String businessNumber;
   private String mid;
-  private Timestamp bossCreatedAt;
+  private Timestamp createdAt;
 
 }

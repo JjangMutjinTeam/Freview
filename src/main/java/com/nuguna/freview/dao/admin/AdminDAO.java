@@ -124,7 +124,7 @@ public class AdminDAO {
         storeAndBoss.setStoreName(rs.getString(1));
         storeAndBoss.setBusinessNumber(rs.getString(2));
         storeAndBoss.setMid(rs.getString(3));
-        storeAndBoss.setBossCreatedAt(rs.getTimestamp(4));
+        storeAndBoss.setCreatedAt(rs.getTimestamp(4));
 
         list.add(storeAndBoss);
       }
