@@ -26,5 +26,26 @@ public class AdminServlet extends HttpServlet {
     RequestDispatcher rd = req.getRequestDispatcher("admin-mg-users-y.jsp");
     rd.forward(req, resp);
   }
-}
 
+  @Override
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
+    String userId = req.getParameter("userId");
+    String inputPassword = req.getParameter("password");
+    System.out.println("inputPassword: " + inputPassword);
+    String adminPassword = adminDAO.selectAdminPW();
+    System.out.println("adminPassword: " + adminPassword);
+
+    if (inputPassword.equals(adminPassword)) {
+      boolean isDeleted = adminDAO.deleteMember(userId);
+
+      if (isDeleted) {
+        resp.setStatus(HttpServletResponse.SC_OK);
+      } else {
+        resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      }
+    } else {
+      resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+    }
+  }
+}
