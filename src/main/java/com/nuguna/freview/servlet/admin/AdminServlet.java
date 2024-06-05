@@ -32,11 +32,9 @@ public class AdminServlet extends HttpServlet {
       throws ServletException, IOException {
     String userId = req.getParameter("userId");
     String inputPassword = req.getParameter("password");
-    System.out.println("inputPassword: " + inputPassword);
     String adminPassword = adminDAO.selectAdminPW();
-    System.out.println("adminPassword: " + adminPassword);
 
-    if (inputPassword.equals(adminPassword)) {
+    if (isPasswordMatch(inputPassword, adminPassword)) {
       boolean isDeleted = adminDAO.deleteMember(userId);
 
       if (isDeleted) {
@@ -47,5 +45,9 @@ public class AdminServlet extends HttpServlet {
     } else {
       resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     }
+  }
+
+  private boolean isPasswordMatch(String inputPassword, String adminPassword) {
+    return inputPassword.equals(adminPassword);
   }
 }
