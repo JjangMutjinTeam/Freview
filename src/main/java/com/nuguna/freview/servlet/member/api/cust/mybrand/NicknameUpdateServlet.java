@@ -2,8 +2,9 @@ package com.nuguna.freview.servlet.member.api.cust.mybrand;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.nuguna.freview.dao.member.CustBrandDAO;
+import com.nuguna.freview.dao.member.CustNicknameDAO;
 import com.nuguna.freview.dto.common.ResponseMessage;
+import com.nuguna.freview.util.EncodingUtil;
 import com.nuguna.freview.util.JsonRequestUtil;
 import com.nuguna.freview.util.JsonResponseUtil;
 import java.io.BufferedReader;
@@ -20,19 +21,19 @@ import lombok.extern.slf4j.Slf4j;
 @WebServlet("/api/cust/my-brand/nickname")
 public class NicknameUpdateServlet extends HttpServlet {
 
-  private CustBrandDAO custBrandDAO;
+  private CustNicknameDAO custNicknameDAO;
 
   @Override
   public void init() throws ServletException {
     log.info("NicknameUpdateServlet 초기화");
-    custBrandDAO = new CustBrandDAO();
+    custNicknameDAO = new CustNicknameDAO();
   }
 
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    request.setCharacterEncoding("UTF-8");
-    response.setContentType("application/json;charset=UTF-8");
+
+    EncodingUtil.setEncodingToUTF8AndJson(request, response);
 
     log.info("NicknameUpdateServlet.doPost");
 
@@ -45,6 +46,7 @@ public class NicknameUpdateServlet extends HttpServlet {
       JsonObject jsonObject = JsonRequestUtil.parseJson(in, gson);
       // 입력값 가져오기 ( 클라이언트에서 데이터를 올바르게 주는 경우만 가정 )
       // TODO : 추후 Input Data가 NULL 인 경우 또한 처리해주어야 함.
+      // TODO : 서블릿 필터에서 memberSeq의 유효성을 체크해준다고 가정
       int memberSeq = jsonObject.get("member_seq").getAsInt();
       String fromNickname = jsonObject.get("from_nickname").getAsString();
       String toNickname = jsonObject.get("to_nickname").getAsString();
@@ -58,7 +60,7 @@ public class NicknameUpdateServlet extends HttpServlet {
       }
 
       // 중복된 닉네임인지 확인
-      boolean isExistNickname = custBrandDAO.checkNicknameIsExist(toNickname);
+      boolean isExistNickname = custNicknameDAO.checkNicknameIsExist(toNickname);
       if (isExistNickname) {
         message = "중복된 닉네임입니다. 다시 입력해주세요.";
         hasError = true;
@@ -75,7 +77,7 @@ public class NicknameUpdateServlet extends HttpServlet {
         JsonResponseUtil.sendBackJson(new ResponseMessage<>(message, null), out, gson);
       } else {
         // 닉네임 업데이트
-        custBrandDAO.updateNickname(memberSeq, toNickname);
+        custNicknameDAO.updateNickname(memberSeq, toNickname);
         // 성공 응답
         response.setStatus(HttpServletResponse.SC_OK);
         JsonResponseUtil.sendBackJson(new ResponseMessage<>("성공적으로 수정했습니다.", toNickname), out,
