@@ -1,5 +1,7 @@
 package com.nuguna.freview.dao.admin;
 
+import static com.nuguna.freview.config.DbConfig.*;
+
 import com.nuguna.freview.entity.member.Member;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,11 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class AdminDAO {
-
-  static final String DB_URL = "jdbc:mariadb://localhost:3306/freview";
-  static final String DB_USER = "root";
-  static final String DB_PW = "0000";
-  static final String driver = "org.mariadb.jdbc.Driver";
 
   private final String SELECT_ALL_MEMBER_NOT_ADMIN = "SELECT * FROM member WHERE gubun != 'A'";
   private final String SELECT_MEMBER_BY_ID = "SELECT * FROM member WHERE id = ?";
@@ -111,7 +108,7 @@ public class AdminDAO {
   private Connection getConnection() {
     Connection conn = null;
     try {
-      Class.forName(driver);
+      Class.forName(DRIVER_NAME);
       conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PW);
     } catch (ClassNotFoundException e) {
       log.error("JDBC Driver not found");
