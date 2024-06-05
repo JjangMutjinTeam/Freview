@@ -24,13 +24,12 @@ public class CustAgeGroupDAO {
     String sql = "UPDATE MEMBER "
         + "SET age_group = ? "
         + "WHERE member_seq = ?";
-    
+
     try {
       conn = getConnection();
       pstmt = conn.prepareStatement(sql);
       pstmt.setString(1, toAgeGroup);
       pstmt.setInt(2, memberSeq);
-      int rowCount = pstmt.executeUpdate();
       pstmt.executeUpdate();
     } catch (SQLException e) {
       throw new RuntimeException("SQLException : 닉네임 변경 도중 예외 발생", e);

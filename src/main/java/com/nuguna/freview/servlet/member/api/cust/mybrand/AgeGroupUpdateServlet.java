@@ -47,6 +47,7 @@ public class AgeGroupUpdateServlet extends HttpServlet {
       JsonObject jsonObject = JsonRequestUtil.parseJson(in, gson);
       // 입력값 가져오기 ( 클라이언트에서 데이터를 올바르게 주는 경우만 가정 )
       // TODO : 추후 Input Data가 NULL 인 경우 또한 처리해주어야 함.
+      // TODO : 서블릿 필터에서 memberSeq의 유효성을 체크해준다고 가정
       int memberSeq = jsonObject.get("member_seq").getAsInt();
       String toAgeGroup = jsonObject.get("to_age_group").getAsString();
 
