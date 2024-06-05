@@ -20,7 +20,8 @@ public class AdminDAO {
 
   private final String SELECT_ALL_MEMBER = "SELECT * FROM member";
   private final String SELECT_MEMBER_BY_ID = "SELECT * FROM member WHERE id = ?";
-  private final String DELETE_MEMBER_BY_ID = "DELETE FROM member WHERE id = ?";
+  private final String DELETE_MEMBER_BY_ID = "DELETE FROM member WHERE mid = ?";
+  private final String SELECT_ADMIN_PW = "SELECT MPW FROM member WHERE gubun = 'A'";
 
   public List<Member> selectAllMember() {
     Connection conn = null;
@@ -59,6 +60,52 @@ public class AdminDAO {
     }
 
     return list;
+  }
+
+  public boolean deleteMember(String userId) {
+    boolean isDeleted = false;
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+
+    try {
+      conn = getConnection();
+      pstmt = conn.prepareStatement(DELETE_MEMBER_BY_ID);
+      pstmt.setString(1, userId);
+
+      int rows = pstmt.executeUpdate();
+      if (rows > 0) {
+        isDeleted = true;
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    } finally {
+      closeResource(pstmt, conn);
+    }
+
+    return isDeleted;
+  }
+
+  public String selectAdminPW() {
+    String adminPW = "";
+
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+
+    try {
+      conn = getConnection();
+      pstmt = conn.prepareStatement(SELECT_ADMIN_PW);
+      rs = pstmt.executeQuery();
+
+      while (rs.next()) {
+        adminPW = rs.getString(1);
+      }
+
+      return adminPW;
+
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   private Connection getConnection() {
