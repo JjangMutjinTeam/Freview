@@ -416,17 +416,17 @@
 
     <li class="nav-item">
       <a class="nav-link " data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-layout-text-window-reverse"></i><span>Tables</span><i class="bi bi-chevron-down ms-auto"></i>
+        <i class="bi bi-layout-text-window-reverse"></i><span>관리</span><i class="bi bi-chevron-down ms-auto"></i>
       </a>
       <ul id="tables-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
         <li>
-          <a href="tables-general.html">
-            <i class="bi bi-circle"></i><span>General Tables</span>
+          <a href="admin-mg-users-y.jsp" class="active">
+            <i class="bi bi-circle"></i><span>유저</span>
           </a>
         </li>
         <li>
-          <a href="tables-data.html" class="active">
-            <i class="bi bi-circle"></i><span>Data Tables</span>
+          <a href="tables-general.html">
+            <i class="bi bi-circle"></i><span>스토어</span>
           </a>
         </li>
       </ul>
@@ -536,7 +536,7 @@
 <main id="main" class="main">
 
   <div class="pagetitle">
-    <h1>Data Tables</h1>
+    <h1>유저</h1>
     <nav>
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="index.html">Home</a></li>
@@ -552,8 +552,8 @@
 
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Datatables</h5>
-            <p>Add lightweight datatables to your project with using the <a href="https://github.com/fiduswriter/Simple-DataTables" target="_blank">Simple DataTables</a> library. Just add <code>.datatable</code> class name to any table you wish to conver to a datatable. Check for <a href="https://fiduswriter.github.io/simple-datatables/demos/" target="_blank">more examples</a>.</p>
+            <h5 class="card-title">유저 리스트</h5>
+            <p>가입한 유저 리스트입니다. <br>아이디를 클릭하면 해당 유저의 브랜딩 페이지로 이동할 수 있습니다.</p>
 
             <!-- Table with stripped rows -->
             <table class="table datatable">
