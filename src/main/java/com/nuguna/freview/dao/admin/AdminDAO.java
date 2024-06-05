@@ -18,7 +18,7 @@ public class AdminDAO {
   static final String DB_PW = "0000";
   static final String driver = "org.mariadb.jdbc.Driver";
 
-  private final String SELECT_ALL_MEMBER = "SELECT * FROM member";
+  private final String SELECT_ALL_MEMBER_NOT_ADMIN = "SELECT * FROM member WHERE gubun != 'A'";
   private final String SELECT_MEMBER_BY_ID = "SELECT * FROM member WHERE id = ?";
   private final String DELETE_MEMBER_BY_ID = "DELETE FROM member WHERE mid = ?";
   private final String SELECT_ADMIN_PW = "SELECT MPW FROM member WHERE gubun = 'A'";
@@ -32,7 +32,7 @@ public class AdminDAO {
 
     try {
       conn = getConnection();
-      pstmt = conn.prepareStatement(SELECT_ALL_MEMBER);
+      pstmt = conn.prepareStatement(SELECT_ALL_MEMBER_NOT_ADMIN);
       rs = pstmt.executeQuery();
 
       while (rs.next()) {
