@@ -44,6 +44,29 @@
 
 <body>
 
+<!-- 탈퇴 모달 창 -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">정말 탈퇴시킬까요?</h5><br>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        탈퇴를 원하시면 관리자 비밀번호를 입력해주세요
+        <form id="deleteForm">
+          <div class="mb-3">
+            <label for="password" class="form-label">비밀번호</label>
+            <input type="password" class="form-control" id="password" required>
+          </div>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button> <!-- 추가된 취소 버튼 -->
+          <button type="submit" class="btn btn-primary">확인</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center">
 
@@ -536,27 +559,80 @@
             <table class="table datatable">
               <thead>
               <tr>
-                <th>
-                  <b>N</b>ame
-                </th>
-                <th>Ext.</th>
-                <th>City</th>
-                <th data-type="date" data-format="YYYY/DD/MM">Start Date</th>
-                <th>Completion</th>
+                <th>번호</th>
+                <th>유형</th>
+                <th>닉네임</th>
+                <th>아이디</th>
+                <th data-type="date" data-format="YYYY/DD/MM">가입일자</th>
+                <th>탈퇴</th>
               </tr>
               </thead>
               <tbody>
-              <c:forEach items="${memberAllList}" var="member">
+              <c:forEach items="${memberAllList}" var="member" varStatus="status">
                 <tr>
+                  <td>${status.index+1}</td>
                   <td>${member.gubun}</td>
                   <td>${member.nickname}</td>
                   <td>${member.mid}</td>
                   <td>${member.createdAt}</td>
+                  <td><button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="${member.mid}">x</button></td> <!-- 추가된 부분: 탈퇴 버튼 -->
                 </tr>
               </c:forEach>
               </tbody>
             </table>
             <!-- End Table with stripped rows -->
+
+            <script>
+              var deleteModal = document.getElementById('deleteModal');
+              deleteModal.addEventListener('show.bs.modal', function (event) {
+                var button = event.relatedTarget;
+                var userId = button.getAttribute('data-id');
+                var modalTitle = deleteModal.querySelector('.modal-title');
+                var modalBodyInput = deleteModal.querySelector('.modal-body input');
+
+                modalTitle.textContent = '정말 탈퇴시킬까요? (ID: ' + userId + ')';
+                modalBodyInput.value = '';
+
+                document.getElementById('deleteForm').onsubmit = function(event) {
+                  event.preventDefault();
+                  var password = modalBodyInput.value;
+
+                  fetch('/AdminPage', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: 'userId=' + encodeURIComponent(userId) + '&password=' + encodeURIComponent(password)
+                  })
+                  .then(response => {
+                    if (response.status === 200) {
+                      return response.text().then(data => {
+                        console.log(data);
+                        alert('정상적으로 탈퇴 처리 되었습니다.');
+                        var modal = bootstrap.Modal.getInstance(deleteModal);
+                        modal.hide();
+                        location.reload();
+                      });
+                    } else if (response.status === 401) {
+                      modalBodyInput.classList.add('is-invalid');
+                      var invalidFeedback = deleteModal.querySelector('.invalid-feedback');
+                      if (!invalidFeedback) {
+                        invalidFeedback = document.createElement('div');
+                        invalidFeedback.classList.add('invalid-feedback');
+                        invalidFeedback.textContent = '비밀번호가 잘못되었습니다.';
+                        modalBodyInput.parentNode.appendChild(invalidFeedback);
+                      }
+                    } else {
+                      return response.text().then(data => {
+                        console.error(data);
+                        alert('오류가 발생했습니다. 다음에 다시 시도해주세요.');
+                      });
+                    }
+                  })
+                  .catch(error => console.error('Error:', error));
+                };
+              });
+            </script>
 
           </div>
         </div>
@@ -564,6 +640,8 @@
       </div>
     </div>
   </section>
+
+
 
 </main><!-- End #main -->
 
