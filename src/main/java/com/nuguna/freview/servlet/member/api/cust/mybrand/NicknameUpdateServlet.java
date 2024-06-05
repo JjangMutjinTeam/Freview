@@ -6,6 +6,7 @@ import com.nuguna.freview.dao.member.CustBrandDAO;
 import com.nuguna.freview.dto.common.ResponseMessage;
 import com.nuguna.freview.util.JsonRequestUtil;
 import com.nuguna.freview.util.JsonResponseUtil;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -35,12 +36,13 @@ public class NicknameUpdateServlet extends HttpServlet {
 
     log.info("NicknameUpdateServlet.doPost");
 
+    BufferedReader in = request.getReader();
     PrintWriter out = response.getWriter();
     Gson gson = new Gson();
     String message = null;
 
     try {
-      JsonObject jsonObject = JsonRequestUtil.parseJson(request, response, gson);
+      JsonObject jsonObject = JsonRequestUtil.parseJson(in, gson);
       // 입력값 가져오기 ( 클라이언트에서 데이터를 올바르게 주는 경우만 가정 )
       // TODO : 추후 Input Data가 NULL 인 경우 또한 처리해주어야 함.
       int memberSeq = jsonObject.get("member_seq").getAsInt();
@@ -70,20 +72,20 @@ public class NicknameUpdateServlet extends HttpServlet {
 
       if (hasError) {
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        JsonResponseUtil.sendBackJson(new ResponseMessage<>(message, null), gson, out);
+        JsonResponseUtil.sendBackJson(new ResponseMessage<>(message, null), out, gson);
       } else {
         // 닉네임 업데이트
         custBrandDAO.updateNickname(memberSeq, toNickname);
         // 성공 응답
         response.setStatus(HttpServletResponse.SC_OK);
-        JsonResponseUtil.sendBackJson(new ResponseMessage<>("성공적으로 수정했습니다.", toNickname), gson,
-            out);
+        JsonResponseUtil.sendBackJson(new ResponseMessage<>("성공적으로 수정했습니다.", toNickname), out,
+            gson);
       }
     } catch (Exception e) {
       log.error("닉네임 변경 도중 에러가 발생했습니다.", e);
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-      JsonResponseUtil.sendBackJson(new ResponseMessage<>("닉네임 변경 도중 서버 에러가 발생했습니다.", null), gson,
-          out);
+      JsonResponseUtil.sendBackJson(new ResponseMessage<>("닉네임 변경 도중 서버 에러가 발생했습니다.", null), out,
+          gson);
     }
   }
 }

@@ -6,8 +6,8 @@ import java.io.PrintWriter;
 
 public class JsonResponseUtil {
 
-  public static <T> void sendBackJson(ResponseMessage<T> responseJsonSource, Gson gson,
-      PrintWriter out) {
+  public static <T> void sendBackJson(ResponseMessage<T> responseJsonSource, PrintWriter out,
+      Gson gson) {
     String jsonStr = gson.toJson(responseJsonSource);
     out.print(jsonStr);
   }
