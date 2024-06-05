@@ -4,7 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.nuguna.freview.dao.member.CustBrandDAO;
 import com.nuguna.freview.dto.common.ResponseMessage;
-import java.io.BufferedReader;
+import com.nuguna.freview.util.JsonRequestUtil;
+import com.nuguna.freview.util.JsonResponseUtil;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -29,31 +30,20 @@ public class NicknameUpdateServlet extends HttpServlet {
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-
     request.setCharacterEncoding("UTF-8");
     response.setContentType("application/json;charset=UTF-8");
 
     log.info("NicknameUpdateServlet.doPost");
 
-    Gson gson = new Gson();
     PrintWriter out = response.getWriter();
-    ResponseMessage<String> responseJsonSource;
+    Gson gson = new Gson();
     String message = null;
 
     try {
-      // JSON Parsing
-      BufferedReader reader = request.getReader();
-      StringBuilder jsonBuilder = new StringBuilder();
-      String line;
-      while ((line = reader.readLine()) != null) {
-        jsonBuilder.append(line);
-      }
-      String jsonString = jsonBuilder.toString();
-      JsonObject jsonObject = gson.fromJson(jsonString, JsonObject.class);
-
+      JsonObject jsonObject = JsonRequestUtil.parseJson(request, response, gson);
       // 입력값 가져오기 ( 클라이언트에서 데이터를 올바르게 주는 경우만 가정 )
       // TODO : 추후 Input Data가 NULL 인 경우 또한 처리해주어야 함.
-      Integer memberSeq = jsonObject.get("member_seq").getAsInt();
+      int memberSeq = jsonObject.get("member_seq").getAsInt();
       String fromNickname = jsonObject.get("from_nickname").getAsString();
       String toNickname = jsonObject.get("to_nickname").getAsString();
 
@@ -80,18 +70,14 @@ public class NicknameUpdateServlet extends HttpServlet {
 
       if (hasError) {
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        responseJsonSource = new ResponseMessage<>(message, null);
-        String jsonStr = gson.toJson(responseJsonSource);
-        out.print(jsonStr);
-        // JsonUtil.print(ResponseMessage<T> jsonSource)
+        JsonResponseUtil.sendBackJson(new ResponseMessage<>(message, null), gson, out);
       } else {
         // 닉네임 업데이트
         custBrandDAO.updateNickname(memberSeq, toNickname);
         // 성공 응답
         response.setStatus(HttpServletResponse.SC_OK);
-        responseJsonSource = new ResponseMessage<>("성공적으로 수정했습니다.", toNickname); // 화면 업데이트
-        String jsonStr = gson.toJson(responseJsonSource);
-        out.print(jsonStr);
+        JsonResponseUtil.sendBackJson(new ResponseMessage<>("성공적으로 수정했습니다.", toNickname), gson,
+            out);
       }
     } catch (NumberFormatException e) {
       response.sendError(HttpServletResponse.SC_BAD_REQUEST, "memberSeq는 null일 수 없습니다.");
