@@ -79,11 +79,11 @@ public class NicknameUpdateServlet extends HttpServlet {
         JsonResponseUtil.sendBackJson(new ResponseMessage<>("성공적으로 수정했습니다.", toNickname), gson,
             out);
       }
-    } catch (NumberFormatException e) {
-      response.sendError(HttpServletResponse.SC_BAD_REQUEST, "memberSeq는 null일 수 없습니다.");
     } catch (Exception e) {
       log.error("닉네임 변경 도중 에러가 발생했습니다.", e);
-      response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+      response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      JsonResponseUtil.sendBackJson(new ResponseMessage<>("닉네임 변경 도중 서버 에러가 발생했습니다.", null), gson,
+          out);
     }
   }
 }
