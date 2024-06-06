@@ -27,4 +27,28 @@ public class StoreManagingServlet extends HttpServlet {
     RequestDispatcher rd = req.getRequestDispatcher("/admin-mg-stores-y.jsp");
     rd.forward(req, resp);
   }
+
+  @Override
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
+    String businessNumber = req.getParameter("businessNumber");
+    String inputPassword = req.getParameter("password");
+    String adminPassword = adminDAO.selectAdminPW();
+
+    if (isPasswordMatch(inputPassword, adminPassword)) {
+      boolean isDeleted = adminDAO.deleteStore(businessNumber);
+
+      if (isDeleted) {
+        resp.setStatus(HttpServletResponse.SC_OK);
+      } else {
+        resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      }
+    } else {
+      resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+    }
+  }
+
+  private boolean isPasswordMatch(String inputPassword, String adminPassword) {
+    return inputPassword.equals(adminPassword);
+  }
 }
