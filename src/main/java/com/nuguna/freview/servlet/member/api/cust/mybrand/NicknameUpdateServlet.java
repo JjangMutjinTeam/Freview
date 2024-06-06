@@ -19,11 +19,13 @@ import lombok.extern.slf4j.Slf4j;
 @WebServlet("/api/cust/my-brand/nickname")
 public class NicknameUpdateServlet extends HttpServlet {
 
+  private Gson gson;
   private CustNicknameDAO custNicknameDAO;
 
   @Override
   public void init() throws ServletException {
     log.info("NicknameUpdateServlet 초기화");
+    gson = new Gson();
     custNicknameDAO = new CustNicknameDAO();
   }
 
@@ -35,7 +37,6 @@ public class NicknameUpdateServlet extends HttpServlet {
 
     log.info("NicknameUpdateServlet.doPost");
 
-    Gson gson = new Gson();
     String errorMessage = null;
 
     try {

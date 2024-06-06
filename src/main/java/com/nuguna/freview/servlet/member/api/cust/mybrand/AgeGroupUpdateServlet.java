@@ -20,11 +20,13 @@ import lombok.extern.slf4j.Slf4j;
 @WebServlet("/api/cust/my-brand/age-group")
 public class AgeGroupUpdateServlet extends HttpServlet {
 
+  private Gson gson;
   private CustAgeGroupDAO custAgeGroupDAO;
 
   @Override
   public void init() throws ServletException {
     log.info("AgeGroupUpdateServlet 초기화");
+    gson = new Gson();
     custAgeGroupDAO = new CustAgeGroupDAO();
   }
 
@@ -35,9 +37,7 @@ public class AgeGroupUpdateServlet extends HttpServlet {
     EncodingUtil.setEncodingToUTF8AndJson(request, response);
 
     log.info("AgeGroupUpdateServlet.doPost");
-
-    Gson gson = new Gson();
-
+    
     try {
       JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
       // 입력값 가져오기 ( 클라이언트에서 데이터를 올바르게 주는 경우만 가정 )

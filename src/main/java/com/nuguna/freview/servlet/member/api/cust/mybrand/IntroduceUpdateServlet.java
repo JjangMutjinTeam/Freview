@@ -19,11 +19,13 @@ import lombok.extern.slf4j.Slf4j;
 @WebServlet("/api/cust/my-brand/introduce")
 public class IntroduceUpdateServlet extends HttpServlet {
 
+  private Gson gson;
   private CustIntroduceDAO custIntroduceDAO;
 
   @Override
   public void init() throws ServletException {
     log.info("IntroduceUpdateServlet 초기화");
+    gson = new Gson();
     custIntroduceDAO = new CustIntroduceDAO();
   }
 
@@ -34,8 +36,6 @@ public class IntroduceUpdateServlet extends HttpServlet {
     EncodingUtil.setEncodingToUTF8AndJson(request, response);
 
     log.info("IntroduceUpdateServlet.doPost");
-
-    Gson gson = new Gson();
 
     try {
       JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
