@@ -3,6 +3,7 @@ package com.nuguna.freview.dao.admin;
 import static com.nuguna.freview.config.DbConfig.*;
 
 import com.nuguna.freview.dto.StoreAndBoss;
+import com.nuguna.freview.entity.admin.StoreBusinessInfo;
 import com.nuguna.freview.entity.member.Member;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -22,6 +23,7 @@ public class AdminDAO {
   private final String SELECT_ADMIN_PW = "SELECT MPW FROM member WHERE gubun = 'A'";
   private final String SELECT_STORE_BUSINESS_INFO = "SELECT s.store_name, s.business_number, m.mid, m.created_at FROM store_business_info s LEFT JOIN member m ON s.business_number = m.business_number";
   private final String DELETE_STORE_BY_BUSINESS_NUMBER = "DELETE FROM store_business_info WHERE business_number = ?";
+  private final String INSERT_STORE = "INSERT INTO store_business_info(business_number, store_name) VALUES(?, ?)";
 
   public List<Member> selectAllMember() {
     Connection conn = null;
@@ -157,6 +159,30 @@ public class AdminDAO {
     }
 
     return isDeleted;
+  }
+
+  public boolean insertStore(StoreBusinessInfo storeBusinessInfo) {
+    boolean isInserted = false;
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+
+    try {
+      conn = getConnection();
+      pstmt = conn.prepareStatement(INSERT_STORE);
+      pstmt.setString(1, storeBusinessInfo.getBusinessNumber());
+      pstmt.setString(2, storeBusinessInfo.getStoreName());
+
+      int rows = pstmt.executeUpdate();
+      if (rows > 0) {
+        isInserted = true;
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    } finally {
+      closeResource(pstmt, conn);
+    }
+
+    return isInserted;
   }
 
   private Connection getConnection() {
