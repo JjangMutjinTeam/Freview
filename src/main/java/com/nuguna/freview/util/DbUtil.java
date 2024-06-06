@@ -56,4 +56,24 @@ public class DbUtil {
       throw new RuntimeException(e);
     }
   }
+
+  public static void closeResource(ResultSet rs) {
+    try {
+      if (rs != null) {
+        rs.close();
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public static void closeResource(PreparedStatement pstmt) {
+    try {
+      if (pstmt != null) {
+        pstmt.close();
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
 }
