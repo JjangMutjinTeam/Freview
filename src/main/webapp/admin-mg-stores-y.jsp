@@ -553,7 +553,10 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">스토어 리스트</h5>
-                        <p>전국 스토어 리스트와 가입한 사장님 목록입니다 <br>아이디를 클릭하면 해당 유저의 브랜딩 페이지로 이동할 수 있습니다.</p>
+                        <p>전국 스토어 리스트와 가입한 사장님 목록입니다 <br>
+                            아이디를 클릭하면 해당 유저의 브랜딩 페이지로 이동할 수 있습니다 <br>
+                            가입한 사장님이 있는 스토어는 삭제할 수 없습니다 <br>
+                        </p>
 
                         <!-- Table with stripped rows -->
                         <table class="table datatable">
