@@ -15,5 +15,4 @@ public class JsonResponseUtil {
     String jsonStr = gson.toJson(responseJsonSource);
     response.getWriter().print(jsonStr);
   }
-
 }
