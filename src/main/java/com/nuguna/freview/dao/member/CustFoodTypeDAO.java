@@ -66,15 +66,18 @@ public class CustFoodTypeDAO {
       for (FoodTypeGubun foodTypeGubun : foodTypeGubuns) {
         selectPstmt.setString(index++, foodTypeGubun.getCodeName());
       }
-      rs = selectPstmt.executeQuery();
 
       List<Integer> foodTypeSeqs = new ArrayList<>();
-      log.info("RS : " + rs.toString());
-      while (rs.next()) {
-        foodTypeSeqs.add(rs.getInt("food_type_seq"));
+      if (index > 1) {
+        rs = selectPstmt.executeQuery();
+        log.info("select 성공");
+        while (rs.next()) {
+          foodTypeSeqs.add(rs.getInt("food_type_seq"));
+        }
       }
-
+      
       log.info(foodTypeSeqs.toString());
+
       // 3. 선택된 FoodTypeSeq들을 Member와 매핑해준다.
       insertPstmt = conn.prepareStatement(insertSql);
       for (Integer foodTypeSeq : foodTypeSeqs) {
