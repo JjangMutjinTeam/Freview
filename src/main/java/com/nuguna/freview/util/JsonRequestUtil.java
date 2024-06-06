@@ -17,5 +17,4 @@ public class JsonRequestUtil {
     String jsonString = jsonBuilder.toString();
     return gson.fromJson(jsonString, JsonObject.class);
   }
-
 }
