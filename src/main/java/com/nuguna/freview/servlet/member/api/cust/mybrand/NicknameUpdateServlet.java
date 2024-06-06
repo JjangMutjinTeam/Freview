@@ -58,6 +58,7 @@ public class NicknameUpdateServlet extends HttpServlet {
       }
 
       // 중복된 닉네임인지 확인
+
       boolean isExistNickname = custNicknameDAO.checkNicknameIsExist(toNickname);
       if (isExistNickname) {
         errorMessage = "중복된 닉네임입니다. 다시 입력해주세요.";
