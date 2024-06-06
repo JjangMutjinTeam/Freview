@@ -31,7 +31,7 @@ public class StoreManagingServlet extends HttpServlet {
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
-    String businessNumber = req.getParameter("businessNumber");
+    String businessNumber = req.getParameter("deleteBusinessNumber");
     String inputPassword = req.getParameter("password");
     String adminPassword = adminDAO.selectAdminPW();
 

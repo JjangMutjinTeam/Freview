@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/AdminPage/user")
-public class memberManagingServlet extends HttpServlet {
+public class MemberManagingServlet extends HttpServlet {
 
   AdminDAO adminDAO = new AdminDAO();
 
