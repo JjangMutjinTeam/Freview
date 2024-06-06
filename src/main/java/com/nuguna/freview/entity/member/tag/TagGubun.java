@@ -8,8 +8,8 @@ import lombok.ToString;
 @ToString
 @RequiredArgsConstructor
 public enum TagGubun {
-  B("B"),
-  C("C");
+  BOSS("B"),
+  CUST("C");
 
   private final String gubun;
 
@@ -21,4 +21,13 @@ public enum TagGubun {
     }
     throw new IllegalArgumentException("유효하지 않은 TagGubun 입력 : " + gubun);
   }
+
+  public boolean isBossTag() {
+    return this == BOSS;
+  }
+
+  public boolean isCustTag() {
+    return this == CUST;
+  }
+
 }

@@ -7,7 +7,7 @@ import java.util.List;
 import lombok.Getter;
 
 @Getter
-public class BossTag extends Tag {
+public class BossTag extends TagItem {
 
   private static final List<String> bossTagNames = new ArrayList<>(
       Arrays.asList(
@@ -17,11 +17,10 @@ public class BossTag extends Tag {
           "반려동물 환영")
   );
 
-  public BossTag(Integer tagSeq, String tagName) {
+  public BossTag(String tagName) {
     validateTagName(tagName);
-    this.tagSeq = tagSeq;
     this.tagName = tagName;
-    this.gubun = TagGubun.B;
+    this.gubun = TagGubun.BOSS;
   }
 
   @Override

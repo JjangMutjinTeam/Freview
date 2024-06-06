@@ -7,7 +7,7 @@ import java.util.List;
 import lombok.Getter;
 
 @Getter
-public class CustTag extends Tag {
+public class CustTag extends TagItem {
 
   private static final List<String> custTagNames = new ArrayList<>(
       Arrays.asList(
@@ -16,11 +16,10 @@ public class CustTag extends Tag {
           "빵빵이")
   );
 
-  public CustTag(Integer tagSeq, String tagName) {
+  public CustTag(String tagName) {
     validateTagName(tagName);
-    this.tagSeq = tagSeq;
     this.tagName = tagName;
-    this.gubun = TagGubun.C;
+    this.gubun = TagGubun.CUST;
   }
 
   @Override
