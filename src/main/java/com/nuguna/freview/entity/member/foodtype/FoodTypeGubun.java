@@ -1,5 +1,6 @@
 package com.nuguna.freview.entity.member.foodtype;
 
+import com.nuguna.freview.exception.UnsupportedFoodTypeException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -15,14 +16,14 @@ public enum FoodTypeGubun {
   BC("BC"),
   ETC("ETC");
 
-  private final String code;
+  private final String codeName;
 
-  public static FoodTypeGubun from(String code) {
+  public static FoodTypeGubun from(String foodTypeName) {
     for (FoodTypeGubun g : FoodTypeGubun.values()) {
-      if (g.getCode().equalsIgnoreCase(code)) {
+      if (g.getCodeName().equalsIgnoreCase(foodTypeName)) {
         return g;
       }
     }
-    throw new IllegalArgumentException("유효하지 않은 FoodTypeGubun 입력 : " + code);
+    throw new UnsupportedFoodTypeException("유효하지 않은 FoodTypeGubun 입력 : " + foodTypeName);
   }
 }
