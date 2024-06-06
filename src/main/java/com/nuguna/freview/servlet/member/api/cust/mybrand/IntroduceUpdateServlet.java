@@ -2,6 +2,7 @@ package com.nuguna.freview.servlet.member.api.cust.mybrand;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.nuguna.freview.dao.member.CustIntroduceDAO;
 import com.nuguna.freview.dto.common.ResponseMessage;
 import com.nuguna.freview.util.EncodingUtil;
@@ -48,8 +49,12 @@ public class IntroduceUpdateServlet extends HttpServlet {
       custIntroduceDAO.updateIntroduce(memberSeq, toIntroduce);
       JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
           new ResponseMessage<>("성공적으로 수정했습니다.", toIntroduce), response, gson);
+    } catch (JsonParseException e) {
+      log.error("소개 변경 요청에 대한 JSON 파싱 에러가 발생했습니다.", e);
+      JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_BAD_REQUEST,
+          new ResponseMessage<>("요청 JSON의 형식에 문제가 있습니다.", null), response, gson);
     } catch (Exception e) {
-      log.error("소개 변경 도중 에러가 발생했습니다.", e);
+      log.error("소개 변경 도중 서버 에러가 발생했습니다.", e);
       JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
           new ResponseMessage<>("소개 변경 도중 서버 에러가 발생했습니다.", null), response, gson);
     }

@@ -2,6 +2,7 @@ package com.nuguna.freview.servlet.member.api.cust.mybrand;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.nuguna.freview.dao.member.CustAgeGroupDAO;
 import com.nuguna.freview.dto.common.ResponseMessage;
 import com.nuguna.freview.exception.UnsupportedAgeGroupException;
@@ -37,7 +38,7 @@ public class AgeGroupUpdateServlet extends HttpServlet {
     EncodingUtil.setEncodingToUTF8AndJson(request, response);
 
     log.info("AgeGroupUpdateServlet.doPost");
-    
+
     try {
       JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
       // 입력값 가져오기 ( 클라이언트에서 데이터를 올바르게 주는 경우만 가정 )
@@ -50,11 +51,16 @@ public class AgeGroupUpdateServlet extends HttpServlet {
 
       JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
           new ResponseMessage<>("성공적으로 수정되었습니다.", toAgeGroup), response, gson);
+    } catch (JsonParseException e) {
+      log.error("연령대 변경 요청에 대한 JSON 파싱 에러가 발생했습니다.", e);
+      JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_BAD_REQUEST,
+          new ResponseMessage<>("요청 JSON의 형식에 문제가 있습니다.", null), response, gson);
     } catch (UnsupportedAgeGroupException e) {
+      log.error("유효하지 않은 연령대 요청입니다.");
       JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_BAD_REQUEST,
           new ResponseMessage<>("유효하지 않은 연령대입니다.", null), response, gson);
     } catch (Exception e) {
-      log.error("연령대 변경 도중 에러가 발생했습니다.", e);
+      log.error("연령대 변경 도중 서버 에러가 발생했습니다.", e);
       JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
           new ResponseMessage<>("연령대 변경 도중 서버 에러가 발생했습니다.", null), response, gson);
     }
