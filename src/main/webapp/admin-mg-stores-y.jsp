@@ -67,6 +67,39 @@
     </div>
 </div>
 
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registerModal">
+    스토어 등록
+</button>
+
+<!-- 스토어 등록 모달 창 -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="registerModalLabel">스토어 등록</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                등록할 스토어의 정보를 입력해주세요
+                <form id="registerForm">
+                    <div class="mb-3">
+                        <label for="storeName" class="form-label">스토어명</label>
+                        <input type="text" class="form-control" id="storeName" name="addStoreName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="businessNumber" class="form-label">사업자번호</label>
+                        <input type="text" class="form-control" id="businessNumber" name="addBusinessNumber" pattern="\d{3}-\d{2}-\d{5}" placeholder="123-45-67890" required>
+                    </div>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <button type="submit" class="btn btn-primary">등록완료</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center">
 
@@ -557,6 +590,11 @@
                             아이디를 클릭하면 해당 유저의 브랜딩 페이지로 이동할 수 있습니다 <br>
                             가입한 사장님이 있는 스토어는 삭제할 수 없습니다 <br>
                         </p>
+                        <div class="d-flex justify-content-end">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registerModal">
+                                스토어 등록
+                            </button>
+                        </div>
 
                         <!-- Table with stripped rows -->
                         <table class="table datatable">
@@ -596,7 +634,6 @@
                             </tbody>
                         </table>
                         <!-- End Table with stripped rows -->
-
                         <script>
                           var deleteModal = document.getElementById('deleteModal');
                           deleteModal.addEventListener('show.bs.modal', function (event) {
@@ -617,7 +654,7 @@
                                 headers: {
                                   'Content-Type': 'application/x-www-form-urlencoded'
                                 },
-                                body: 'businessNumber=' + encodeURIComponent(businessNumber) + '&password=' + encodeURIComponent(password)
+                                body: 'deleteBusinessNumber=' + encodeURIComponent(businessNumber) + '&password=' + encodeURIComponent(password)
                               })
                               .then(response => {
                                 if (response.status === 200) {
@@ -648,10 +685,54 @@
                             };
                           });
                         </script>
+                        <script>
+                          var registerModal = document.getElementById('registerModal');
+                          registerModal.addEventListener('show.bs.modal', function (event) {
+                            document.getElementById('registerForm').onsubmit = function(event) {
+                              event.preventDefault(); // Prevent default form submission
+
+                              var storeName = document.getElementById('storeName').value;
+                              var businessNumber = document.getElementById('businessNumber').value;
+
+                              // Prepare data to be sent
+                              var formData = new URLSearchParams();
+                              formData.append('addStoreName', storeName);
+                              formData.append('addBusinessNumber', businessNumber);
+
+                              // Send the data using fetch
+                              fetch('/AdminPage/addStore', {
+                                method: 'POST',
+                                headers: {
+                                  'Content-Type': 'application/x-www-form-urlencoded'
+                                },
+                                body: formData.toString()
+                              })
+                              .then(response => {
+                                if (response.status === 200) {
+                                  return response.text().then(data => {
+                                    console.log(data);
+                                    alert('스토어가 성공적으로 등록되었습니다.');
+                                    var modal = bootstrap.Modal.getInstance(registerModal);
+                                    modal.hide();
+                                    location.reload();
+                                  });
+                                } else {
+                                  return response.text().then(data => {
+                                    console.error(data);
+                                    alert('스토어 등록에 실패했습니다. 다시 시도해 주세요.');
+                                  });
+                                }
+                              })
+                              .catch(error => console.error('Error:', error));
+
+                              // Close the modal
+                              $('#registerModal').modal('hide');
+                            };
+                          });
+                        </script>
 
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
