@@ -3,9 +3,8 @@ package com.nuguna.freview.servlet.member.api.cust.mybrand;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.nuguna.freview.dao.member.CustAgeGroupDAO;
+import com.nuguna.freview.dao.member.CustIntroduceDAO;
 import com.nuguna.freview.dto.common.ResponseMessage;
-import com.nuguna.freview.exception.UnsupportedAgeGroupException;
 import com.nuguna.freview.util.EncodingUtil;
 import com.nuguna.freview.util.JsonRequestUtil;
 import com.nuguna.freview.util.JsonResponseUtil;
@@ -18,17 +17,17 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@WebServlet("/api/cust/my-brand/age-group")
-public class AgeGroupUpdateServlet extends HttpServlet {
+@WebServlet("/api/cust/my-brand/introduce")
+public class IntroduceUpdateServlet extends HttpServlet {
 
   private Gson gson;
-  private CustAgeGroupDAO custAgeGroupDAO;
+  private CustIntroduceDAO custIntroduceDAO;
 
   @Override
   public void init() throws ServletException {
-    log.info("AgeGroupUpdateServlet 초기화");
+    log.info("IntroduceUpdateServlet 초기화");
     gson = new Gson();
-    custAgeGroupDAO = new CustAgeGroupDAO();
+    custIntroduceDAO = new CustIntroduceDAO();
   }
 
   @Override
@@ -37,7 +36,7 @@ public class AgeGroupUpdateServlet extends HttpServlet {
 
     EncodingUtil.setEncodingToUTF8AndJson(request, response);
 
-    log.info("AgeGroupUpdateServlet.doPost");
+    log.info("IntroduceUpdateServlet.doPost");
 
     try {
       JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
@@ -45,24 +44,19 @@ public class AgeGroupUpdateServlet extends HttpServlet {
       // TODO : 추후 Input Data가 NULL 인 경우 또한 처리해주어야 함.
       // TODO : 서블릿 필터에서 memberSeq의 유효성을 체크해준다고 가정
       int memberSeq = jsonObject.get("member_seq").getAsInt();
-      String toAgeGroup = jsonObject.get("to_age_group").getAsString();
+      String toIntroduce = jsonObject.get("to_introduce").getAsString();
 
-      custAgeGroupDAO.updateAgeGroup(memberSeq, toAgeGroup);
-
+      custIntroduceDAO.updateIntroduce(memberSeq, toIntroduce);
       JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
-          new ResponseMessage<>("성공적으로 수정되었습니다.", toAgeGroup), response, gson);
+          new ResponseMessage<>("성공적으로 수정했습니다.", toIntroduce), response, gson);
     } catch (JsonParseException e) {
-      log.error("연령대 변경 요청에 대한 JSON 파싱 에러가 발생했습니다.", e);
+      log.error("소개 변경 요청에 대한 JSON 파싱 에러가 발생했습니다.", e);
       JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_BAD_REQUEST,
           new ResponseMessage<>("요청 JSON의 형식에 문제가 있습니다.", null), response, gson);
-    } catch (UnsupportedAgeGroupException e) {
-      log.error("유효하지 않은 연령대 요청입니다.");
-      JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_BAD_REQUEST,
-          new ResponseMessage<>("유효하지 않은 연령대입니다.", null), response, gson);
     } catch (Exception e) {
-      log.error("연령대 변경 도중 서버 에러가 발생했습니다.", e);
+      log.error("소개 변경 도중 서버 에러가 발생했습니다.", e);
       JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-          new ResponseMessage<>("연령대 변경 도중 서버 에러가 발생했습니다.", null), response, gson);
+          new ResponseMessage<>("소개 변경 도중 서버 에러가 발생했습니다.", null), response, gson);
     }
   }
 }

@@ -2,6 +2,7 @@ package com.nuguna.freview.servlet.member.api.cust.mybrand;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.nuguna.freview.dao.member.CustNicknameDAO;
 import com.nuguna.freview.dto.common.ResponseMessage;
 import com.nuguna.freview.util.EncodingUtil;
@@ -19,11 +20,13 @@ import lombok.extern.slf4j.Slf4j;
 @WebServlet("/api/cust/my-brand/nickname")
 public class NicknameUpdateServlet extends HttpServlet {
 
+  private Gson gson;
   private CustNicknameDAO custNicknameDAO;
 
   @Override
   public void init() throws ServletException {
     log.info("NicknameUpdateServlet 초기화");
+    gson = new Gson();
     custNicknameDAO = new CustNicknameDAO();
   }
 
@@ -35,7 +38,6 @@ public class NicknameUpdateServlet extends HttpServlet {
 
     log.info("NicknameUpdateServlet.doPost");
 
-    Gson gson = new Gson();
     String errorMessage = null;
 
     try {
@@ -76,6 +78,10 @@ public class NicknameUpdateServlet extends HttpServlet {
         JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
             new ResponseMessage<>("성공적으로 수정했습니다.", toNickname), response, gson);
       }
+    } catch (JsonParseException e) {
+      log.error("닉네임 변경 요청에 대한 JSON 파싱 에러가 발생했습니다.", e);
+      JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_BAD_REQUEST,
+          new ResponseMessage<>("요청 JSON의 형식에 문제가 있습니다.", null), response, gson);
     } catch (Exception e) {
       log.error("닉네임 변경 도중 에러가 발생했습니다.", e);
       JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
