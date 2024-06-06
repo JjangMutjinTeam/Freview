@@ -1,5 +1,6 @@
 package com.nuguna.freview.entity.member.tag;
 
+import com.nuguna.freview.exception.IllegalTagException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,9 +25,9 @@ public class BossTag extends Tag {
   }
 
   @Override
-  protected void validateTagName(String tagName) {
+  protected void validateTagName(String tagName) throws IllegalTagException {
     if (!bossTagNames.contains(tagName)) {
-      throw new IllegalArgumentException("유효하지 않은 BossTag 입력");
+      throw new IllegalTagException("유효하지 않은 BossTag 입력");
     }
   }
 }

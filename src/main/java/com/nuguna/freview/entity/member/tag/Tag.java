@@ -1,5 +1,6 @@
 package com.nuguna.freview.entity.member.tag;
 
+import com.nuguna.freview.exception.IllegalTagException;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -13,7 +14,7 @@ public abstract class Tag {
   protected TagGubun gubun;
   protected String tagName;
 
-  protected abstract void validateTagName(String tagName);
+  protected abstract void validateTagName(String tagName) throws IllegalTagException;
 
   public String getGubun() {
     return gubun != null ? gubun.getGubun() : null;
