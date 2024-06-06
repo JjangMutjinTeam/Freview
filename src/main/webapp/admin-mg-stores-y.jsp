@@ -420,12 +420,12 @@
             </a>
             <ul id="tables-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
                 <li>
-                    <a href="admin-mg-users-y.jsp" class="active">
+                    <a href="/AdminPage/user">
                         <i class="bi bi-circle"></i><span>유저</span>
                     </a>
                 </li>
                 <li>
-                    <a href="aaaaaa.jsp">
+                    <a href="/AdminPage/store" class="active">
                         <i class="bi bi-circle"></i><span>스토어</span>
                     </a>
                 </li>
