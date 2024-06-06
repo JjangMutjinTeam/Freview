@@ -1,24 +1,22 @@
 package com.nuguna.freview.entity.member.tag;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor
-@AllArgsConstructor
-public class Tag {
+public abstract class Tag {
 
-  private Integer tagSeq;
-  private TagGubun gubun;
-  private String name;
+  protected Integer tagSeq;
+  protected TagGubun gubun;
+  protected String tagName;
+
+  protected abstract void validateTagName(String tagName);
 
   public String getGubun() {
-    return gubun != null ? gubun.getCode() : null;
+    return gubun != null ? gubun.getGubun() : null;
   }
 
   public void setGubun(String gubun) {

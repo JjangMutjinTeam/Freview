@@ -11,14 +11,14 @@ public enum TagGubun {
   B("B"),
   C("C");
 
-  private final String code;
+  private final String gubun;
 
-  public static TagGubun from(String code) {
+  public static TagGubun from(String gubun) {
     for (TagGubun g : TagGubun.values()) {
-      if (g.getCode().equalsIgnoreCase(code)) {
+      if (g.getGubun().equalsIgnoreCase(gubun)) {
         return g;
       }
     }
-    throw new IllegalArgumentException("유효하지 않은 TagGubun 입력 : " + code);
+    throw new IllegalArgumentException("유효하지 않은 TagGubun 입력 : " + gubun);
   }
 }
