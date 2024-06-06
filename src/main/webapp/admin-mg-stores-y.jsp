@@ -570,16 +570,23 @@
                             <tbody>
                             <c:forEach items="${storeAndBossList}" var="store" varStatus="status">
                                 <tr>
-                                    <td>${status.index+1}</td>
+                                    <td>${status.index + 1}</td>
                                     <td>${store.storeName}</td>
                                     <td>${store.businessNumber}</td>
                                     <td><a href="MemberBrandingServlet?mid=${store.mid}">${store.mid}</a></td>
                                     <td>${store.createdAt}</td>
                                     <td>
-                                        <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
-                                                data-bs-target="#deleteModal"
-                                                data-id="${store.businessNumber}">x
-                                        </button>
+                                        <c:choose>
+                                            <c:when test="${store.mid == null}">
+                                                <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                                        data-bs-target="#deleteModal"
+                                                        data-id="${store.businessNumber}">x
+                                                </button>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <button class="btn btn-secondary btn-sm" disabled>x</button>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -591,23 +598,23 @@
                           var deleteModal = document.getElementById('deleteModal');
                           deleteModal.addEventListener('show.bs.modal', function (event) {
                             var button = event.relatedTarget;
-                            var userId = button.getAttribute('data-id');
+                            var businessNumber = button.getAttribute('data-id');
                             var modalTitle = deleteModal.querySelector('.modal-title');
                             var modalBodyInput = deleteModal.querySelector('.modal-body input');
 
-                            modalTitle.textContent = '정말 삭제시킬까요? (ID: ' + userId + ')';
+                            modalTitle.textContent = '정말 삭제시킬까요? (사업자번호: ' + businessNumber + ')';
                             modalBodyInput.value = '';
 
                             document.getElementById('deleteForm').onsubmit = function(event) {
                               event.preventDefault();
                               var password = modalBodyInput.value;
 
-                              fetch('/AdminPage/StoreManagingServlet', {
+                              fetch('/AdminPage/store', {
                                 method: 'POST',
                                 headers: {
                                   'Content-Type': 'application/x-www-form-urlencoded'
                                 },
-                                body: 'userId=' + encodeURIComponent(userId) + '&password=' + encodeURIComponent(password)
+                                body: 'businessNumber=' + encodeURIComponent(businessNumber) + '&password=' + encodeURIComponent(password)
                               })
                               .then(response => {
                                 if (response.status === 200) {
