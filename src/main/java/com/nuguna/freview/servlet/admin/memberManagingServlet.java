@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/AdminPage")
-public class AdminServlet extends HttpServlet {
+@WebServlet("/AdminPage/user")
+public class memberManagingServlet extends HttpServlet {
 
   AdminDAO adminDAO = new AdminDAO();
 
@@ -23,7 +23,7 @@ public class AdminServlet extends HttpServlet {
     resp.setContentType("text/html;charset=UTF-8");
     List<Member> memberAllList = adminDAO.selectAllMember();
     req.setAttribute("memberAllList", memberAllList);
-    RequestDispatcher rd = req.getRequestDispatcher("admin-mg-users-y.jsp");
+    RequestDispatcher rd = req.getRequestDispatcher("/admin-mg-users-y.jsp");
     rd.forward(req, resp);
   }
 
