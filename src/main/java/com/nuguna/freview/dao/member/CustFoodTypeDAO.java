@@ -4,7 +4,7 @@ import static com.nuguna.freview.util.DbUtil.closeResource;
 import static com.nuguna.freview.util.DbUtil.getConnection;
 
 import com.nuguna.freview.entity.member.foodtype.FoodTypeGubun;
-import com.nuguna.freview.exception.UnsupportedFoodTypeException;
+import com.nuguna.freview.exception.IllegalFoodTypeException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,7 +24,7 @@ public class CustFoodTypeDAO {
       foodTypeGubuns = foodTypeNames.stream()
           .map(FoodTypeGubun::from)
           .collect(Collectors.toList());
-    } catch (UnsupportedFoodTypeException e) {
+    } catch (IllegalFoodTypeException e) {
       throw e;
     }
 

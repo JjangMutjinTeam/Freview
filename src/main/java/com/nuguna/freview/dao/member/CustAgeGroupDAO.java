@@ -4,20 +4,20 @@ import static com.nuguna.freview.util.DbUtil.closeResource;
 import static com.nuguna.freview.util.DbUtil.getConnection;
 
 import com.nuguna.freview.entity.member.AgeGroup;
-import com.nuguna.freview.exception.UnsupportedAgeGroupException;
+import com.nuguna.freview.exception.IllegalAgeGroupException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class CustAgeGroupDAO {
 
-  public void updateAgeGroup(int memberSeq, String toAgeGroup) throws UnsupportedAgeGroupException {
+  public void updateAgeGroup(int memberSeq, String toAgeGroup) throws IllegalAgeGroupException {
     Connection conn = null;
     PreparedStatement pstmt = null;
 
     try {
       AgeGroup.from(toAgeGroup);
-    } catch (UnsupportedAgeGroupException e) {
+    } catch (IllegalAgeGroupException e) {
       throw e;
     }
 

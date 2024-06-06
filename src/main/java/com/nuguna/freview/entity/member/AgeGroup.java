@@ -1,6 +1,6 @@
 package com.nuguna.freview.entity.member;
 
-import com.nuguna.freview.exception.UnsupportedAgeGroupException;
+import com.nuguna.freview.exception.IllegalAgeGroupException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -27,7 +27,7 @@ public enum AgeGroup {
         return a;
       }
     }
-    throw new UnsupportedAgeGroupException("유효하지 않은 AgeGroup 입력 : " + ageGroup);
+    throw new IllegalAgeGroupException("유효하지 않은 AgeGroup 입력 : " + ageGroup);
   }
 
 }

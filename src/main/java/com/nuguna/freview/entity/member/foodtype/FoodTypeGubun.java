@@ -1,6 +1,6 @@
 package com.nuguna.freview.entity.member.foodtype;
 
-import com.nuguna.freview.exception.UnsupportedFoodTypeException;
+import com.nuguna.freview.exception.IllegalFoodTypeException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -24,6 +24,6 @@ public enum FoodTypeGubun {
         return g;
       }
     }
-    throw new UnsupportedFoodTypeException("유효하지 않은 FoodTypeGubun 입력 : " + foodTypeName);
+    throw new IllegalFoodTypeException("유효하지 않은 FoodTypeGubun 입력 : " + foodTypeName);
   }
 }

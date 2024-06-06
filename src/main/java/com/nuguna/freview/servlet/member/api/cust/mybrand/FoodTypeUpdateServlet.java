@@ -7,7 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.nuguna.freview.dao.member.CustFoodTypeDAO;
 import com.nuguna.freview.dto.common.ResponseMessage;
-import com.nuguna.freview.exception.UnsupportedFoodTypeException;
+import com.nuguna.freview.exception.IllegalFoodTypeException;
 import com.nuguna.freview.util.EncodingUtil;
 import com.nuguna.freview.util.JsonRequestUtil;
 import com.nuguna.freview.util.JsonResponseUtil;
@@ -63,7 +63,7 @@ public class FoodTypeUpdateServlet extends HttpServlet {
       log.error("활동 분야 변경 요청에 대한 JSON 파싱 에러가 발생했습니다.", e);
       JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_BAD_REQUEST,
           new ResponseMessage<>("요청 JSON의 형식에 문제가 있습니다.", null), response, gson);
-    } catch (UnsupportedFoodTypeException e) {
+    } catch (IllegalFoodTypeException e) {
       log.error("유효하지 않은 활동 분야 요청입니다.");
       JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_BAD_REQUEST,
           new ResponseMessage<>("유효하지 않은 활동 분야입니다.", null), response, gson);

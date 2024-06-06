@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.nuguna.freview.dao.member.CustAgeGroupDAO;
 import com.nuguna.freview.dto.common.ResponseMessage;
-import com.nuguna.freview.exception.UnsupportedAgeGroupException;
+import com.nuguna.freview.exception.IllegalAgeGroupException;
 import com.nuguna.freview.util.EncodingUtil;
 import com.nuguna.freview.util.JsonRequestUtil;
 import com.nuguna.freview.util.JsonResponseUtil;
@@ -55,7 +55,7 @@ public class AgeGroupUpdateServlet extends HttpServlet {
       log.error("연령대 변경 요청에 대한 JSON 파싱 에러가 발생했습니다.", e);
       JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_BAD_REQUEST,
           new ResponseMessage<>("요청 JSON의 형식에 문제가 있습니다.", null), response, gson);
-    } catch (UnsupportedAgeGroupException e) {
+    } catch (IllegalAgeGroupException e) {
       log.error("유효하지 않은 연령대 요청입니다.");
       JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_BAD_REQUEST,
           new ResponseMessage<>("유효하지 않은 연령대입니다.", null), response, gson);
