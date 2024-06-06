@@ -21,6 +21,7 @@ public class AdminDAO {
   private final String DELETE_MEMBER_BY_ID = "DELETE FROM member WHERE mid = ?";
   private final String SELECT_ADMIN_PW = "SELECT MPW FROM member WHERE gubun = 'A'";
   private final String SELECT_STORE_BUSINESS_INFO = "SELECT s.store_name, s.business_number, m.mid, m.created_at FROM store_business_info s LEFT JOIN member m ON s.business_number = m.business_number";
+  private final String DELETE_STORE_BY_BUSINESS_NUMBER = "DELETE FROM store_business_info WHERE business_number = ?";
 
   public List<Member> selectAllMember() {
     Connection conn = null;
@@ -133,6 +134,29 @@ public class AdminDAO {
     }
 
     return list;
+  }
+
+  public boolean deleteStore(String businessNumber) {
+    boolean isDeleted = false;
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+
+    try {
+      conn = getConnection();
+      pstmt = conn.prepareStatement(DELETE_STORE_BY_BUSINESS_NUMBER);
+      pstmt.setString(1, businessNumber);
+
+      int rows = pstmt.executeUpdate();
+      if (rows > 0) {
+        isDeleted = true;
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    } finally {
+      closeResource(pstmt, conn);
+    }
+
+    return isDeleted;
   }
 
   private Connection getConnection() {
