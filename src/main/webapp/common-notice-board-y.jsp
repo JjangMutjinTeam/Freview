@@ -570,7 +570,7 @@
                 <c:forEach items="${postList}" var="post" varStatus="status">
                     <tr>
                         <td>${status.index + 1}</td>
-                        <td><a href="common-notice-post-detail.jsp?postSeq=${post.postSeq}">${post.title}</a></td>
+                        <td><a href="${pageContext.request.contextPath}/noticeBoard/detail?postSeq=${post.postSeq}">${post.title}</a></td>
                         <td>${post.createdAt}</td>
                     </tr>
                 </c:forEach>
