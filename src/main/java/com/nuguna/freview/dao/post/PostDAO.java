@@ -24,7 +24,7 @@ public class PostDAO {
       + "ORDER BY post_seq DESC "
       + "limit ?";
 
-  private final String COUNT_POST = "SELECT COUNT(*) FROM freview.POST WHERE gubun = ?";
+  private final String COUNT_POST = "SELECT COUNT(*) FROM post WHERE gubun = ?";
 
   private final String INSERT_POST = "INSERT INTO post(title, content, gubun, created_at, updated_at, member_seq) VALUES(?, ?, ?, ?, ?, ?)";
 
