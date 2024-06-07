@@ -1,4 +1,4 @@
-package com.nuguna.freview.entity.member.tag;
+package com.nuguna.freview.entity.member.tag.mapping;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
