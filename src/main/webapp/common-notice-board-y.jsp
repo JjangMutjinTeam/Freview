@@ -552,6 +552,11 @@
             <h5 class="card-title">공지 게시판</h5>
             <p>매우 중요한 공지가 올라옵니다 <br></p>
 
+            <div class="d-flex justify-content-end">
+                <a href="/noticeBoard/createPost" class="btn btn-primary">
+                    공지 등록
+                </a>
+            </div>
             <!-- Table with stripped rows -->
             <table class="table">
                 <thead>
@@ -565,7 +570,7 @@
                 <c:forEach items="${postList}" var="post" varStatus="status">
                     <tr>
                         <td>${status.index + 1}</td>
-                        <td>${post.title}</td>
+                        <td><a href="common-notice-post-detail.jsp?postSeq=${post.postSeq}">${post.title}</a></td>
                         <td>${post.createdAt}</td>
                     </tr>
                 </c:forEach>
