@@ -30,6 +30,31 @@ public class PostDAO {
 
   private final String SELECT_POST_BY_SEQ = " SELECT post_seq, member_seq, title, content, view_count, created_at, updated_at from post WHERE post_seq = ?";
 
+  private final String UPDATE_POST_BY_SEQ = "UPDATE post SET title = ?, content = ?, updated_at = ? WHERE post_seq = ?";
+
+  public boolean updatePost(Post post) {
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+
+    try {
+      conn = getConnection();
+      pstmt = conn.prepareStatement(UPDATE_POST_BY_SEQ);
+
+        pstmt.setString(1, post.getTitle());
+        pstmt.setString(2, post.getContent());
+        pstmt.setTimestamp(3, post.getUpdatedAt());
+        pstmt.setInt(4, post.getPostSeq());
+
+        int affectedRows = pstmt.executeUpdate();
+        return affectedRows > 0;
+
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    } finally {
+      closeResource(pstmt, conn);
+    }
+  }
+
   public Post selectPostByPostSeq(int postSeq) {
     Connection conn = null;
     PreparedStatement pstmt = null;

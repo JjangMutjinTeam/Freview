@@ -45,11 +45,15 @@
         vertical-align: top;
         white-space: pre-wrap; /* 띄어쓰기 인식 */
       }
-
+    </style>
+    <style>
       .fixed-width {
-        min-width: 150px; /* 칸의 최소 넓이를 설정 */
-        max-width: 150px;
+        width: 150px;
         word-wrap: break-word;
+      }
+      .table {
+        table-layout: fixed;
+        width: 100%;
       }
     </style>
     <!-- =======================================================
@@ -565,31 +569,69 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="card-title mb-0">공지</h5>
-                    <button type="button" class="btn btn-primary" onclick="location.href='/noticeBoard'">목록으로</button>
+                    <div>
+                        <button type="button" class="btn btn-primary" onclick="editPost()">수정</button>
+                        <button type="button" class="btn btn-primary" onclick="location.href='/noticeBoard'">목록으로</button>
+                    </div>
                 </div>
-                <table class="table table-bordered">
-                    <tbody>
-                    <tr>
-                        <th class="fixed-width">제목</th>
-                        <td>${POST.title}</td>
-                    </tr>
-                    <tr>
-                        <th class="fixed-width">작성자</th>
-                        <td>사이트 관리자</td> <!-- 작성자의 이름을 표시하려면 memberSeq 대신 작성자 이름을 받아와야 합니다 -->
-                    </tr>
-                    <tr>
-                        <th class="fixed-width">작성일자</th>
-                        <td>${POST.createdAt}</td>
-                    </tr>
-                    <tr>
-                        <th class="fixed-width">내용</th>
-                        <td class="content-cell">${POST.content}</td>
-                    </tr>
-                    </tbody>
-                </table>
+                <form id="postForm" action="/noticeBoard/detail/modify" method="post">
+                    <input type="hidden" name="postSeq" value="${POST.postSeq}">
+                    <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
+                        <tbody>
+                        <tr>
+                            <th class="fixed-width">제목</th>
+                            <td>
+                                <span id="titleView">${POST.title}</span>
+                                <input type="text" class="form-control d-none" id="titleEdit" name="title" value="${POST.title}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="fixed-width">작성자</th>
+                            <td>사이트 관리자</td>
+                        </tr>
+                        <tr>
+                            <th class="fixed-width">작성일자</th>
+                            <td>${POST.createdAt}</td>
+                        </tr>
+                        <tr>
+                            <th class="fixed-width">수정일자</th>
+                            <td>${POST.updatedAt}</td>
+                        </tr>
+                        <tr>
+                            <th class="fixed-width">내용</th>
+                            <td>
+                                <span id="contentView" style="white-space: pre-line;">${POST.content}</span>
+                                <textarea class="form-control d-none" id="contentEdit" name="content" rows="10">${POST.content}</textarea>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div id="editButtons" class="d-none">
+                        <button type="submit" class="btn btn-primary">완료</button>
+                        <button type="button" class="btn btn-secondary" onclick="cancelEdit()">취소</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+
+    <script>
+      function editPost() {
+        document.getElementById('titleView').classList.add('d-none');
+        document.getElementById('contentView').classList.add('d-none');
+        document.getElementById('titleEdit').classList.remove('d-none');
+        document.getElementById('contentEdit').classList.remove('d-none');
+        document.getElementById('editButtons').classList.remove('d-none');
+      }
+
+      function cancelEdit() {
+        document.getElementById('titleView').classList.remove('d-none');
+        document.getElementById('contentView').classList.remove('d-none');
+        document.getElementById('titleEdit').classList.add('d-none');
+        document.getElementById('contentEdit').classList.add('d-none');
+        document.getElementById('editButtons').classList.add('d-none');
+      }
+    </script>
 
 </main><!-- End #main -->
 
