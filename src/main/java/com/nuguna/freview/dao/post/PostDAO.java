@@ -26,7 +26,41 @@ public class PostDAO {
 
   private final String COUNT_POST = "SELECT COUNT(*) FROM freview.POST WHERE gubun = ?";
 
-  public final String INSERT_POST = "INSERT INTO post(title, content, gubun, created_at, updated_at, member_seq) VALUES(?, ?, ?, ?, ?, ?)";
+  private final String INSERT_POST = "INSERT INTO post(title, content, gubun, created_at, updated_at, member_seq) VALUES(?, ?, ?, ?, ?, ?)";
+
+  private final String SELECT_POST_BY_SEQ = " SELECT post_seq, member_seq, title, content, view_count, created_at, updated_at from post WHERE post_seq = ?";
+
+  public Post selectPostByPostSeq(int postSeq) {
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+
+    Post post = new Post();
+
+    try {
+      conn = getConnection();
+      pstmt = conn.prepareStatement(SELECT_POST_BY_SEQ);
+      pstmt.setInt(1, postSeq);
+      rs = pstmt.executeQuery();
+
+      while (rs.next()) {
+        post.setPostSeq(rs.getInt("post_seq"));
+        post.setMemberSeq(rs.getInt("member_seq"));
+        post.setTitle(rs.getString("title"));
+        post.setContent(rs.getString("content"));
+        post.setViewCount(rs.getInt("view_count"));
+        post.setCreatedAt(rs.getTimestamp("created_at"));
+        post.setUpdatedAt(rs.getTimestamp("updated_at"));
+
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    } finally {
+      closeResource(pstmt, conn, rs);
+    }
+
+    return post;
+  }
 
   public boolean insertPost(Post post) {
     boolean isInserted = false;
@@ -73,7 +107,7 @@ public class PostDAO {
       pstmt.setInt(3, limit);
       rs = pstmt.executeQuery();
 
-      while(rs.next()) {
+      while (rs.next()) {
         Post post = new Post();
         post.setPostSeq(rs.getInt("post_seq"));
         post.setTitle(rs.getString("title"));
@@ -105,7 +139,7 @@ public class PostDAO {
       pstmt.setString(1, gubun);
       rs = pstmt.executeQuery();
 
-      while(rs.next()) {
+      while (rs.next()) {
         countTotalPosts = rs.getInt(1);
       }
     } catch (SQLException e) {
