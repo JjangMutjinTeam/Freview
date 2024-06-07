@@ -1,7 +1,7 @@
+<%@ page import="com.nuguna.freview.dao.member.BossMyBrandDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
+<%@ page import="com.nuguna.freview.entity.member.Member" %>
+<%@ page import="java.util.ArrayList" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,29 +9,33 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Tables / Data - NiceAdmin Bootstrap Template</title>
+  <title>Users / Profile - NiceAdmin Bootstrap Template</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
   <!-- Favicons -->
-  <link href="/assets/img/favicon.png" rel="icon">
-  <link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
   <link href="https://fonts.gstatic.com" rel="preconnect">
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
-  <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
-  <link href="/assets/vendor/quill/quill.snow.css" rel="stylesheet">
-  <link href="/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
-  <link href="/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
-  <link href="/assets/vendor/simple-datatables/style.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="assets/vendor/quill/quill.snow.css" rel="stylesheet">
+  <link href="assets/vendor/quill/quill.bubble.css" rel="stylesheet">
+  <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+  <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
 
   <!-- Template Main CSS File -->
-  <link href="/assets/css/style.css" rel="stylesheet">
+  <link href="assets/css/style.css" rel="stylesheet">
+  <link href="assets/css/style-h.css" rel="stylesheet">
+
+  <!-- icon bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
   <!-- =======================================================
   * Template Name: NiceAdmin
@@ -44,35 +48,12 @@
 
 <body>
 
-<!-- 탈퇴 모달 창 -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="deleteModalLabel">정말 탈퇴시킬까요?</h5><br>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        탈퇴를 원하시면 관리자 비밀번호를 입력해주세요
-        <form id="deleteForm">
-          <div class="mb-3">
-            <label for="password" class="form-label">비밀번호</label>
-            <input type="password" class="form-control" id="password" required>
-          </div>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button> <!-- 추가된 취소 버튼 -->
-          <button type="submit" class="btn btn-primary">확인</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center">
 
   <div class="d-flex align-items-center justify-content-between">
     <a href="index.html" class="logo d-flex align-items-center">
-      <img src="/assets/img/logo.png" alt="">
+      <img src="assets/img/logo.png" alt="">
       <span class="d-none d-lg-block">NiceAdmin</span>
     </a>
     <i class="bi bi-list toggle-sidebar-btn"></i>
@@ -187,7 +168,7 @@
 
           <li class="message-item">
             <a href="#">
-              <img src="/assets/img/messages-1.jpg" alt="" class="rounded-circle">
+              <img src="assets/img/messages-1.jpg" alt="" class="rounded-circle">
               <div>
                 <h4>Maria Hudson</h4>
                 <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
@@ -201,7 +182,7 @@
 
           <li class="message-item">
             <a href="#">
-              <img src="/assets/img/messages-2.jpg" alt="" class="rounded-circle">
+              <img src="assets/img/messages-2.jpg" alt="" class="rounded-circle">
               <div>
                 <h4>Anna Nelson</h4>
                 <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
@@ -215,7 +196,7 @@
 
           <li class="message-item">
             <a href="#">
-              <img src="/assets/img/messages-3.jpg" alt="" class="rounded-circle">
+              <img src="assets/img/messages-3.jpg" alt="" class="rounded-circle">
               <div>
                 <h4>David Muldon</h4>
                 <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
@@ -238,7 +219,7 @@
       <li class="nav-item dropdown pe-3">
 
         <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-          <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
+          <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
           <span class="d-none d-md-block dropdown-toggle ps-2">K. Anderson</span>
         </a><!-- End Profile Iamge Icon -->
 
@@ -415,18 +396,18 @@
     </li><!-- End Forms Nav -->
 
     <li class="nav-item">
-      <a class="nav-link " data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-layout-text-window-reverse"></i><span>관리</span><i class="bi bi-chevron-down ms-auto"></i>
+      <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-layout-text-window-reverse"></i><span>Tables</span><i class="bi bi-chevron-down ms-auto"></i>
       </a>
-      <ul id="tables-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
+      <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <li>
-          <a href="/AdminPage/user" class="active">
-            <i class="bi bi-circle"></i><span>유저</span>
+          <a href="tables-general.html">
+            <i class="bi bi-circle"></i><span>General Tables</span>
           </a>
         </li>
         <li>
-          <a href="/AdminPage/store">
-            <i class="bi bi-circle"></i><span>스토어</span>
+          <a href="tables-data.html">
+            <i class="bi bi-circle"></i><span>Data Tables</span>
           </a>
         </li>
       </ul>
@@ -481,7 +462,7 @@
     <li class="nav-heading">Pages</li>
 
     <li class="nav-item">
-      <a class="nav-link collapsed" href="users-profile.html">
+      <a class="nav-link " href="users-profile.html">
         <i class="bi bi-person"></i>
         <span>Profile</span>
       </a>
@@ -536,112 +517,261 @@
 <main id="main" class="main">
 
   <div class="pagetitle">
-    <h1>유저</h1>
-    <nav>
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-        <li class="breadcrumb-item">Tables</li>
-        <li class="breadcrumb-item active">Data</li>
-      </ol>
-    </nav>
+    <h1>Profile</h1>
   </div><!-- End Page Title -->
 
-  <section class="section">
+  <section class="section profile">
     <div class="row">
-      <div class="col-lg-12">
+    <%
+//      ArrayList<Member> amb = (ArrayList<Member>)request.getAttribute("KEY_BOSSBRAND");
+//      System.out.println(amb.toString());
+    %>
+      <div class="card">
 
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">유저 리스트</h5>
-            <p>가입한 유저 리스트입니다. <br>아이디를 클릭하면 해당 유저의 브랜딩 페이지로 이동할 수 있습니다.</p>
+        <!-- profile  -->
+        <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+            <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
+            <h2>Kevin Anderson</h2>
+            <div class="social-links mt-2">
+              <a href="#" class="binheart"><i class="bi bi-heart"></i></a>
+            </div>
+            <textarea class="form-control" id="exampleFormControlTextarea1" readonly class="form-control-plaintext" rows="3"> member-introduce </textarea>
+        </div>
 
-            <!-- Table with stripped rows -->
-            <table class="table datatable">
-              <thead>
-              <tr>
-                <th>번호</th>
-                <th>유형</th>
-                <th>닉네임</th>
-                <th>아이디</th>
-                <th data-type="date" data-format="YYYY/DD/MM">가입일자</th>
-                <th>탈퇴</th>
-              </tr>
-              </thead>
-              <tbody>
-              <c:forEach items="${memberAllList}" var="member" varStatus="status">
-                <tr>
-                  <td>${status.index+1}</td>
-                  <td>${member.gubun}</td>
-                  <td>${member.nickname}</td>
-                  <td><a href="MemberBrandingServlet?gubun=${member.gubun}&mid=${member.mid}">${member.mid}</a></td> <!-- 서블릿으로 이동 -->
-                  <td>${member.createdAt}</td>
-                  <td><button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="${member.mid}">x</button></td> <!-- 추가된 부분: 탈퇴 버튼 -->
-                </tr>
-              </c:forEach>
-              </tbody>
-            </table>
-            <!-- End Table with stripped rows -->
+        <div class="card-body pt-3">
+          <!-- Bordered Tabs -->
 
-            <script>
-              var deleteModal = document.getElementById('deleteModal');
-              deleteModal.addEventListener('show.bs.modal', function (event) {
-                var button = event.relatedTarget;
-                var userId = button.getAttribute('data-id');
-                var modalTitle = deleteModal.querySelector('.modal-title');
-                var modalBodyInput = deleteModal.querySelector('.modal-body input');
+          <div class="tab-content pt-2">
 
-                modalTitle.textContent = '정말 탈퇴시킬까요? (ID: ' + userId + ')';
-                modalBodyInput.value = '';
+            <div class="tab-pane fade show active profile-overview" id="profile-overview">
+            <form method="get" action="BrandInfoServlet">
 
-                document.getElementById('deleteForm').onsubmit = function(event) {
-                  event.preventDefault();
-                  var password = modalBodyInput.value;
+              <h5 class="card-title">Profile Details</h5>
 
-                  fetch('/AdminPage', {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: 'userId=' + encodeURIComponent(userId) + '&password=' + encodeURIComponent(password)
-                  })
-                  .then(response => {
-                    if (response.status === 200) {
-                      return response.text().then(data => {
-                        console.log(data);
-                        alert('정상적으로 탈퇴 처리 되었습니다.');
-                        var modal = bootstrap.Modal.getInstance(deleteModal);
-                        modal.hide();
-                        location.reload();
-                      });
-                    } else if (response.status === 401) {
-                      modalBodyInput.classList.add('is-invalid');
-                      var invalidFeedback = deleteModal.querySelector('.invalid-feedback');
-                      if (!invalidFeedback) {
-                        invalidFeedback = document.createElement('div');
-                        invalidFeedback.classList.add('invalid-feedback');
-                        invalidFeedback.textContent = '비밀번호가 잘못되었습니다.';
-                        modalBodyInput.parentNode.appendChild(invalidFeedback);
-                      }
-                    } else {
-                      return response.text().then(data => {
-                        console.error(data);
-                        alert('오류가 발생했습니다. 다음에 다시 시도해주세요.');
-                      });
-                    }
-                  })
-                  .catch(error => console.error('Error:', error));
-                };
-              });
-            </script>
+              <div class="row">
+                <div class="col-lg-3 col-md-4 label">스토어 연락처</div>
+                <div class="col-lg-8 col-md-6"> store-email </div>
+                <input class="col-lg-1 col-md-2" type="submit" value="수정">
+              </div>
 
-          </div>
+              <div class="row">
+                <div class="col-lg-3 col-md-4 label">업체명</div>
+                <div class="col-lg-8 col-md-6"> store-name</div>
+                <input class="col-lg-1 col-md-2" type="submit" value="수정">
+              </div>
+
+              <div class="row">
+                <div class="col-lg-3 col-md-4 label">사업자 번호</div>
+                <div class="col-lg-8 col-md-6"> business-number </div>
+                <input class="col-lg-1 col-md-2" type="submit" value="수정">
+              </div>
+
+              <div class="row">
+                <div class="col-lg-3 col-md-4 label">스토어 주소</div>
+                <div class="col-lg-8 col-md-6">store address</div>
+                <input class="col-lg-1 col-md-2" type="submit" value="수정">
+              </div>
+
+              <div class="row">
+                <div class="col-lg-3 col-md-4 label">분야</div>
+                <div class="col-lg-8 col-md-6"> store-food-type </div>
+                <input class="col-lg-1 col-md-2" type="submit" value="수정">
+              </div>
+
+              <div class="row">
+                <div class="col-lg-3 col-md-4 label">태그</div>
+                <div class="col-lg-8 col-md-6"> store-tag </div>
+                <input class="col-lg-1 col-md-2" type="submit" value="수정">
+              </div>
+
+            </form>
+            <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
+
+              <!-- Profile Edit Form -->
+              <form>
+                <div class="row mb-3">
+                  <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
+                  <div class="col-md-8 col-lg-9">
+                    <img src="assets/img/profile-img.jpg" alt="Profile">
+                    <div class="pt-2">
+                      <a href="#" class="btn btn-primary btn-sm" title="Upload new profile image"><i class="bi bi-upload"></i></a>
+                      <a href="#" class="btn btn-danger btn-sm" title="Remove my profile image"><i class="bi bi-trash"></i></a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Full Name</label>
+                  <div class="col-md-8 col-lg-9">
+                    <input name="fullName" type="text" class="form-control" id="fullName" value="Kevin Anderson">
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="about" class="col-md-4 col-lg-3 col-form-label">About</label>
+                  <div class="col-md-8 col-lg-9">
+                    <textarea name="about" class="form-control" id="about" style="height: 100px">Sunt est soluta temporibus accusantium neque nam maiores cumque temporibus. Tempora libero non est unde veniam est qui dolor. Ut sunt iure rerum quae quisquam autem eveniet perspiciatis odit. Fuga sequi sed ea saepe at unde.</textarea>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="company" class="col-md-4 col-lg-3 col-form-label">Company</label>
+                  <div class="col-md-8 col-lg-9">
+                    <input name="company" type="text" class="form-control" id="company" value="Lueilwitz, Wisoky and Leuschke">
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="Job" class="col-md-4 col-lg-3 col-form-label">Job</label>
+                  <div class="col-md-8 col-lg-9">
+                    <input name="job" type="text" class="form-control" id="Job" value="Web Designer">
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="Country" class="col-md-4 col-lg-3 col-form-label">Country</label>
+                  <div class="col-md-8 col-lg-9">
+                    <input name="country" type="text" class="form-control" id="Country" value="USA">
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="Address" class="col-md-4 col-lg-3 col-form-label">Address</label>
+                  <div class="col-md-8 col-lg-9">
+                    <input name="address" type="text" class="form-control" id="Address" value="A108 Adam Street, New York, NY 535022">
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="Phone" class="col-md-4 col-lg-3 col-form-label">Phone</label>
+                  <div class="col-md-8 col-lg-9">
+                    <input name="phone" type="text" class="form-control" id="Phone" value="(436) 486-3538 x29071">
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="Email" class="col-md-4 col-lg-3 col-form-label">Email</label>
+                  <div class="col-md-8 col-lg-9">
+                    <input name="email" type="email" class="form-control" id="Email" value="k.anderson@example.com">
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="Twitter" class="col-md-4 col-lg-3 col-form-label">Twitter Profile</label>
+                  <div class="col-md-8 col-lg-9">
+                    <input name="twitter" type="text" class="form-control" id="Twitter" value="https://twitter.com/#">
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="Facebook" class="col-md-4 col-lg-3 col-form-label">Facebook Profile</label>
+                  <div class="col-md-8 col-lg-9">
+                    <input name="facebook" type="text" class="form-control" id="Facebook" value="https://facebook.com/#">
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="Instagram" class="col-md-4 col-lg-3 col-form-label">Instagram Profile</label>
+                  <div class="col-md-8 col-lg-9">
+                    <input name="instagram" type="text" class="form-control" id="Instagram" value="https://instagram.com/#">
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="Linkedin" class="col-md-4 col-lg-3 col-form-label">Linkedin Profile</label>
+                  <div class="col-md-8 col-lg-9">
+                    <input name="linkedin" type="text" class="form-control" id="Linkedin" value="https://linkedin.com/#">
+                  </div>
+                </div>
+
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+              </form><!-- End Profile Edit Form -->
+
+            </div>
+
+            <div class="tab-pane fade pt-3" id="profile-settings">
+
+              <!-- Settings Form -->
+              <form>
+
+                <div class="row mb-3">
+                  <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Email Notifications</label>
+                  <div class="col-md-8 col-lg-9">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="changesMade" checked>
+                      <label class="form-check-label" for="changesMade">
+                        Changes made to your account
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="newProducts" checked>
+                      <label class="form-check-label" for="newProducts">
+                        Information on new products and services
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="proOffers">
+                      <label class="form-check-label" for="proOffers">
+                        Marketing and promo offers
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="securityNotify" checked disabled>
+                      <label class="form-check-label" for="securityNotify">
+                        Security alerts
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+              </form><!-- End settings Form -->
+
+            </div>
+
+            <div class="tab-pane fade pt-3" id="profile-change-password">
+              <!-- Change Password Form -->
+              <form>
+
+                <div class="row mb-3">
+                  <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">Current Password</label>
+                  <div class="col-md-8 col-lg-9">
+                    <input name="password" type="password" class="form-control" id="currentPassword">
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="newPassword" class="col-md-4 col-lg-3 col-form-label">New Password</label>
+                  <div class="col-md-8 col-lg-9">
+                    <input name="newpassword" type="password" class="form-control" id="newPassword">
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="renewPassword" class="col-md-4 col-lg-3 col-form-label">Re-enter New Password</label>
+                  <div class="col-md-8 col-lg-9">
+                    <input name="renewpassword" type="password" class="form-control" id="renewPassword">
+                  </div>
+                </div>
+
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary">Change Password</button>
+                </div>
+              </form><!-- End Change Password Form -->
+
+            </div>
+
+          </div><!-- End Bordered Tabs -->
+
         </div>
 
       </div>
     </div>
   </section>
-
-
 
 </main><!-- End #main -->
 
@@ -660,19 +790,28 @@
 </footer><!-- End Footer -->
 
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+<!-- jquery  -->
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script>
+
+
+</script>
+
+<!-- icon bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
 <!-- Vendor JS Files -->
-<script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
-<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="/assets/vendor/chart.js/chart.umd.js"></script>
-<script src="/assets/vendor/echarts/echarts.min.js"></script>
-<script src="/assets/vendor/quill/quill.js"></script>
-<script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
-<script src="/assets/vendor/tinymce/tinymce.min.js"></script>
-<script src="/assets/vendor/php-email-form/validate.js"></script>
+<script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/vendor/chart.js/chart.umd.js"></script>
+<script src="assets/vendor/echarts/echarts.min.js"></script>
+<script src="assets/vendor/quill/quill.js"></script>
+<script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="assets/vendor/tinymce/tinymce.min.js"></script>
+<script src="assets/vendor/php-email-form/validate.js"></script>
 
 <!-- Template Main JS File -->
-<script src="/assets/js/main.js"></script>
+<script src="assets/js/main.js"></script>
 
 </body>
 
