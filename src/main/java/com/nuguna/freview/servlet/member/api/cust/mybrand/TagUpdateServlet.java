@@ -28,15 +28,15 @@ import lombok.extern.slf4j.Slf4j;
 public class TagUpdateServlet extends HttpServlet {
 
   private Gson gson;
-  private CustTagDAO custTagDAO;
   private MemberDAO memberDAO;
+  private CustTagDAO custTagDAO;
 
   @Override
   public void init() throws ServletException {
     log.info("TagUpdateServlet 초기화");
     gson = new Gson();
-    custTagDAO = new CustTagDAO();
     memberDAO = new MemberDAO();
+    custTagDAO = new CustTagDAO();
   }
 
   @Override

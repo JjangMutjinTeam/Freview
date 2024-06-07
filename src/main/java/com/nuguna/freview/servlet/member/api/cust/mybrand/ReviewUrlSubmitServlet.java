@@ -3,7 +3,8 @@ package com.nuguna.freview.servlet.member.api.cust.mybrand;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.nuguna.freview.dao.member.CustNicknameDAO;
+import com.nuguna.freview.dao.member.CustReviewDAO;
+import com.nuguna.freview.dao.member.MemberDAO;
 import com.nuguna.freview.dto.common.ResponseMessage;
 import com.nuguna.freview.util.EncodingUtil;
 import com.nuguna.freview.util.JsonRequestUtil;
@@ -17,17 +18,19 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@WebServlet("/api/cust/my-brand/nickname")
-public class NicknameUpdateServlet extends HttpServlet {
+@WebServlet("/api/cust/my-brand/review")
+public class ReviewUrlSubmitServlet extends HttpServlet {
 
   private Gson gson;
-  private CustNicknameDAO custNicknameDAO;
+  private MemberDAO memberDAO;
+  private CustReviewDAO custReviewDAO;
 
   @Override
   public void init() throws ServletException {
-    log.info("NicknameUpdateServlet 초기화");
+    log.info("ReviewUrlSubmitServlet 초기화");
     gson = new Gson();
-    custNicknameDAO = new CustNicknameDAO();
+    memberDAO = new MemberDAO();
+    custReviewDAO = new CustReviewDAO();
   }
 
   @Override
@@ -36,9 +39,7 @@ public class NicknameUpdateServlet extends HttpServlet {
 
     EncodingUtil.setEncodingToUTF8AndJson(request, response);
 
-    log.info("NicknameUpdateServlet.doPost");
-
-    String errorMessage = null;
+    log.info("ReviewUrlSubmitServlet.doPost");
 
     try {
       JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
@@ -46,46 +47,25 @@ public class NicknameUpdateServlet extends HttpServlet {
       // TODO : 추후 Input Data가 NULL 인 경우 또한 처리해주어야 함.
       // TODO : 서블릿 필터에서 memberSeq의 유효성을 체크해준다고 가정
       int memberSeq = jsonObject.get("member_seq").getAsInt();
-      String fromNickname = jsonObject.get("from_nickname").getAsString();
-      String toNickname = jsonObject.get("to_nickname").getAsString();
+      int reviewSeq = jsonObject.get("review_seq").getAsInt();
+      String toReviewUrl = jsonObject.get("to_review_url").getAsString();
 
-      // 입력값 검증
-      boolean hasError = false;
-
-      if (toNickname == null || toNickname.isEmpty()) {
-        errorMessage = "비어있는 닉네임 값입니다.";
-        hasError = true;
-      }
-
-      // 중복된 닉네임인지 확인
-      boolean isExistNickname = custNicknameDAO.checkNicknameIsExist(toNickname);
-      if (isExistNickname) {
-        errorMessage = "중복된 닉네임입니다. 다시 입력해주세요.";
-        hasError = true;
-      }
-
-      // 기존과 동일한 닉네임
-      if (fromNickname.equals(toNickname)) {
-        errorMessage = "기존과 동일한 닉네임입니다.";
-        hasError = true;
-      }
-
-      if (hasError) {
-        JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_BAD_REQUEST,
-            new ResponseMessage<>(errorMessage, null), response, gson);
-      } else {
-        custNicknameDAO.updateNickname(memberSeq, toNickname);
+      if (memberDAO.doesMemberOwnReview(memberSeq, reviewSeq)) { // 리뷰 주인인지 검증
+        custReviewDAO.updateReviewUrl(reviewSeq, toReviewUrl);
         JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
-            new ResponseMessage<>("성공적으로 수정했습니다.", toNickname), response, gson);
+            new ResponseMessage<>("성공적으로 수정했습니다.", toReviewUrl), response, gson);
+      } else {
+        JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_BAD_REQUEST,
+            new ResponseMessage<>("해당 체험단은 리뷰 주인이 아닙니다.", null), response, gson);
       }
     } catch (JsonParseException e) {
-      log.error("닉네임 변경 요청에 대한 JSON 파싱 에러가 발생했습니다.", e);
+      log.error("리뷰 URL 변경 요청에 대한 JSON 파싱 에러가 발생했습니다.", e);
       JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_BAD_REQUEST,
           new ResponseMessage<>("요청 JSON의 형식에 문제가 있습니다.", null), response, gson);
     } catch (Exception e) {
-      log.error("닉네임 변경 도중 에러가 발생했습니다.", e);
+      log.error("리뷰 URL 변경 도중 서버 에러가 발생했습니다.", e);
       JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-          new ResponseMessage<>("닉네임 변경 도중 서버 에러가 발생했습니다.", null), response, gson);
+          new ResponseMessage<>("리뷰 URL 변경 도중 서버 에러가 발생했습니다.", null), response, gson);
     }
   }
 }
