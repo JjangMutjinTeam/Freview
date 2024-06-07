@@ -548,6 +548,7 @@
     </div><!-- End Page Title -->
 
     <%
+        //TODO: 로그인 기능 구현 후 session 의 구분에 따라 '등록' 버튼 활성화
         Integer memberSeq;
         if (session.getAttribute("memberSeq") != null) {
             memberSeq = (Integer) session.getAttribute("memberSeq");

@@ -570,6 +570,7 @@
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="card-title mb-0">공지</h5>
                     <div>
+                        <button type="button" class="btn btn-danger" onclick="confirmDelete()">삭제</button>
                         <button type="button" class="btn btn-primary" onclick="editPost()">수정</button>
                         <button type="button" class="btn btn-primary" onclick="location.href='/noticeBoard'">목록으로</button>
                     </div>
@@ -611,6 +612,25 @@
                         <button type="button" class="btn btn-secondary" onclick="cancelEdit()">취소</button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">삭제 확인</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    정말 삭제하겠습니까?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <button type="button" class="btn btn-danger" onclick="deletePost()">확인</button>
+                </div>
             </div>
         </div>
     </div>
@@ -660,6 +680,40 @@
         })
         .catch(error => console.error('Error:', error));
       });
+
+      function confirmDelete() {
+        var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        deleteModal.show();
+      }
+
+      function deletePost() {
+        var postSeq = document.querySelector('input[name="postSeq"]').value;
+
+        fetch('/noticeBoard/detail/delete', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: new URLSearchParams({ postSeq: postSeq }).toString()
+        })
+        .then(response => {
+          if (response.ok) {
+            return response.text().then(data => {
+              console.log(data);
+              alert('게시글이 성공적으로 삭제되었습니다.');
+              location.replace("/noticeBoard");
+            });
+          } else {
+            response.text().then(data => {
+              console.error(data);
+              alert('게시글 삭제에 실패했습니다. 다시 시도해 주세요.');
+            });
+          }
+        })
+        .catch(error => console.error('Error:', error));
+      }
+    </script>
+
     </script>
 
 </main><!-- End #main -->
