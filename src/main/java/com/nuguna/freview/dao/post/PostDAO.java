@@ -26,6 +26,36 @@ public class PostDAO {
 
   private final String COUNT_POST = "SELECT COUNT(*) FROM POST WHERE gubun = ?";
 
+  public final String INSERT_POST = "INSERT INTO post(title, content, gubun, created_at, updated_at, member_seq) VALUES(?, ?, ?, ?, ?, ?)";
+
+  public boolean insertPost(Post post) {
+    boolean isInserted = false;
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+
+    try {
+      conn = getConnection();
+      pstmt = conn.prepareStatement(INSERT_POST);
+      pstmt.setString(1, post.getTitle());
+      pstmt.setString(2, post.getContent());
+      pstmt.setString(3, post.getGubun());
+      pstmt.setTimestamp(4, post.getCreatedAt());
+      pstmt.setTimestamp(5, post.getUpdatedAt());
+      pstmt.setInt(6, post.getMemberSeq());
+
+      int rows = pstmt.executeUpdate();
+      if (rows > 0) {
+        isInserted = true;
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    } finally {
+      closeResource(pstmt, conn);
+    }
+
+    return isInserted;
+  }
+
   public List<Post> selectPostByCursorPaging(String gubun, int previousPostSeq, int limit) {
     Connection conn = null;
     PreparedStatement pstmt = null;
