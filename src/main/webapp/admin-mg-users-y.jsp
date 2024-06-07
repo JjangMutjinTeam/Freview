@@ -597,7 +597,7 @@
                   event.preventDefault();
                   var password = modalBodyInput.value;
 
-                  fetch('/AdminPage', {
+                  fetch('/AdminPage/user', {
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/x-www-form-urlencoded'
