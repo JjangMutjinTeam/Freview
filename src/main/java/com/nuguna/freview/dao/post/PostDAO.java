@@ -32,6 +32,28 @@ public class PostDAO {
 
   private final String UPDATE_POST_BY_SEQ = "UPDATE post SET title = ?, content = ?, updated_at = ? WHERE post_seq = ?";
 
+  private final String DELETE_POST_BY_SEQ = "DELETE FROM post WHERE post_seq = ?";
+
+  public boolean deletePost(int postSeq) {
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+
+    try {
+      conn = getConnection();
+      pstmt = conn.prepareStatement(DELETE_POST_BY_SEQ);
+
+      pstmt.setInt(1, postSeq);
+
+      int result = pstmt.executeUpdate();
+      return result > 0;
+
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    } finally {
+      closeResource(pstmt, conn);
+    }
+  }
+
   public boolean updatePost(Post post) {
     Connection conn = null;
     PreparedStatement pstmt = null;
