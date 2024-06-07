@@ -14,14 +14,15 @@ import lombok.ToString;
 public class Tag {
 
   private Integer tagSeq;
-  private TagGubun gubun;
-  private String name;
 
-  public String getGubun() {
-    return gubun != null ? gubun.getCode() : null;
+  private TagItem tagItem;
+
+  public boolean isCustTag() {
+    return tagItem.isCustTag();
   }
 
-  public void setGubun(String gubun) {
-    this.gubun = TagGubun.from(gubun);
+  public boolean isBossTag() {
+    return tagItem.isCustTag();
   }
+
 }
