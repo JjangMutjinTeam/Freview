@@ -3,8 +3,7 @@ package com.nuguna.freview.servlet.member.api.cust.mybrand;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.nuguna.freview.dao.member.CustLovecallDAO;
-import com.nuguna.freview.dao.member.MemberDAO;
+import com.nuguna.freview.dao.zzim.ZzimDAO;
 import com.nuguna.freview.dto.common.ResponseMessage;
 import com.nuguna.freview.util.EncodingUtil;
 import com.nuguna.freview.util.JsonRequestUtil;
@@ -18,19 +17,17 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@WebServlet("/api/cust/my-brand/lovecall-request")
-public class LovecallRequestServlet extends HttpServlet {
+@WebServlet("/api/cust/my-brand/zzim")
+public class ZzimToggleServlet extends HttpServlet {
 
   private Gson gson;
-  private MemberDAO memberDAO;
-  private CustLovecallDAO custLovecallDAO;
-  
+  private ZzimDAO zzimDAO;
+
   @Override
   public void init() throws ServletException {
-    log.info("LovecallRequestServlet 초기화");
+    log.info("ZzimToggleServlet 초기화");
     gson = new Gson();
-    memberDAO = new MemberDAO();
-    custLovecallDAO = new CustLovecallDAO();
+    zzimDAO = new ZzimDAO();
   }
 
   @Override
@@ -39,36 +36,28 @@ public class LovecallRequestServlet extends HttpServlet {
 
     EncodingUtil.setEncodingToUTF8AndJson(request, response);
 
-    log.info("LovecallRequestServlet.doPost");
+    log.info("ZzimToggleServlet.doPost");
 
     try {
       JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
       // 입력값 가져오기 ( 클라이언트에서 데이터를 올바르게 주는 경우만 가정 )
       // TODO : 추후 Input Data가 NULL 인 경우 또한 처리해주어야 함.
       // TODO : 서블릿 필터에서 memberSeq의 유효성을 체크해준다고 가정
-      int bossSeq = jsonObject.get("member_seq").getAsInt();
-      int custSeq = jsonObject.get("cust_seq").getAsInt();
-      String benefitDetails = jsonObject.get("benefit_details").getAsString();
-
-      if (!memberDAO.selectMemberGubun(bossSeq).isBoss()
-          || !memberDAO.selectMemberGubun(custSeq).isCust()) {
-        JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
-            new ResponseMessage<>("잘못된 요청 ( 사용자가 사장님이 아니거나, 해당 브랜드 페이지의 주인이 체험단이 아닙니다.",
-                benefitDetails), response, gson);
-      } else {
-        custLovecallDAO.submitLovecall(bossSeq, custSeq, benefitDetails);
-        JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
-            new ResponseMessage<>("성공적으로 체험단에게 러브콜을 보냈습니다.", benefitDetails), response, gson);
-      }
+      int fromMemberSeq = jsonObject.get("from_member_seq").getAsInt();
+      int toMemberSeq = jsonObject.get("to_member_seq").getAsInt();
+      zzimDAO.toggleZzim(fromMemberSeq, toMemberSeq);
+      JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
+          new ResponseMessage<>("성공적으로 찜 요청을 보냈습니다.", null), response, gson);
     } catch (JsonParseException e) {
-      log.error("러브콜 요청에 대한 JSON 파싱 에러가 발생했습니다.", e);
+      log.error("찜 요청에 대한 JSON 파싱 에러가 발생했습니다.", e);
       JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_BAD_REQUEST,
           new ResponseMessage<>("요청 JSON의 형식에 문제가 있습니다.", null), response, gson);
     } catch (Exception e) {
-      log.error("러브콜 입력 도중 서버 에러가 발생했습니다.", e);
+      log.error("찜 입력 도중 서버 에러가 발생했습니다.", e);
       JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-          new ResponseMessage<>("러브콜 입력 도중 서버 에러가 발생했습니다.", null), response, gson);
+          new ResponseMessage<>("찜 입력 도중 서버 에러가 발생했습니다.", null), response, gson);
     }
   }
+
 
 }
