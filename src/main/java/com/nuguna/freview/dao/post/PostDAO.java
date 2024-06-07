@@ -19,12 +19,12 @@ import lombok.extern.slf4j.Slf4j;
 public class PostDAO {
 
   private final String SELECT_POST_BY_PAGING = " SELECT post_seq, title, view_count, created_at "
-      + "FROM POST "
+      + "FROM post "
       + "WHERE gubun = ? and post_seq < ? "
       + "ORDER BY post_seq DESC "
       + "limit ?";
 
-  private final String COUNT_POST = "SELECT COUNT(*) FROM POST WHERE gubun = ?";
+  private final String COUNT_POST = "SELECT COUNT(*) FROM freview.POST WHERE gubun = ?";
 
   public final String INSERT_POST = "INSERT INTO post(title, content, gubun, created_at, updated_at, member_seq) VALUES(?, ?, ?, ?, ?, ?)";
 
