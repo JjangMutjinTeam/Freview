@@ -18,17 +18,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PostDAO {
 
-  private final int LIMIT = 10;
-
   private final String SELECT_POST_BY_PAGING = " SELECT post_seq, title, view_count, created_at "
       + "FROM POST "
       + "WHERE gubun = ? and post_seq < ? "
       + "ORDER BY post_seq DESC "
       + "limit ?";
 
-  private final String COUNT_POST = "SELECT COUNT(1) FROM POST WHERE gubun = ?";
+  private final String COUNT_POST = "SELECT COUNT(*) FROM POST WHERE gubun = ?";
 
-  public List<Post> selectPostByPaging(String gubun, int previousPostSeq) {
+  public List<Post> selectPostByCursorPaging(String gubun, int previousPostSeq, int limit) {
     Connection conn = null;
     PreparedStatement pstmt = null;
     ResultSet rs = null;
@@ -42,7 +40,7 @@ public class PostDAO {
       pstmt = conn.prepareStatement(SELECT_POST_BY_PAGING);
       pstmt.setString(1, gubun);
       pstmt.setInt(2, previousPostSeq);
-      pstmt.setInt(3, LIMIT);
+      pstmt.setInt(3, limit);
       rs = pstmt.executeQuery();
 
       while(rs.next()) {

@@ -29,7 +29,7 @@ public class NoticeBoardServlet extends HttpServlet {
       previousPostSeq = Integer.parseInt(req.getParameter("previousPostSeq"));
     }
 
-    List<Post> postList = postDAO.selectPostByPaging(postGubun, previousPostSeq, LIMIT);
+    List<Post> postList = postDAO.selectPostByCursorPaging(postGubun, previousPostSeq, LIMIT);
     req.setAttribute("postList", postList);
 
     RequestDispatcher rd = req.getRequestDispatcher("/common-notice-board-y.jsp");
