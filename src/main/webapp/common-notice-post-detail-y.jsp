@@ -574,7 +574,7 @@
                         <button type="button" class="btn btn-primary" onclick="location.href='/noticeBoard'">목록으로</button>
                     </div>
                 </div>
-                <form id="postForm" action="/noticeBoard/detail/modify" method="post">
+                <form id="postForm" action="/noticeBoard/detail/update" method="post">
                     <input type="hidden" name="postSeq" value="${POST.postSeq}">
                     <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
                         <tbody>
@@ -631,6 +631,35 @@
         document.getElementById('contentEdit').classList.add('d-none');
         document.getElementById('editButtons').classList.add('d-none');
       }
+
+      document.getElementById('postForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        var formData = new URLSearchParams(new FormData(this));
+
+        fetch('/noticeBoard/detail/update', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: formData.toString()
+        })
+        .then(response => {
+          if (response.ok) {
+            return response.text().then(data => {
+              console.log(data);
+              alert('게시글이 성공적으로 수정되었습니다.');
+              location.replace("/noticeBoard")
+            })
+          } else {
+            response.text().then(data => {
+              console.error(data);
+              alert('게시글 수정에 실패했습니다. 다시 시도해 주세요.');
+            });
+          }
+        })
+        .catch(error => console.error('Error:', error));
+      });
     </script>
 
 </main><!-- End #main -->
