@@ -564,6 +564,7 @@
                     <th>번호</th>
                     <th>제목</th>
                     <th>작성일자</th>
+                    <th>수정일자</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -572,6 +573,7 @@
                         <td>${status.index + 1}</td>
                         <td><a href="${pageContext.request.contextPath}/noticeBoard/detail?postId=${post.postSeq}">${post.title}</a></td>
                         <td>${post.createdAt}</td>
+                        <td>${post.updatedAt}</td>
                     </tr>
                 </c:forEach>
                 </tbody>

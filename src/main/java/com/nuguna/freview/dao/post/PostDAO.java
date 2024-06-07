@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PostDAO {
 
-  private final String SELECT_POST_BY_PAGING = " SELECT post_seq, title, view_count, created_at "
+  private final String SELECT_POST_BY_PAGING = " SELECT post_seq, title, view_count, created_at, updated_at "
       + "FROM post "
       + "WHERE gubun = ? and post_seq < ? "
       + "ORDER BY post_seq DESC "
@@ -138,6 +138,7 @@ public class PostDAO {
         post.setTitle(rs.getString("title"));
         post.setViewCount(rs.getInt("view_count"));
         post.setCreatedAt(rs.getTimestamp("created_at"));
+        post.setUpdatedAt(rs.getTimestamp("updated_at"));
 
         list.add(post);
       }
