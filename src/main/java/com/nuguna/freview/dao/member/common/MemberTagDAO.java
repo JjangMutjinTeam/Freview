@@ -1,8 +1,10 @@
-package com.nuguna.freview.dao.member.cust;
+package com.nuguna.freview.dao.member.common;
 
 import static com.nuguna.freview.util.DbUtil.closeResource;
 import static com.nuguna.freview.util.DbUtil.getConnection;
 
+import com.nuguna.freview.entity.member.MemberGubun;
+import com.nuguna.freview.entity.member.tag.BossTag;
 import com.nuguna.freview.entity.member.tag.CustTag;
 import com.nuguna.freview.entity.member.tag.TagItem;
 import com.nuguna.freview.exception.IllegalTagException;
@@ -16,15 +18,21 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class CustTagDAO {
+public class MemberTagDAO {
 
-  public void updateTags(int memberSeq, List<String> tagNames) {
+  public void updateTags(int memberSeq, List<String> tagNames, MemberGubun memberGubun) {
 
-    List<TagItem> tags;
+    List<TagItem> tags = null;
     try {
-      tags = tagNames.stream()
-          .map(CustTag::new)
-          .collect(Collectors.toList());
+      if (memberGubun.isCust()) {
+        tags = tagNames.stream()
+            .map(CustTag::new)
+            .collect(Collectors.toList());
+      } else if (memberGubun.isBoss()) {
+        tags = tagNames.stream()
+            .map(BossTag::new)
+            .collect(Collectors.toList());
+      }
     } catch (IllegalTagException e) {
       throw e;
     }
@@ -43,8 +51,9 @@ public class CustTagDAO {
         .map(t -> "?")
         .collect(Collectors.joining(", "));
 
+    log.info("memberGubun.getCode() = " + memberGubun.getCode());
     String selectSql = "SELECT tag_seq FROM TAG "
-        + "WHERE tag.gubun = 'C' AND "
+        + "WHERE tag.gubun = '" + memberGubun.getCode() + "' AND "
         + "tag.name IN (" + placeholders + ")";
 
     String insertSql = "INSERT INTO MEMBER_TAG (member_seq, tag_seq) "

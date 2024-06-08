@@ -5,8 +5,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.nuguna.freview.dao.member.common.MemberTagDAO;
 import com.nuguna.freview.dao.member.common.MemberUtilDAO;
-import com.nuguna.freview.dao.member.cust.CustTagDAO;
 import com.nuguna.freview.dto.common.ResponseMessage;
 import com.nuguna.freview.entity.member.MemberGubun;
 import com.nuguna.freview.exception.IllegalTagException;
@@ -24,19 +24,19 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@WebServlet("/api/cust/my-brand/tag")
+@WebServlet("/api/my-brand/tag")
 public class TagUpdateServlet extends HttpServlet {
 
   private Gson gson;
   private MemberUtilDAO memberUtilDAO;
-  private CustTagDAO custTagDAO;
+  private MemberTagDAO memberTagDAO;
 
   @Override
   public void init() throws ServletException {
     log.info("TagUpdateServlet 초기화");
     gson = new Gson();
     memberUtilDAO = new MemberUtilDAO();
-    custTagDAO = new CustTagDAO();
+    memberTagDAO = new MemberTagDAO();
   }
 
   @Override
@@ -60,24 +60,25 @@ public class TagUpdateServlet extends HttpServlet {
           .collect(Collectors.toList());
 
       MemberGubun memberGubun = memberUtilDAO.selectMemberGubun(memberSeq);
-
-      if (!memberGubun.isCust()) {
+      if (memberGubun == null) {
         JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_BAD_REQUEST,
-            new ResponseMessage<>("해당 유저의 구분은 체험단이 아닙니다.", tagNames), response, gson);
-      } else {
-        custTagDAO.updateTags(memberSeq, tagNames);
-
-        JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
-            new ResponseMessage<>("성공적으로 수정되었습니다.", tagNames), response, gson);
+            new ResponseMessage<>("주어진 member_seq에 해당하는 멤버가 존재하지 않습니다.", null), response,
+            gson);
+        return;
       }
+      memberTagDAO.updateTags(memberSeq, tagNames, memberGubun);
+      JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
+          new ResponseMessage<>("성공적으로 수정되었습니다.", tagNames), response, gson);
     } catch (JsonParseException e) {
       log.error("태그 변경 요청에 대한 JSON 파싱 에러가 발생했습니다.", e);
       JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_BAD_REQUEST,
           new ResponseMessage<>("요청 JSON의 형식에 문제가 있습니다.", null), response, gson);
     } catch (IllegalTagException e) {
-      log.error("유효하지 않은 체험단용 태그입니다.", e);
+      log.error("해당 유저 타입에게는 유효하지 않은 태그입니다. ( 체험단이 사장님 태그 입력 또는 사장님이 체험단 태그 입력, 혹은 없는 태그 입력)", e);
       JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_BAD_REQUEST,
-          new ResponseMessage<>("유효하지 않은 체험단용 태그입니다.", null), response, gson);
+          new ResponseMessage<>(
+              "해당 유저 타입에게는 유효하지 않은 태그입니다. ( 체험단이 사장님 태그 입력 또는 사장님이 체험단 태그 입력, 혹은 없는 태그 입력)",
+              null), response, gson);
     } catch (Exception e) {
       log.error("태그 변경 도중 서버 에러가 발생했습니다.", e);
       JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
