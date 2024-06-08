@@ -38,6 +38,32 @@ public class MemberUtilDAO {
     return gubun == null ? null : MemberGubun.from(gubun);
   }
 
+  public boolean isValidMember(int memberSeq) {
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+
+    String sql = "SELECT 1 "
+        + "FROM MEMBER "
+        + "WHERE member_seq = ?";
+
+    try {
+      conn = getConnection();
+      pstmt = conn.prepareStatement(sql);
+      pstmt.setInt(1, memberSeq);
+      rs = pstmt.executeQuery();
+      if (rs.next()) {
+        return true;
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException("SQLException : 소개 변경 도중 예외 발생", e);
+    } finally {
+      closeResource(rs);
+      closeResource(pstmt, conn);
+    }
+    return false;
+  }
+
   public boolean doesMemberOwnReview(int memberSeq, int reviewSeq) {
     Connection conn = null;
     PreparedStatement pstmt = null;

@@ -27,7 +27,7 @@ public class LovecallRequestServlet extends HttpServlet {
 
   @Override
   public void init() throws ServletException {
-    log.info("LovecallRequestServlet 초기화");
+    log.info("Cust - LovecallRequestServlet 초기화");
     gson = new Gson();
     memberUtilDAO = new MemberUtilDAO();
     custLovecallDAO = new CustLovecallDAO();
@@ -39,7 +39,7 @@ public class LovecallRequestServlet extends HttpServlet {
 
     EncodingUtil.setEncodingToUTF8AndJson(request, response);
 
-    log.info("LovecallRequestServlet.doPost");
+    log.info("Cust - LovecallRequestServlet.doPost");
 
     try {
       JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);

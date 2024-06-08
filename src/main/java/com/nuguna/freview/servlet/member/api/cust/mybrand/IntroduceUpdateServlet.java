@@ -28,7 +28,7 @@ public class IntroduceUpdateServlet extends HttpServlet {
 
   @Override
   public void init() throws ServletException {
-    log.info("IntroduceUpdateServlet 초기화");
+    log.info("Cust - IntroduceUpdateServlet 초기화");
     gson = new Gson();
     memberUtilDAO = new MemberUtilDAO();
     custIntroduceDAO = new CustIntroduceDAO();
@@ -40,7 +40,7 @@ public class IntroduceUpdateServlet extends HttpServlet {
 
     EncodingUtil.setEncodingToUTF8AndJson(request, response);
 
-    log.info("IntroduceUpdateServlet.doPost");
+    log.info("Cust - IntroduceUpdateServlet.doPost");
 
     try {
       JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
@@ -62,7 +62,7 @@ public class IntroduceUpdateServlet extends HttpServlet {
             new ResponseMessage<>("해당 멤버는 체험단이 아닙니다.", toIntroduce), response, gson);
         return;
       }
-      
+
       custIntroduceDAO.updateIntroduce(memberSeq, toIntroduce);
       JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
           new ResponseMessage<>("성공적으로 수정했습니다.", toIntroduce), response, gson);
