@@ -20,7 +20,6 @@ public class StoreAddServlet extends HttpServlet {
     req.setCharacterEncoding("UTF-8");
     resp.setCharacterEncoding("UTF-8");
     resp.setContentType("application/json; charset=UTF-8");
-    System.out.println("등록 post 이동완료");
     StoreBusinessInfo storeBusinessInfo = new StoreBusinessInfo();
     storeBusinessInfo.setBusinessNumber(req.getParameter("addBusinessNumber"));
     storeBusinessInfo.setStoreName(req.getParameter("addStoreName"));

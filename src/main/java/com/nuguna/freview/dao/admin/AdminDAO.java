@@ -107,6 +107,8 @@ public class AdminDAO {
 
     } catch (SQLException e) {
       throw new RuntimeException(e);
+    } finally {
+      closeResource(pstmt, conn, rs);
     }
   }
 
@@ -133,6 +135,8 @@ public class AdminDAO {
       }
     } catch (SQLException e) {
       throw new RuntimeException(e);
+    } finally {
+      closeResource(pstmt, conn, rs);
     }
 
     return list;
