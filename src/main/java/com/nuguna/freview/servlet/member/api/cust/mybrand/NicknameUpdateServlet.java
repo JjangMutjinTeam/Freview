@@ -25,7 +25,7 @@ public class NicknameUpdateServlet extends HttpServlet {
 
   @Override
   public void init() throws ServletException {
-    log.info("NicknameUpdateServlet 초기화");
+    log.info("Cust - NicknameUpdateServlet 초기화");
     gson = new Gson();
     custNicknameDAO = new CustNicknameDAO();
   }
@@ -36,7 +36,7 @@ public class NicknameUpdateServlet extends HttpServlet {
 
     EncodingUtil.setEncodingToUTF8AndJson(request, response);
 
-    log.info("NicknameUpdateServlet.doPost");
+    log.info("Cust - NicknameUpdateServlet.doPost");
 
     String errorMessage = null;
 

@@ -30,7 +30,7 @@ public class FoodTypeUpdateServlet extends HttpServlet {
 
   @Override
   public void init() throws ServletException {
-    log.info("FoodTypeUpdateServlet 초기화");
+    log.info("Cust - FoodTypeUpdateServlet 초기화");
     gson = new Gson();
     custFoodTypeDAO = new CustFoodTypeDAO();
   }
@@ -41,7 +41,7 @@ public class FoodTypeUpdateServlet extends HttpServlet {
 
     EncodingUtil.setEncodingToUTF8AndJson(request, response);
 
-    log.info("FoodTypeUpdateServlet.doPost");
+    log.info("Cust - FoodTypeUpdateServlet.doPost");
 
     try {
       JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);

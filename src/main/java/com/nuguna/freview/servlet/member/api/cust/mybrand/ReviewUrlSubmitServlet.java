@@ -27,7 +27,7 @@ public class ReviewUrlSubmitServlet extends HttpServlet {
 
   @Override
   public void init() throws ServletException {
-    log.info("ReviewUrlSubmitServlet 초기화");
+    log.info("Cust - ReviewUrlSubmitServlet 초기화");
     gson = new Gson();
     memberUtilDAO = new MemberUtilDAO();
     custReviewDAO = new CustReviewDAO();
@@ -39,7 +39,7 @@ public class ReviewUrlSubmitServlet extends HttpServlet {
 
     EncodingUtil.setEncodingToUTF8AndJson(request, response);
 
-    log.info("ReviewUrlSubmitServlet.doPost");
+    log.info("Cust - ReviewUrlSubmitServlet.doPost");
 
     try {
       JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
