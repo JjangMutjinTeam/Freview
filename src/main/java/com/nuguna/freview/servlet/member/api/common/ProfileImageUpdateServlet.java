@@ -59,21 +59,24 @@ public class ProfileImageUpdateServlet extends HttpServlet {
 
       log.info("filePart = " + filePart);
 
-      // 파일 경로 지정
-      String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-      String filePath = FileConfig.UPLOAD_DIR + File.separator + fileName;
-
-      log.info("filePath = " + filePath);
-      // 파일 저장
-      File uploadFile = new File(filePath);
-      try (InputStream fileContent = filePart.getInputStream()) {
-        Files.copy(fileContent, uploadFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+      String filePath;
+      // 비어있는 프로필 파일을 전송하면
+      if (filePart == null || filePart.getSubmittedFileName().isEmpty()) {
+        filePath = "";
+      } else {
+        // 파일 경로 지정
+        String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+        filePath = FileConfig.UPLOAD_DIR + File.separator + fileName;
+        // 파일 저장
+        File uploadFile = new File(filePath);
+        try (InputStream fileContent = filePart.getInputStream()) {
+          Files.copy(fileContent, uploadFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        }
       }
-
       // 1. 프로필 사진을 기본 프로필로 변경하는 경우
       // 2. 프로필 사진을 업로드/업데이트 하는 경우
+      log.info("filePath = " + filePath);
       profileImageDAO.updateMemberProfile(memberSeq, filePath);
-
       JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
           new ResponseMessage<>("성공적으로 프로필을 수정했습니다.", null), response, gson);
     } catch (JsonParseException e) {
