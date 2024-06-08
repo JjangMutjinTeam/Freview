@@ -18,11 +18,9 @@ public class MemberBrandingServlet extends HttpServlet {
 
     switch (gubun) {
       case "B":
-        System.out.println("gubun = B");
         resp.sendRedirect(req.getContextPath() + "/boss-branding-page.jsp?mid=" + mid);
         break;
       case "C":
-        System.out.println("gubun = C");
         resp.sendRedirect(req.getContextPath() + "/customer-branding-page.jsp?mid=" + mid);
         break;
       default:
