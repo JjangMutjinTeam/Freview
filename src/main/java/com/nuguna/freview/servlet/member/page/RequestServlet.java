@@ -1,0 +1,56 @@
+package com.nuguna.freview.servlet.member.page;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.nuguna.freview.dao.member.BossRequestDAO;
+import com.nuguna.freview.dto.api.boss.BossRequestMozzipListDto;
+import com.nuguna.freview.dto.common.ResponseMessage;
+import com.nuguna.freview.util.EncodingUtil;
+import com.nuguna.freview.util.JsonRequestUtil;
+import com.nuguna.freview.util.JsonResponseUtil;
+import java.io.IOException;
+import java.util.List;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@WebServlet("/api/boss/my-request")
+public class RequestServlet extends HttpServlet {
+    private Gson gson;
+    private BossRequestDAO BossRequestDAO;
+
+    public void init() {
+      gson = new Gson();
+      BossRequestDAO = new BossRequestDAO();
+    }
+
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+      try {
+        EncodingUtil.setEncodingToUTF8AndJson(request, response);
+
+        JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
+        int bossSeq = jsonObject.get("member_seq").getAsInt();
+
+
+        List<BossRequestMozzipListDto> mozzipList = BossRequestDAO.bossMozzipList(bossSeq);
+        JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
+            new ResponseMessage<>("나를 찜한 유저들의 정보를 성공적으로 가져왔습니다.", mozzipList) , response, gson);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      } catch (JsonParseException e) {
+        log.error("리스트 요청에 대한 JSON 파싱 에러가 발생했습니다.", e);
+        JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_BAD_REQUEST,
+            new ResponseMessage<>("요청 JSON의 형식에 문제가 있습니다.", null), response, gson);
+      } catch (Exception e) {
+        log.error("리스트 요청 도중 서버 에러가 발생했습니다.", e);
+        JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+            new ResponseMessage<>("찜 정보 요청 도중 서버 에러가 발생했습니다.", null), response, gson);
+      }
+    }
+
+}
