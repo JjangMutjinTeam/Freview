@@ -6,7 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.nuguna.freview.dao.member.cust.CustTagDAO;
-import com.nuguna.freview.dao.member.cust.MemberCustDAO;
+import com.nuguna.freview.dao.member.cust.MemberUtilDAO;
 import com.nuguna.freview.dto.common.ResponseMessage;
 import com.nuguna.freview.entity.member.MemberGubun;
 import com.nuguna.freview.exception.IllegalTagException;
@@ -28,14 +28,14 @@ import lombok.extern.slf4j.Slf4j;
 public class TagUpdateServlet extends HttpServlet {
 
   private Gson gson;
-  private MemberCustDAO memberCustDAO;
+  private MemberUtilDAO memberUtilDAO;
   private CustTagDAO custTagDAO;
 
   @Override
   public void init() throws ServletException {
     log.info("TagUpdateServlet 초기화");
     gson = new Gson();
-    memberCustDAO = new MemberCustDAO();
+    memberUtilDAO = new MemberUtilDAO();
     custTagDAO = new CustTagDAO();
   }
 
@@ -44,8 +44,8 @@ public class TagUpdateServlet extends HttpServlet {
       throws ServletException, IOException {
 
     EncodingUtil.setEncodingToUTF8AndJson(request, response);
-
-    log.info("TagUpdateServlet.doPost");
+    
+    log.info("Cust - TagUpdateServlet.doPost");
 
     try {
       JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
@@ -59,7 +59,7 @@ public class TagUpdateServlet extends HttpServlet {
           .map(JsonElement::getAsString)
           .collect(Collectors.toList());
 
-      MemberGubun memberGubun = memberCustDAO.selectMemberGubun(memberSeq);
+      MemberGubun memberGubun = memberUtilDAO.selectMemberGubun(memberSeq);
 
       if (!memberGubun.isCust()) {
         JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_BAD_REQUEST,

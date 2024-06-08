@@ -26,7 +26,7 @@ public class AgeGroupUpdateServlet extends HttpServlet {
 
   @Override
   public void init() throws ServletException {
-    log.info("AgeGroupUpdateServlet 초기화");
+    log.info("Cust - AgeGroupUpdateServlet 초기화");
     gson = new Gson();
     custAgeGroupDAO = new CustAgeGroupDAO();
   }
@@ -37,7 +37,7 @@ public class AgeGroupUpdateServlet extends HttpServlet {
 
     EncodingUtil.setEncodingToUTF8AndJson(request, response);
 
-    log.info("AgeGroupUpdateServlet.doPost");
+    log.info("Cust - AgeGroupUpdateServlet.doPost");
 
     try {
       JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
