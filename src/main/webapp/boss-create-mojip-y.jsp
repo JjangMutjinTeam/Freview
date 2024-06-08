@@ -604,18 +604,13 @@
 
       var today = new Date().toISOString().split('T')[0];
       applyStartDateInput.value = today;
-
-      // Add event listener to applyStartDate to set the minimum date for applyEndDate
-      applyStartDateInput.addEventListener('change', function() {
-        applyEndDateInput.setAttribute('min', applyStartDateInput.value);
-      });
+      applyEndDateInput.min = today;
 
       // Add event listener to applyEndDate to set the minimum date for experienceDate
       applyEndDateInput.addEventListener('change', function() {
         experienceDateInput.setAttribute('min', applyEndDateInput.value);
       });
 
-      // Prevent form submission if dates do not meet the conditions
       document.getElementById('createPostForm').addEventListener('submit', function(event) {
         var applyStartDate = applyStartDateInput.value;
         var applyEndDate = applyEndDateInput.value;
@@ -627,7 +622,7 @@
           return false;
         }
 
-        if (experienceDate <= applyEndDate) {
+        if (experienceDate < applyEndDate) {
           alert('체험 날짜는 모집 마감일 이후로 선택해야 합니다.');
           event.preventDefault();
           return false;
@@ -654,8 +649,8 @@
           return response.text().then(data => {
             console.log(data);
             alert('게시글이 성공적으로 등록되었습니다.');
-            location.replace("/mojipBoard")
-          })
+            location.replace("/mojipBoard");
+          });
         } else {
           response.text().then(data => {
             console.error(data);
