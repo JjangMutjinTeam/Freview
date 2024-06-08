@@ -1,4 +1,4 @@
-package com.nuguna.freview.servlet.member.api.cust.mybrand;
+package com.nuguna.freview.servlet.member.page.cust;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -18,8 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@WebServlet("/api/cust/my-brand/age-group")
-public class AgeGroupUpdateServlet extends HttpServlet {
+@WebServlet("/my-info")
+public class BrandInfoServlet extends HttpServlet {
 
   private Gson gson;
   private CustAgeGroupDAO custAgeGroupDAO;

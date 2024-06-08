@@ -1,5 +1,9 @@
 package com.nuguna.freview.dao.member;
 
+
+public class MemberDAO {
+
+
 import static com.nuguna.freview.config.DbConfig.DB_PW;
 import static com.nuguna.freview.config.DbConfig.DB_URL;
 import static com.nuguna.freview.config.DbConfig.DB_USER;

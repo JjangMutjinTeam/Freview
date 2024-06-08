@@ -3,7 +3,7 @@ package com.nuguna.freview.servlet.member.api.cust.mybrand;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.nuguna.freview.dao.member.CustNicknameDAO;
+import com.nuguna.freview.dao.member.cust.CustNicknameDAO;
 import com.nuguna.freview.dto.common.ResponseMessage;
 import com.nuguna.freview.util.EncodingUtil;
 import com.nuguna.freview.util.JsonRequestUtil;
@@ -58,7 +58,6 @@ public class NicknameUpdateServlet extends HttpServlet {
       }
 
       // 중복된 닉네임인지 확인
-
       boolean isExistNickname = custNicknameDAO.checkNicknameIsExist(toNickname);
       if (isExistNickname) {
         errorMessage = "중복된 닉네임입니다. 다시 입력해주세요.";
