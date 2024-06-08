@@ -15,21 +15,56 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PostDAO {
 
-  private final String SELECT_POST_BY_PAGING = " SELECT post_seq, title, view_count, created_at, updated_at "
-      + "FROM post "
-      + "WHERE gubun = ? and post_seq < ? "
-      + "ORDER BY post_seq DESC "
-      + "limit ?";
+  private final String SELECT_POST_BY_PAGING =
+      " SELECT post_seq, title, view_count, created_at, updated_at "
+          + "FROM post "
+          + "WHERE gubun = ? and post_seq < ? "
+          + "ORDER BY post_seq DESC "
+          + "limit ?";
 
   private final String COUNT_POST = "SELECT COUNT(*) FROM post WHERE gubun = ?";
 
   private final String INSERT_NOTICE = "INSERT INTO post(title, content, gubun, created_at, updated_at, member_seq) VALUES(?, ?, ?, ?, ?, ?)";
+
+  private final String INSERT_MOJIP = "INSERT INTO post(title, member_seq, apply_start_date, apply_end_date, experience_date, content) VALUES(?, ?, ?, ?, ?, ?) ";
 
   private final String SELECT_NOTICE_BY_SEQ = " SELECT post_seq, member_seq, title, content, view_count, created_at, updated_at from post WHERE post_seq = ?";
 
   private final String UPDATE_POST_BY_SEQ = "UPDATE post SET title = ?, content = ?, updated_at = ? WHERE post_seq = ?";
 
   private final String DELETE_POST_BY_SEQ = "DELETE FROM post WHERE post_seq = ?";
+
+  public boolean insertMojipPost(Post post) {
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+
+    boolean isInserted = false;
+
+    try {
+      conn = getConnection();
+      pstmt = conn.prepareStatement(INSERT_MOJIP);
+      pstmt.setString(1, post.getTitle());
+      pstmt.setString(2, String.valueOf(post.getMemberSeq()));
+      pstmt.setDate(3, post.getApplyStartDate());
+      pstmt.setDate(4, post.getApplyEndDate());
+      pstmt.setDate(5, post.getExperienceDate());
+      pstmt.setString(6, post.getContent());
+
+      int rows = pstmt.executeUpdate();
+
+      if (rows > 0) {
+        isInserted = true;
+      }
+
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    } finally {
+      closeResource(pstmt, conn);
+    }
+
+    return isInserted;
+  }
 
   public boolean deletePost(int postSeq) {
     Connection conn = null;
@@ -59,13 +94,13 @@ public class PostDAO {
       conn = getConnection();
       pstmt = conn.prepareStatement(UPDATE_POST_BY_SEQ);
 
-        pstmt.setString(1, post.getTitle());
-        pstmt.setString(2, post.getContent());
-        pstmt.setTimestamp(3, post.getUpdatedAt());
-        pstmt.setInt(4, post.getPostSeq());
+      pstmt.setString(1, post.getTitle());
+      pstmt.setString(2, post.getContent());
+      pstmt.setTimestamp(3, post.getUpdatedAt());
+      pstmt.setInt(4, post.getPostSeq());
 
-        int affectedRows = pstmt.executeUpdate();
-        return affectedRows > 0;
+      int affectedRows = pstmt.executeUpdate();
+      return affectedRows > 0;
 
     } catch (SQLException e) {
       throw new RuntimeException(e);
@@ -106,7 +141,7 @@ public class PostDAO {
     return post;
   }
 
-  public boolean insertPost(Post post) {
+  public boolean insertNoticePost(Post post) {
     boolean isInserted = false;
     Connection conn = null;
     PreparedStatement pstmt = null;
