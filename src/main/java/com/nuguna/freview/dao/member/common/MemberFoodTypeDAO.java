@@ -1,4 +1,4 @@
-package com.nuguna.freview.dao.member.cust;
+package com.nuguna.freview.dao.member.common;
 
 import static com.nuguna.freview.util.DbUtil.closeResource;
 import static com.nuguna.freview.util.DbUtil.getConnection;
@@ -15,10 +15,9 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class CustFoodTypeDAO {
+public class MemberFoodTypeDAO {
 
-  public void updateFoodTypes(int memberSeq, List<String> foodTypeNames) {
-
+  public void updateMemberFoodTypes(int memberSeq, List<String> foodTypeNames) {
     List<FoodTypeGubun> foodTypeGubuns;
     try {
       foodTypeGubuns = foodTypeNames.stream()

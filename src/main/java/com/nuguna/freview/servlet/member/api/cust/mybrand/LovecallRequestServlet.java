@@ -3,8 +3,8 @@ package com.nuguna.freview.servlet.member.api.cust.mybrand;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.nuguna.freview.dao.member.CustLovecallDAO;
-import com.nuguna.freview.dao.member.cust.MemberCustDAO;
+import com.nuguna.freview.dao.member.common.MemberUtilDAO;
+import com.nuguna.freview.dao.member.cust.CustLovecallDAO;
 import com.nuguna.freview.dto.common.ResponseMessage;
 import com.nuguna.freview.util.EncodingUtil;
 import com.nuguna.freview.util.JsonRequestUtil;
@@ -22,14 +22,14 @@ import lombok.extern.slf4j.Slf4j;
 public class LovecallRequestServlet extends HttpServlet {
 
   private Gson gson;
-  private MemberCustDAO memberCustDAO;
+  private MemberUtilDAO memberUtilDAO;
   private CustLovecallDAO custLovecallDAO;
 
   @Override
   public void init() throws ServletException {
-    log.info("LovecallRequestServlet 초기화");
+    log.info("Cust - LovecallRequestServlet 초기화");
     gson = new Gson();
-    memberCustDAO = new MemberCustDAO();
+    memberUtilDAO = new MemberUtilDAO();
     custLovecallDAO = new CustLovecallDAO();
   }
 
@@ -39,7 +39,7 @@ public class LovecallRequestServlet extends HttpServlet {
 
     EncodingUtil.setEncodingToUTF8AndJson(request, response);
 
-    log.info("LovecallRequestServlet.doPost");
+    log.info("Cust - LovecallRequestServlet.doPost");
 
     try {
       JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
@@ -50,8 +50,8 @@ public class LovecallRequestServlet extends HttpServlet {
       int custSeq = jsonObject.get("cust_seq").getAsInt();
       String benefitDetails = jsonObject.get("benefit_details").getAsString();
 
-      if (!memberCustDAO.selectMemberGubun(bossSeq).isBoss()
-          || !memberCustDAO.selectMemberGubun(custSeq).isCust()) {
+      if (!memberUtilDAO.selectMemberGubun(bossSeq).isBoss()
+          || !memberUtilDAO.selectMemberGubun(custSeq).isCust()) {
         JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
             new ResponseMessage<>("잘못된 요청 ( 사용자가 사장님이 아니거나, 해당 브랜드 페이지의 주인이 체험단이 아닙니다.",
                 benefitDetails), response, gson);
