@@ -1,6 +1,5 @@
 package com.nuguna.freview.dto;
 
-import com.nuguna.freview.entity.member.foodtype.FoodTypeGubun;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +11,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class BossRecommendationInfo {
+public class memberRecommendationInfo {
 
   private String nickname;
   private String profilePhotoUrl;

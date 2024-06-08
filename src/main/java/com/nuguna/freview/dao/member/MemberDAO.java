@@ -6,7 +6,7 @@ import static com.nuguna.freview.config.DbConfig.DB_USER;
 import static com.nuguna.freview.config.DbConfig.DRIVER_NAME;
 import static com.nuguna.freview.util.DbUtil.closeResource;
 
-import com.nuguna.freview.dto.BossRecommendationInfo;
+import com.nuguna.freview.dto.memberRecommendationInfo;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -40,12 +40,12 @@ public class MemberDAO {
           "GROUP BY " +
           "    m.nickname, m.profile_photo_url;";
 
-  public List<BossRecommendationInfo> selectMemberInfo(String gubun) {
+  public List<memberRecommendationInfo> selectMemberInfo(String gubun) {
     Connection conn = null;
     PreparedStatement pstmt = null;
     ResultSet rs = null;
 
-    List<BossRecommendationInfo> list = new ArrayList<>();
+    List<memberRecommendationInfo> list = new ArrayList<>();
     try {
       conn = getConnection();
       pstmt = conn.prepareStatement(SELECT_MEMBER_INFO);
@@ -53,7 +53,7 @@ public class MemberDAO {
       rs = pstmt.executeQuery();
 
       while (rs.next()) {
-        BossRecommendationInfo boss = new BossRecommendationInfo();
+        memberRecommendationInfo boss = new memberRecommendationInfo();
         boss.setNickname(rs.getString("nickname"));
         boss.setProfilePhotoUrl(rs.getString("profile_photo_url"));
         boss.setFoodTypes(rs.getString("food_types"));
