@@ -1,4 +1,4 @@
-package com.nuguna.freview.servlet.member.api.cust.mybrand;
+package com.nuguna.freview.servlet.member.api.common;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -45,7 +45,7 @@ public class TagUpdateServlet extends HttpServlet {
 
     EncodingUtil.setEncodingToUTF8AndJson(request, response);
 
-    log.info("Cust - TagUpdateServlet.doPost");
+    log.info("TagUpdateServlet.doPost");
 
     try {
       JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
