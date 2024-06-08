@@ -11,7 +11,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class memberRecommendationInfo {
+public class MemberRecommendationInfo {
 
   private String mid;
   private String nickname;

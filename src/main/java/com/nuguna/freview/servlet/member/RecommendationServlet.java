@@ -1,7 +1,7 @@
 package com.nuguna.freview.servlet.member;
 
 import com.nuguna.freview.dao.member.MemberDAO;
-import com.nuguna.freview.dto.memberRecommendationInfo;
+import com.nuguna.freview.dto.MemberRecommendationInfo;
 import com.nuguna.freview.entity.member.MemberGubun;
 import java.io.IOException;
 import java.util.List;
@@ -23,9 +23,9 @@ public class RecommendationServlet extends HttpServlet {
     req.setCharacterEncoding("UTF-8");
     resp.setContentType("text/html;charset=UTF-8");
 
-    List<memberRecommendationInfo> bossInfoList = memberDAO.selectMemberInfo(MemberGubun.B.getCode());
+    List<MemberRecommendationInfo> bossInfoList = memberDAO.selectMemberInfo(MemberGubun.B.getCode());
     req.setAttribute("bossInfoList", bossInfoList);
-    List<memberRecommendationInfo> customerInfoList = memberDAO.selectMemberInfo(MemberGubun.C.getCode());
+    List<MemberRecommendationInfo> customerInfoList = memberDAO.selectMemberInfo(MemberGubun.C.getCode());
     req.setAttribute("customerInfoList", customerInfoList);
     RequestDispatcher rd = req.getRequestDispatcher("/common-recommendation-y.jsp");
     rd.forward(req, resp);

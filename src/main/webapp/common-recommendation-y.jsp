@@ -539,10 +539,10 @@
             <!-- Tabs navigation -->
             <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link active" id="boss-tab" data-bs-toggle="tab" href="#boss" role="tab" aria-controls="boss" aria-selected="true">사장님</a>
+                    <a class="nav-link active" id="boss-tab" data-bs-toggle="tab" href="#boss" role="tab" aria-controls="boss" aria-selected="true">Boss</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="customer-tab" data-bs-toggle="tab" href="#customer" role="tab" aria-controls="customer" aria-selected="false">체험단</a>
+                    <a class="nav-link" id="customer-tab" data-bs-toggle="tab" href="#customer" role="tab" aria-controls="customer" aria-selected="false">Customer</a>
                 </li>
             </ul>
             <div class="tab-content">

@@ -6,7 +6,7 @@ import static com.nuguna.freview.config.DbConfig.DB_USER;
 import static com.nuguna.freview.config.DbConfig.DRIVER_NAME;
 import static com.nuguna.freview.util.DbUtil.closeResource;
 
-import com.nuguna.freview.dto.memberRecommendationInfo;
+import com.nuguna.freview.dto.MemberRecommendationInfo;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MemberDAO {
 
-  private static final String SELECT_MEMBER_INFO =
+  private final String SELECT_MEMBER_INFO =
       "SELECT " +
           "    m.mid, " +
           "    m.nickname, " +
@@ -41,12 +41,12 @@ public class MemberDAO {
           "GROUP BY " +
           "    m.nickname, m.profile_photo_url;";
 
-  public List<memberRecommendationInfo> selectMemberInfo(String gubun) {
+  public List<MemberRecommendationInfo> selectMemberInfo(String gubun) {
     Connection conn = null;
     PreparedStatement pstmt = null;
     ResultSet rs = null;
 
-    List<memberRecommendationInfo> list = new ArrayList<>();
+    List<MemberRecommendationInfo> list = new ArrayList<>();
     try {
       conn = getConnection();
       pstmt = conn.prepareStatement(SELECT_MEMBER_INFO);
@@ -54,7 +54,7 @@ public class MemberDAO {
       rs = pstmt.executeQuery();
 
       while (rs.next()) {
-        memberRecommendationInfo boss = new memberRecommendationInfo();
+        MemberRecommendationInfo boss = new MemberRecommendationInfo();
         boss.setMid(rs.getString("mid"));
         boss.setNickname(rs.getString("nickname"));
         boss.setProfilePhotoUrl(rs.getString("profile_photo_url"));
