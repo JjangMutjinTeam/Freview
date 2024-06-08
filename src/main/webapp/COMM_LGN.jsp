@@ -44,6 +44,10 @@
     * Author: BootstrapMade.com
     * License: https://bootstrapmade.com/license/
     ======================================================== -->
+    <script
+            src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+            crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -72,19 +76,19 @@
                                     <p class="text-center small">아이디와 비밀번호를 입력해주세요</p>
                                 </div>
 
-                                <form class="row g-3 needs-validation" novalidate>
+                                <form class="row g-3 needs-validation" id="COMM_LGN_form_login" method="post" action="/auth?pagecode=login_check" novalidate>
 
                                     <div class="col-12">
-                                        <label for="yourUsername" class="form-label">아이디</label>
+                                        <label for="COMM_LGN_input_id" class="form-label">아이디</label>
                                         <div class="input-group has-validation">
-                                            <input type="text" name="username" class="form-control" id="yourUsername" required>
+                                            <input type="text" name="id" class="form-control" id="COMM_LGN_input_id" required>
                                             <div class="invalid-feedback">아이디를 입력해주세요</div>
                                         </div>
                                     </div>
 
                                     <div class="col-12">
-                                        <label for="yourPassword" class="form-label">비밀번호</label>
-                                        <input type="password" name="password" class="form-control" id="yourPassword" required>
+                                        <label for="COMM_LGN_input_pw" class="form-label">비밀번호</label>
+                                        <input type="password" name="password" class="form-control" id="COMM_LGN_input_pw" required>
                                         <div class="invalid-feedback">비밀번호를 입력해주세요</div>
                                     </div>
 
@@ -92,7 +96,7 @@
 
                                     </div>
                                     <div class="col-12">
-                                        <button class="btn btn-primary w-100" type="submit">로그인</button>
+                                        <button class="btn btn-primary w-100" id="COMM_LGN_login" type="submit">로그인</button>
                                     </div>
                                     <div class="col-12">
                                         <a href="/auth?pagecode=findid" style="font-size: 13px" href="#">아이디 찾기</a><a href="/auth?pagecode=findpw" style="margin-left: 10px; font-size: 13px" class="LGN_FIND" id="LGN_FIND_PW" href="#">비밀번호 찾기</a>
@@ -136,7 +140,7 @@
 
 <!-- Template Main JS File -->
 <script src="assets/js/main.js"></script>
-
+<script src="assets/js/hr.js"></script>
 </body>
 
 </html>
