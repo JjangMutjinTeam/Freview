@@ -1,11 +1,11 @@
-package com.nuguna.freview.servlet.member.api.cust.mybrand;
+package com.nuguna.freview.servlet.member.api.common;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.nuguna.freview.dao.member.cust.CustFoodTypeDAO;
+import com.nuguna.freview.dao.member.common.MemberFoodTypeDAO;
 import com.nuguna.freview.dto.common.ResponseMessage;
 import com.nuguna.freview.exception.IllegalFoodTypeException;
 import com.nuguna.freview.util.EncodingUtil;
@@ -22,17 +22,17 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@WebServlet("/api/cust/my-brand/food-type")
+@WebServlet("/api/my-brand/food-type")
 public class FoodTypeUpdateServlet extends HttpServlet {
 
   private Gson gson;
-  private CustFoodTypeDAO custFoodTypeDAO;
+  private MemberFoodTypeDAO memberFoodTypeDAO;
 
   @Override
   public void init() throws ServletException {
-    log.info("Cust - FoodTypeUpdateServlet 초기화");
+    log.info("FoodTypeUpdateServlet 초기화");
     gson = new Gson();
-    custFoodTypeDAO = new CustFoodTypeDAO();
+    memberFoodTypeDAO = new MemberFoodTypeDAO();
   }
 
   @Override
@@ -41,7 +41,7 @@ public class FoodTypeUpdateServlet extends HttpServlet {
 
     EncodingUtil.setEncodingToUTF8AndJson(request, response);
 
-    log.info("Cust - FoodTypeUpdateServlet.doPost");
+    log.info("FoodTypeUpdateServlet.doPost");
 
     try {
       JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
@@ -55,7 +55,7 @@ public class FoodTypeUpdateServlet extends HttpServlet {
           .map(JsonElement::getAsString)
           .collect(Collectors.toList());
 
-      custFoodTypeDAO.updateFoodTypes(memberSeq, foodTypeNames);
+      memberFoodTypeDAO.updateMemberFoodTypes(memberSeq, foodTypeNames);
 
       JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
           new ResponseMessage<>("성공적으로 수정되었습니다.", foodTypeNames), response, gson);

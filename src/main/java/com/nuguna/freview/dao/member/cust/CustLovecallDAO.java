@@ -1,4 +1,4 @@
-package com.nuguna.freview.dao.member;
+package com.nuguna.freview.dao.member.cust;
 
 import static com.nuguna.freview.util.DbUtil.closeResource;
 import static com.nuguna.freview.util.DbUtil.getConnection;

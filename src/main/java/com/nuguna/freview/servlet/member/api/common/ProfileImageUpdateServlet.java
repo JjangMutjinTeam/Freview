@@ -4,8 +4,8 @@ package com.nuguna.freview.servlet.member.api.common;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.nuguna.freview.config.FileConfig;
-import com.nuguna.freview.dao.member.ProfileImageDAO;
-import com.nuguna.freview.dao.member.cust.MemberUtilDAO;
+import com.nuguna.freview.dao.member.common.MemberUtilDAO;
+import com.nuguna.freview.dao.member.common.ProfileImageDAO;
 import com.nuguna.freview.dto.common.ResponseMessage;
 import com.nuguna.freview.entity.member.MemberGubun;
 import com.nuguna.freview.util.EncodingUtil;
@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
     fileSizeThreshold = FileConfig.FILE_SIZE_THRESHOLD,
     maxFileSize = FileConfig.FILE_MAX_SIZE
 )
-@WebServlet("/api/cust/my-brand/profile")
+@WebServlet("/api/my-brand/profile")
 public class ProfileImageUpdateServlet extends HttpServlet {
 
   private Gson gson;
