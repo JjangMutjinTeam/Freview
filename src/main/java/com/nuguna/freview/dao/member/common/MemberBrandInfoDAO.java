@@ -1,4 +1,5 @@
-package com.nuguna.freview.dao.member.cust;
+package com.nuguna.freview.dao.member.common;
+
 
 import static com.nuguna.freview.util.DbUtil.closeResource;
 import static com.nuguna.freview.util.DbUtil.getConnection;
@@ -7,7 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class CustIntroduceDAO {
+public class MemberBrandInfoDAO {
 
   public void updateIntroduce(int memberSeq, String toIntroduce) {
     Connection conn = null;

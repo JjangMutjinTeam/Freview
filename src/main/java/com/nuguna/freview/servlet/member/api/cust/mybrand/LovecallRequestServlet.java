@@ -3,8 +3,8 @@ package com.nuguna.freview.servlet.member.api.cust.mybrand;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.nuguna.freview.dao.member.CustLovecallDAO;
-import com.nuguna.freview.dao.member.cust.MemberUtilDAO;
+import com.nuguna.freview.dao.member.common.MemberUtilDAO;
+import com.nuguna.freview.dao.member.cust.CustLovecallDAO;
 import com.nuguna.freview.dto.common.ResponseMessage;
 import com.nuguna.freview.util.EncodingUtil;
 import com.nuguna.freview.util.JsonRequestUtil;
@@ -40,7 +40,6 @@ public class LovecallRequestServlet extends HttpServlet {
     EncodingUtil.setEncodingToUTF8AndJson(request, response);
 
     log.info("Cust - LovecallRequestServlet.doPost");
-
 
     try {
       JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);

@@ -5,8 +5,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.nuguna.freview.dao.member.common.MemberUtilDAO;
 import com.nuguna.freview.dao.member.cust.CustTagDAO;
-import com.nuguna.freview.dao.member.cust.MemberUtilDAO;
 import com.nuguna.freview.dto.common.ResponseMessage;
 import com.nuguna.freview.entity.member.MemberGubun;
 import com.nuguna.freview.exception.IllegalTagException;
@@ -44,7 +44,7 @@ public class TagUpdateServlet extends HttpServlet {
       throws ServletException, IOException {
 
     EncodingUtil.setEncodingToUTF8AndJson(request, response);
-    
+
     log.info("Cust - TagUpdateServlet.doPost");
 
     try {

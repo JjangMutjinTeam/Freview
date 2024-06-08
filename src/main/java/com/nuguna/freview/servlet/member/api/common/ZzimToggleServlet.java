@@ -3,7 +3,7 @@ package com.nuguna.freview.servlet.member.api.common;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.nuguna.freview.dao.member.cust.MemberUtilDAO;
+import com.nuguna.freview.dao.member.common.MemberUtilDAO;
 import com.nuguna.freview.dao.zzim.ZzimDAO;
 import com.nuguna.freview.dto.common.ResponseMessage;
 import com.nuguna.freview.util.EncodingUtil;
