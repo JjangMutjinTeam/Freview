@@ -2,7 +2,7 @@ package com.nuguna.freview.servlet.post;
 
 import static com.nuguna.freview.entity.post.PostGubun.MJ;
 
-import com.nuguna.freview.dao.post.PostDAO;
+import com.nuguna.freview.dao.post.MojipPostDAO;
 import com.nuguna.freview.entity.post.Post;
 import java.io.IOException;
 import java.sql.Date;
@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/mojipBoard/createPost")
 public class MojipPostAddServlet extends HttpServlet {
 
-  PostDAO postDAO = new PostDAO();
+  MojipPostDAO mojipPostDAO = new MojipPostDAO();
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -45,7 +45,7 @@ public class MojipPostAddServlet extends HttpServlet {
     post.setCreatedAt(now);
     post.setUpdatedAt(now);
 
-    boolean insertPost = postDAO.insertMojipPost(post);
+    boolean insertPost = mojipPostDAO.insertMojipPost(post);
 
     if (insertPost) {
       resp.setStatus(HttpServletResponse.SC_OK);

@@ -2,6 +2,7 @@ package com.nuguna.freview.servlet.post;
 
 import static com.nuguna.freview.entity.post.PostGubun.GJ;
 
+import com.nuguna.freview.dao.post.NoticePostDAO;
 import com.nuguna.freview.dao.post.PostDAO;
 import com.nuguna.freview.entity.post.Post;
 import java.io.IOException;
@@ -16,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/noticeBoard/createPost")
 public class NoticePostAddServlet extends HttpServlet {
 
-  PostDAO postDAO = new PostDAO();
+  NoticePostDAO noticePostdao = new NoticePostDAO();
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -40,7 +41,7 @@ public class NoticePostAddServlet extends HttpServlet {
     post.setUpdatedAt(now);
     post.setMemberSeq(Integer.valueOf(req.getParameter("memberSeq")));
 
-    boolean insertPost = postDAO.insertNoticePost(post);
+    boolean insertPost = noticePostdao.insertNoticePost(post);
 
     if (insertPost) {
       resp.setStatus(HttpServletResponse.SC_OK);
