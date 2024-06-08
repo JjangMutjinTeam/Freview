@@ -4,7 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.nuguna.freview.dao.member.cust.CustIntroduceDAO;
+import com.nuguna.freview.dao.member.cust.MemberUtilDAO;
 import com.nuguna.freview.dto.common.ResponseMessage;
+import com.nuguna.freview.entity.member.MemberGubun;
 import com.nuguna.freview.util.EncodingUtil;
 import com.nuguna.freview.util.JsonRequestUtil;
 import com.nuguna.freview.util.JsonResponseUtil;
@@ -21,12 +23,14 @@ import lombok.extern.slf4j.Slf4j;
 public class IntroduceUpdateServlet extends HttpServlet {
 
   private Gson gson;
+  private MemberUtilDAO memberUtilDAO;
   private CustIntroduceDAO custIntroduceDAO;
 
   @Override
   public void init() throws ServletException {
     log.info("IntroduceUpdateServlet 초기화");
     gson = new Gson();
+    memberUtilDAO = new MemberUtilDAO();
     custIntroduceDAO = new CustIntroduceDAO();
   }
 
@@ -46,6 +50,19 @@ public class IntroduceUpdateServlet extends HttpServlet {
       int memberSeq = jsonObject.get("member_seq").getAsInt();
       String toIntroduce = jsonObject.get("to_introduce").getAsString();
 
+      MemberGubun memberGubun = memberUtilDAO.selectMemberGubun(memberSeq);
+      if (memberGubun == null) {
+        JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_BAD_REQUEST,
+            new ResponseMessage<>("주어진 member_seq에 해당하는 멤버가 존재하지 않습니다.", toIntroduce), response,
+            gson);
+        return;
+      }
+      if (!memberGubun.isCust()) {
+        JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
+            new ResponseMessage<>("해당 멤버는 체험단이 아닙니다.", toIntroduce), response, gson);
+        return;
+      }
+      
       custIntroduceDAO.updateIntroduce(memberSeq, toIntroduce);
       JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
           new ResponseMessage<>("성공적으로 수정했습니다.", toIntroduce), response, gson);

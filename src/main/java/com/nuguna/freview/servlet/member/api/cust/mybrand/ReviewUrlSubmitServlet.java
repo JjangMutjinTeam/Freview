@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.nuguna.freview.dao.member.cust.CustReviewDAO;
-import com.nuguna.freview.dao.member.cust.MemberCustDAO;
+import com.nuguna.freview.dao.member.cust.MemberUtilDAO;
 import com.nuguna.freview.dto.common.ResponseMessage;
 import com.nuguna.freview.util.EncodingUtil;
 import com.nuguna.freview.util.JsonRequestUtil;
@@ -22,14 +22,14 @@ import lombok.extern.slf4j.Slf4j;
 public class ReviewUrlSubmitServlet extends HttpServlet {
 
   private Gson gson;
-  private MemberCustDAO memberCustDAO;
+  private MemberUtilDAO memberUtilDAO;
   private CustReviewDAO custReviewDAO;
 
   @Override
   public void init() throws ServletException {
     log.info("ReviewUrlSubmitServlet 초기화");
     gson = new Gson();
-    memberCustDAO = new MemberCustDAO();
+    memberUtilDAO = new MemberUtilDAO();
     custReviewDAO = new CustReviewDAO();
   }
 
@@ -50,7 +50,7 @@ public class ReviewUrlSubmitServlet extends HttpServlet {
       int reviewSeq = jsonObject.get("review_seq").getAsInt();
       String toReviewUrl = jsonObject.get("to_review_url").getAsString();
 
-      if (memberCustDAO.doesMemberOwnReview(memberSeq, reviewSeq)) { // 리뷰 주인인지 검증
+      if (memberUtilDAO.doesMemberOwnReview(memberSeq, reviewSeq)) { // 리뷰 주인인지 검증
         custReviewDAO.updateReviewUrl(reviewSeq, toReviewUrl);
         JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
             new ResponseMessage<>("성공적으로 수정했습니다.", toReviewUrl), response, gson);

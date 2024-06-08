@@ -9,7 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class MemberCustDAO {
+public class MemberUtilDAO {
 
   public MemberGubun selectMemberGubun(int memberSeq) {
     Connection conn = null;
@@ -35,7 +35,7 @@ public class MemberCustDAO {
       closeResource(rs);
       closeResource(pstmt, conn);
     }
-    return MemberGubun.from(gubun);
+    return gubun == null ? null : MemberGubun.from(gubun);
   }
 
   public boolean doesMemberOwnReview(int memberSeq, int reviewSeq) {
