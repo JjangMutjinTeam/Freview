@@ -1,4 +1,4 @@
-package com.nuguna.freview.dao.member.boss;
+package com.nuguna.freview.dao.member.common;
 
 import static com.nuguna.freview.util.DbUtil.closeResource;
 import static com.nuguna.freview.util.DbUtil.getConnection;
@@ -7,7 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class BossIntroduceDAO {
+public class MemberBrandInfoDAO {
 
   public void updateIntroduce(int memberSeq, String toIntroduce) {
     Connection conn = null;
@@ -24,10 +24,9 @@ public class BossIntroduceDAO {
       pstmt.setInt(2, memberSeq);
       pstmt.executeUpdate();
     } catch (SQLException e) {
-      throw new RuntimeException("SQLException : 사장님 소개 변경 도중 예외 발생", e);
+      throw new RuntimeException("SQLException : 소개 변경 도중 예외 발생", e);
     } finally {
       closeResource(pstmt, conn);
     }
   }
-
 }
