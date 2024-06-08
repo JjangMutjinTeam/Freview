@@ -575,8 +575,7 @@
                 </div>
                 <input type="hidden" id="memberSeq" name="memberSeq" value="${memberSeq}">
                 <div class="d-flex justify-content-between">
-                    <button type="button" class="btn btn-primary"
-                            onclick="location.href='/noticeBoard'">이전
+                    <button type="button" class="btn btn-secondary" onclick="location.href='/noticeBoard'">취소</button>                            onclick="location.href='/noticeBoard'">이전
                     </button>
                     <button type="submit" class="btn btn-primary">등록</button>
                 </div>

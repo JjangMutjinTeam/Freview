@@ -592,12 +592,10 @@
                     <a href="/mojipboard/detail?postSeq=${post.postSeq}" class="post-item">
                         <img src="${post.profilePhotoUrl}" alt="Profile" class="profile-img">
                         <h5>${post.title}</h5>
-                        <p>내용: ${post.content}</p>
                         <p>작성자: ${post.memberSeq}</p>
-                        <p>모집 시작일: ${post.applyStartDate}</p>
-                        <p>모집 마감일: ${post.applyEndDate}</p>
-                        <p>체험 날짜: ${post.experienceDate}</p>
-                        <p>좋아요: ${post.numberOfDdabong}</p>
+                        <p>모집 기간: ${post.applyStartDate} ~ ${post.applyEndDate} </p>
+                        <p>방문 날짜: ${post.experienceDate}</p>
+                        <p>좋아요 수: ${post.numberOfDdabong}</p>
                     </a>
                 </c:forEach>
             </div>
