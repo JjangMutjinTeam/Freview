@@ -44,7 +44,7 @@ public class TagUpdateServlet extends HttpServlet {
       throws ServletException, IOException {
 
     EncodingUtil.setEncodingToUTF8AndJson(request, response);
-
+    
     log.info("Cust - TagUpdateServlet.doPost");
 
     try {

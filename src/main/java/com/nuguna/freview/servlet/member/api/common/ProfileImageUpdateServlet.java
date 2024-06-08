@@ -80,7 +80,6 @@ public class ProfileImageUpdateServlet extends HttpServlet {
         filePath += FileConfig.ADMIN_PROFILE_PHOTO_DIR;
       }
       filePath += File.separator;
-
       // 비어있는 프로필 파일을 전송하면
       if (filePart == null || filePart.getSubmittedFileName().isEmpty()) {
         filePath = "";

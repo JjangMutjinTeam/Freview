@@ -41,6 +41,7 @@ public class LovecallRequestServlet extends HttpServlet {
 
     log.info("Cust - LovecallRequestServlet.doPost");
 
+
     try {
       JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
       // 입력값 가져오기 ( 클라이언트에서 데이터를 올바르게 주는 경우만 가정 )

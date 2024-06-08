@@ -1,5 +1,10 @@
 package com.nuguna.freview.dao.member;
 
+
+import static com.nuguna.freview.config.DbConfig.DB_PW;
+import static com.nuguna.freview.config.DbConfig.DB_URL;
+import static com.nuguna.freview.config.DbConfig.DB_USER;
+import static com.nuguna.freview.config.DbConfig.DRIVER_NAME;
 import static com.nuguna.freview.util.DbUtil.closeResource;
 import static com.nuguna.freview.util.DbUtil.getConnection;
 
