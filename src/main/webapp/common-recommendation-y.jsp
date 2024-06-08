@@ -42,6 +42,10 @@
       .profile-card {
         padding: 0; /* 카드 내부의 여백을 없앱니다 */
       }
+      .col-xl-2 {
+        flex: 0 0 auto;
+        width: 20%;
+      }
     </style>
 
     <!-- =======================================================
@@ -550,7 +554,7 @@
                 <div class="tab-pane fade show active" id="boss" role="tabpanel" aria-labelledby="boss-tab">
                     <div class="row">
                         <c:forEach var="boss" items="${bossInfoList}">
-                            <div class="col-xl-4">
+                            <div class="col-xl-2">
                                 <div class="card">
                                     <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
                                         <a href="MemberBrandingServlet?gubun=B&mid=${boss.mid}">
@@ -569,14 +573,14 @@
                 <div class="tab-pane fade" id="customer" role="tabpanel" aria-labelledby="customer-tab">
                     <div class="row">
                         <c:forEach var="customer" items="${customerInfoList}">
-                            <div class="col-xl-4">
+                            <div class="col-xl-2">
                                 <div class="card">
                                     <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
                                         <a href="MemberBrandingServlet?gubun=C&mid=${customer.mid}">
                                             <img src="${customer.profilePhotoUrl}" alt="Profile" class="profile-img">
                                         </a>
                                         <h2><a href="MemberBrandingServlet?gubun=C&mid=${customer.mid}">${customer.nickname}</a></h2>
-                                        <<h3>${customer.foodTypes}</h3>
+                                        <h3>${customer.foodTypes}</h3>
                                         <h3>${customer.tags}</h3>
                                     </div>
                                 </div>

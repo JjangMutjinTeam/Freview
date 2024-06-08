@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/noticeBoard")
 public class NoticeBoardServlet extends HttpServlet {
+
   PostDAO postDAO = new PostDAO();
 
   private final int LIMIT = 10;
@@ -29,7 +30,7 @@ public class NoticeBoardServlet extends HttpServlet {
       previousPostSeq = Integer.parseInt(req.getParameter("previousPostSeq"));
     }
 
-    List<Post> postList = postDAO.selectPostByCursorPaging(postGubun, previousPostSeq, LIMIT);
+    List<Post> postList = postDAO.selectNoticePostByCursorPaging(postGubun, previousPostSeq, LIMIT);
     req.setAttribute("postList", postList);
 
     RequestDispatcher rd = req.getRequestDispatcher("/common-notice-board-y.jsp");

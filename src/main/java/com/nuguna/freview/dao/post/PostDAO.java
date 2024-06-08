@@ -1,13 +1,10 @@
 package com.nuguna.freview.dao.post;
 
-import static com.nuguna.freview.config.DbConfig.DB_PW;
-import static com.nuguna.freview.config.DbConfig.DB_URL;
-import static com.nuguna.freview.config.DbConfig.DB_USER;
-import static com.nuguna.freview.config.DbConfig.DRIVER_NAME;
+import static com.nuguna.freview.util.DbUtil.closeResource;
+import static com.nuguna.freview.util.DbUtil.getConnection;
 
 import com.nuguna.freview.entity.post.Post;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,9 +23,9 @@ public class PostDAO {
 
   private final String COUNT_POST = "SELECT COUNT(*) FROM post WHERE gubun = ?";
 
-  private final String INSERT_POST = "INSERT INTO post(title, content, gubun, created_at, updated_at, member_seq) VALUES(?, ?, ?, ?, ?, ?)";
+  private final String INSERT_NOTICE = "INSERT INTO post(title, content, gubun, created_at, updated_at, member_seq) VALUES(?, ?, ?, ?, ?, ?)";
 
-  private final String SELECT_POST_BY_SEQ = " SELECT post_seq, member_seq, title, content, view_count, created_at, updated_at from post WHERE post_seq = ?";
+  private final String SELECT_NOTICE_BY_SEQ = " SELECT post_seq, member_seq, title, content, view_count, created_at, updated_at from post WHERE post_seq = ?";
 
   private final String UPDATE_POST_BY_SEQ = "UPDATE post SET title = ?, content = ?, updated_at = ? WHERE post_seq = ?";
 
@@ -86,7 +83,7 @@ public class PostDAO {
 
     try {
       conn = getConnection();
-      pstmt = conn.prepareStatement(SELECT_POST_BY_SEQ);
+      pstmt = conn.prepareStatement(SELECT_NOTICE_BY_SEQ);
       pstmt.setInt(1, postSeq);
       rs = pstmt.executeQuery();
 
@@ -116,7 +113,7 @@ public class PostDAO {
 
     try {
       conn = getConnection();
-      pstmt = conn.prepareStatement(INSERT_POST);
+      pstmt = conn.prepareStatement(INSERT_NOTICE);
       pstmt.setString(1, post.getTitle());
       pstmt.setString(2, post.getContent());
       pstmt.setString(3, post.getGubun());
@@ -137,7 +134,7 @@ public class PostDAO {
     return isInserted;
   }
 
-  public List<Post> selectPostByCursorPaging(String gubun, int previousPostSeq, int limit) {
+  public List<Post> selectNoticePostByCursorPaging(String gubun, int previousPostSeq, int limit) {
     Connection conn = null;
     PreparedStatement pstmt = null;
     ResultSet rs = null;
@@ -192,50 +189,10 @@ public class PostDAO {
       }
     } catch (SQLException e) {
       throw new RuntimeException(e);
+    } finally {
+      closeResource(pstmt, conn, rs);
     }
 
     return countTotalPosts;
-  }
-
-  private Connection getConnection() {
-    Connection conn = null;
-    try {
-      Class.forName(DRIVER_NAME);
-      conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PW);
-    } catch (ClassNotFoundException e) {
-      log.error("JDBC Driver not found");
-    } catch (SQLException e) {
-      log.error("connection failed");
-    }
-    return conn;
-  }
-
-  public void closeResource(PreparedStatement pstmt, Connection conn, ResultSet rs) {
-    try {
-      if (rs != null) {
-        rs.close();
-      }
-      if (pstmt != null) {
-        pstmt.close();
-      }
-      if (conn != null) {
-        conn.close();
-      }
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  public void closeResource(PreparedStatement pstmt, Connection conn) {
-    try {
-      if (pstmt != null) {
-        pstmt.close();
-      }
-      if (conn != null) {
-        conn.close();
-      }
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
   }
 }
