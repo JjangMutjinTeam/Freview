@@ -4,8 +4,10 @@ package com.nuguna.freview.servlet.member.api.common;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.nuguna.freview.config.FileConfig;
-import com.nuguna.freview.dao.member.ProfileImageDAO;
+import com.nuguna.freview.dao.member.common.MemberUtilDAO;
+import com.nuguna.freview.dao.member.common.ProfileImageDAO;
 import com.nuguna.freview.dto.common.ResponseMessage;
+import com.nuguna.freview.entity.member.MemberGubun;
 import com.nuguna.freview.util.EncodingUtil;
 import com.nuguna.freview.util.JsonResponseUtil;
 import java.io.File;
@@ -28,16 +30,18 @@ import lombok.extern.slf4j.Slf4j;
     fileSizeThreshold = FileConfig.FILE_SIZE_THRESHOLD,
     maxFileSize = FileConfig.FILE_MAX_SIZE
 )
-@WebServlet("/api/cust/my-brand/profile")
+@WebServlet("/api/my-brand/profile")
 public class ProfileImageUpdateServlet extends HttpServlet {
 
   private Gson gson;
+  private MemberUtilDAO memberUtilDAO;
   private ProfileImageDAO profileImageDAO;
 
   @Override
   public void init() throws ServletException {
     log.info("ProfileImageUpdateServlet 초기화");
     gson = new Gson();
+    memberUtilDAO = new MemberUtilDAO();
     profileImageDAO = new ProfileImageDAO();
   }
 
@@ -59,14 +63,31 @@ public class ProfileImageUpdateServlet extends HttpServlet {
 
       log.info("filePart = " + filePart);
 
-      String filePath;
+      MemberGubun memberGubun = memberUtilDAO.selectMemberGubun(memberSeq);
+      if (memberGubun == null) {
+        JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_BAD_REQUEST,
+            new ResponseMessage<>("주어진 member_seq에 해당하는 멤버가 존재하지 않습니다.", null), response,
+            gson);
+        return;
+      }
+
+      String filePath = "";
+      if (memberGubun.isCust()) {
+        filePath += FileConfig.CUST_PROFILE_PHOTO_DIR;
+      } else if (memberGubun.isBoss()) {
+        filePath += FileConfig.BOSS_PROFILE_PHOTO_DIR;
+      } else if (memberGubun.isAdmin()) {
+        filePath += FileConfig.ADMIN_PROFILE_PHOTO_DIR;
+      }
+      filePath += File.separator;
+
       // 비어있는 프로필 파일을 전송하면
       if (filePart == null || filePart.getSubmittedFileName().isEmpty()) {
         filePath = "";
       } else {
         // 파일 경로 지정
         String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-        filePath = FileConfig.UPLOAD_DIR + File.separator + fileName;
+        filePath += fileName;
         // 파일 저장
         File uploadFile = new File(filePath);
         try (InputStream fileContent = filePart.getInputStream()) {
