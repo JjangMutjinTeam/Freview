@@ -571,7 +571,7 @@
         <div class="row">
           <div class="col-md-6 mb-3">
             <label for="applyStartDate" class="form-label">모집 시작일</label>
-            <input type="date" class="form-control" id="applyStartDate" name="applyStartDate" required>
+            <input type="date" class="form-control" id="applyStartDate" name="applyStartDate" required readonly>
           </div>
           <div class="col-md-6 mb-3">
             <label for="applyEndDate" class="form-label">모집 마감일</label>
@@ -602,9 +602,8 @@
       var applyEndDateInput = document.getElementById('applyEndDate');
       var experienceDateInput = document.getElementById('experienceDate');
 
-      // Set minimum date for applyStartDate as today
       var today = new Date().toISOString().split('T')[0];
-      applyStartDateInput.setAttribute('min', today);
+      applyStartDateInput.value = today;
 
       // Add event listener to applyStartDate to set the minimum date for applyEndDate
       applyStartDateInput.addEventListener('change', function() {
@@ -622,12 +621,6 @@
         var applyEndDate = applyEndDateInput.value;
         var experienceDate = experienceDateInput.value;
 
-        if (applyStartDate < today) {
-          alert('모집 시작일은 현재 일자 이후로 선택해야 합니다.');
-          event.preventDefault();
-          return false;
-        }
-
         if (applyEndDate < applyStartDate) {
           alert('모집 마감일은 모집 시작일 이후로 선택해야 합니다.');
           event.preventDefault();
@@ -642,7 +635,6 @@
       });
     });
   </script>
-
 
   <script>
     document.getElementById('createPostForm').addEventListener('submit', function (event) {
