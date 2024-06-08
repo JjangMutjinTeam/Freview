@@ -5,7 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.nuguna.freview.dao.member.CustFoodTypeDAO;
+import com.nuguna.freview.dao.member.cust.CustFoodTypeDAO;
 import com.nuguna.freview.dto.common.ResponseMessage;
 import com.nuguna.freview.exception.IllegalFoodTypeException;
 import com.nuguna.freview.util.EncodingUtil;

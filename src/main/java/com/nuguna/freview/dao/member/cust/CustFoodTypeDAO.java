@@ -1,4 +1,4 @@
-package com.nuguna.freview.dao.member;
+package com.nuguna.freview.dao.member.cust;
 
 import static com.nuguna.freview.util.DbUtil.closeResource;
 import static com.nuguna.freview.util.DbUtil.getConnection;
@@ -75,7 +75,7 @@ public class CustFoodTypeDAO {
           foodTypeSeqs.add(rs.getInt("food_type_seq"));
         }
       }
-      
+
       log.info(foodTypeSeqs.toString());
 
       // 3. 선택된 FoodTypeSeq들을 Member와 매핑해준다.

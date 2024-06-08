@@ -3,7 +3,7 @@ package com.nuguna.freview.servlet.member.api.cust.mybrand;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.nuguna.freview.dao.member.CustAgeGroupDAO;
+import com.nuguna.freview.dao.member.cust.CustAgeGroupDAO;
 import com.nuguna.freview.dto.common.ResponseMessage;
 import com.nuguna.freview.exception.IllegalAgeGroupException;
 import com.nuguna.freview.util.EncodingUtil;
