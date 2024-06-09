@@ -413,7 +413,7 @@
       dataType: "json",
       error: function (data) { console.log("여기 에러다 : ", data); },
       success: function (data) {
-        console.log("데이터 수신 완료:", data);
+        // console.log("데이터 수신 완료:", data);
         // 받은 데이터를 처리 == zzimInfos 배열의 각 요소에서 필요한 데이터 추출
         var zzimInfosReceived = data.zzimInfos;
         var bossReceivedDdabong = data.ddabongInfos;
@@ -421,8 +421,8 @@
         $.map(zzimInfosReceived, function (val, idx) {
           // console.log(idx);
           htmlStr += "<div class='card'>";
-          htmlStr += "<div class='card-body'><div><b>+ idx +</b></div>";
-          htmlStr += "<h5 class='card-title'>From. " + val["nickname"] + "</h5>";
+          htmlStr += "<div class='card-body'>"
+          htmlStr += "<h5 class='card-title'><br> From. " + val["nickname"] + "</h5>";
           htmlStr += "<p><a href='<%=request.getContextPath()%>/brand-page?member_seq=" + val["seq"]
                   + "'>" + val["nickname"] + "</a>님이 나를 찜하였습니다.</p>";
           htmlStr += "</div>";
@@ -432,7 +432,7 @@
           htmlStr += "<div class='card'>";
           htmlStr += "<div class='card-body'>";
           htmlStr += "<h5 class='card-title'>From. " + val["nickname"] + "</h5>";
-          htmlStr += "<p><a href='<%=request.getContextPath()%>/brand-page?member_seq=" + val["seq"]
+          htmlStr += "<p><a href='<%=request.getContextPath()%>/brand-page?post_seq=" + val["postSeq"]
                   + "'>" + val["nickname"] + "</a>님이 내 글을 좋아요♥했습니다.</p>";
           htmlStr += "</div>";
           htmlStr += "</div>";
@@ -450,8 +450,8 @@
         dataType: "json",
         error: function (data) { console.log("여기 에러다 : ", data); },
         success: function (data) {
-          console.log("얘는 sendServlet:", data.zzimInfos);
-          console.log("데이터 ddabong : ", data.ddabongInfos);
+          // console.log("얘는 sendServlet:", data.zzimInfos);
+          // console.log("데이터 ddabong : ", data.ddabongInfos);
           // 받은 데이터를 처리 ==  ?? 배열의 각 요소에서 필요한 데이터 추출
           // 받은 데이터를 처리
           // zzimInfos 배열의 각 요소에서 필요한 데이터 추출

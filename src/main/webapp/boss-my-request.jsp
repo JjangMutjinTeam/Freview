@@ -329,10 +329,10 @@
               <!-- Bordered Tabs -->
               <ul class="nav nav-tabs nav-tabs-bordered">
                 <li class="nav-item">
-                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-edit">모집글 리스트</button>
+                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-edit" id="mozzipList">모집글 리스트</button>
                 </li>
                 <li class="nav-item">
-                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-settings">받은 지원서</button>
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-settings" id="receivedRequestList">받은 지원서</button>
                 </li>
                 <li class="nav-item">
                   <button class="nav-link" data-bs-toggle="tab" data-bs-target="#my-request">제안 활동</button>
@@ -343,34 +343,18 @@
                   <!-- MozzipList -->
                   <form method="get" action="${pageContext.request.contextPath}/api/boss/my-notification/received-inform">
                     <!-- Table with stripped rows -->
-                    <table class="table datatable">
+                    <table class="table">
                       <thead>
-                      <tr>
-                        <th>
-                          <b>N</b>o
-                        </th>
-                        <th>지원자</th>
-                        <th>수락여부</th>
+                      <tr style="text-align: center;">
+                        <th>글 제목</th>
                         <th data-type="date" data-format="YYYY/DD/MM">모집시작일</th>
                         <th data-type="date" data-format="YYYY/DD/MM">모집마감일</th>
-                        <th>확정</th>
-                        <th>참석여부</th>
                         <th data-type="date" data-format="YYYY/DD/MM">행사일</th>
-                        <th>리뷰</th>
+                        <th>조회수</th>
                       </tr>
                       </thead>
-                      <tbody>
-                      <tr>
-                        <td>01</td>
-                        <td>yeong</td>
-                        <td>Y</td>
-                        <td>2024/06/15</td>
-                        <td>2024/06/20</td>
-                        <td>확정</td>
-                        <td>NO</td>
-                        <td>2024/06/30</td>
-                        <td>none</td>
-                      </tr>
+                      <tbody id="mozzipListAll" >
+                        <!-- 모집글 리스트 목록 -->
                       </tbody>
                     </table>
                     <!-- End Table with stripped rows -->
@@ -379,21 +363,27 @@
                 </div>
                 <div class="tab-pane fade active pt-6" id="profile-settings">
                   <!-- Settings Form -->
-                  <form method="get" action="${pageContext.request.contextPath}/api/boss/my-notification/send-inform">
-                    <!-- 내가 찜 -->
-                    <div class="card">
-                      <div class="card-body">
-                        <h5 class="card-title">To.OOO </h5>
-                        <p> ____ 님을 찜 하였습니다.</p>
-                      </div>
-                    </div>
-                    <!-- 내가 좋아요 -->
-                    <div class="card">
-                      <div class="card-body">
-                        <h5 class="card-title">To.OOO </h5>
-                        <p> ____님의 게시글을 좋아요했습니다.</p>
-                      </div>
-                    </div>
+                  <form id="strJson">
+                    <!-- Table with stripped rows -->
+                    <table class="table">
+                        <thead>
+                        <tr style="text-align: center;">
+                          <th><b>N</b>o</th>
+                          <th>지원자</th>
+                          <th>진행상태</th>
+                          <th>모집시작일</th>
+                          <th>모집마감일</th>
+                          <th>체험일</th>
+                          <th data-type="date" data-format="YYYY/DD/MM">확정</th>
+                          <th>참석여부</th>
+                          <!--<th>리뷰</th>-->
+                        </tr>
+                        </thead>
+                        <tbody id="receivedRequest" >
+                        <!-- 지원자 리스트 목록 -->
+                      </tbody>
+                    </table>
+                    <!-- End Table with stripped rows -->
                   </form><!-- End settings Form -->
 
                 </div>
@@ -458,9 +448,87 @@
   <script src="assets/js/main.js"></script>
 
   <script>
+    $(function() {
+      // 모집글 리스트
+      $.ajax({
+        method: "GET",
+        url: "<%=request.getContextPath()%>/api/boss/my-request",
+        dataType: "json",
+        error: function(data) {
+          console.log("여기 에러다 : ", data);
+        },
+        success: function(data) {
+          console.log("데이터 수신 완료:", data);
+          var bossMozzipList = data.bossMozzipList;
+          var htmlStr = " ";
+          $.map(bossMozzipList, function(item, index) {
+            htmlStr += "<tr style='text-align: center'>";
+            htmlStr += "<td>" + item.title + "</td>";
+            htmlStr += "<td>" + item.applyStartDate + "</td>";
+            htmlStr += "<td>" + item.applyEndDate + "</td>";
+            htmlStr += "<td>" + item.experienceDate + "</td>";
+            htmlStr += "<td>" + item.viewCount + "</td>";
+            htmlStr += "</tr>";
+          });
+          $("#mozzipListAll").html(htmlStr);
+        }
+      });
 
+      // 받은 지원서
+      $("#receivedRequestList").click(function() {
+        var sendFormData = $("#strJson").serialize();
+        console.log(sendFormData);
+        $.ajax({
+          method: "GET",
+          url: "<%=request.getContextPath()%>/api/boss/my-request",
+          dataType: "json",
+          error: function(data) {
+            console.log("여기 에러다 : ", data);
+          },
+          success: function(data) {
+            console.log("데이터 수신 완료:", data);
+            var receivedRequest = data.receivedRequest;
+            var htmlStr = " ";
+            $.map(receivedRequest, function(item, index) {
+              htmlStr += "<tr style='text-align: center'>";
+              htmlStr += "<td>" + item.seq + "</td>";
+              htmlStr += "<td>" + item.nickname + "</td>";
+              htmlStr += "<td>" + item.status + "</td>";
+              htmlStr += "<td>" + item.comeDate + "</td>";
+              htmlStr += "<td>" + item.comeOrNot + "</td>";
+              htmlStr += "<td>" + item.experienceDate + "</td>";
+              htmlStr += "<td><button class='attend-btn' data-id='" + item.seq + "'>참석</button></td>";
+              htmlStr += "</tr>";
+            });
+            $("#receivedRequest").html(htmlStr);
 
+            // 참석 버튼에 이벤트 핸들러 추가
+            $(".attend-btn").click(function() {
+              var id = $(this).data("id");
+              attendRequest(id);
+            });
+          }
+        });
+      });
+
+      // 참석 요청 처리 함수
+      function attendRequest(id) {
+        $.ajax({
+          method: "POST",
+          url: "<%=request.getContextPath()%>/api/attend",
+          data: { id: id },
+          success: function(response) {
+            alert("참석 처리되었습니다.");
+          },
+          error: function(error) {
+            console.log("에러 발생:", error);
+            alert("참석 처리에 실패했습니다.");
+          }
+        });
+      }
+    });
   </script>
+
 </body>
 
 </html>
