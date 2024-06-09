@@ -24,7 +24,36 @@ public class PostDAO {
 
   private final String INSERT_POST_DDABONG = "INSERT into ddabong(member_seq, post_seq, created_at) values(?, ?, ?)";
 
-  public boolean insertPost(Ddabong ddabong) {
+  private final String DELETE_POST_DDABONG = "DELETE FROM ddabong WHERE member_seq = ? and post_seq = ?"; //TODO: ddabongSeq을 조건으로 사용할 수 있는지 고려
+
+  public boolean deleteDdabong(Ddabong ddabong) {
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+
+    boolean isDeleted = false;
+
+    try {
+      conn = getConnection();
+      pstmt = conn.prepareStatement(DELETE_POST_DDABONG);
+      pstmt.setInt(1, ddabong.getMemberSeq());
+      pstmt.setInt(2, ddabong.getPostSeq());
+
+      int rows = pstmt.executeUpdate();
+
+      if (rows > 0) {
+        isDeleted = true;
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    } finally {
+      closeResource(pstmt, conn, rs);
+    }
+
+    return isDeleted;
+  }
+
+  public boolean insertDdabong(Ddabong ddabong) {
     Connection conn = null;
     PreparedStatement pstmt = null;
     ResultSet rs = null;
@@ -44,6 +73,8 @@ public class PostDAO {
 
     } catch (SQLException e) {
       throw new RuntimeException(e);
+    } finally {
+      closeResource(pstmt, conn, rs);
     }
 
     return isInserted;

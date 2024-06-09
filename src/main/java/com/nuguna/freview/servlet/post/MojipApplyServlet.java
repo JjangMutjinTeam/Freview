@@ -36,8 +36,6 @@ public class MojipApplyServlet extends HttpServlet {
     request.setCreatedAt(Timestamp.valueOf(now));
     request.setUpdatedAt(Timestamp.valueOf(now));
 
-    System.out.println("request test " + request);
-
     boolean isInserted = requestDAO.insertApply(request);
 
     if (isInserted) {

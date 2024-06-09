@@ -30,11 +30,8 @@ public class PostDdabongAddServlet extends HttpServlet {
     ddabong.setPostSeq(Integer.valueOf(req.getParameter("postSeq")));
     ddabong.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
 
-    System.out.println(ddabong);
-
-    boolean isInserted = postDAO.insertPost(ddabong);
-
-    System.out.println(isInserted);
+    //TODO: 동시성 문제 고려
+    boolean isInserted = postDAO.insertDdabong(ddabong);
 
     if (isInserted) {
       resp.setStatus(HttpServletResponse.SC_OK);
