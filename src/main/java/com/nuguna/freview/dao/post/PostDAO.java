@@ -19,6 +19,39 @@ public class PostDAO {
 
   private final String DELETE_POST_BY_SEQ = "DELETE FROM post WHERE post_seq = ?";
 
+  private final String SELECT_POST_LIKED = "SELECT count(*) from ddabong where member_seq = ? and post_seq = ?";
+
+  public boolean isLikedPost(int memberSeq, int postSeq) {
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+
+    boolean isPostLiked = false;
+
+    try {
+      conn = getConnection();
+      pstmt = conn.prepareStatement(SELECT_POST_LIKED);
+      pstmt.setInt(1, memberSeq);
+      pstmt.setInt(2, postSeq);
+
+      rs = pstmt.executeQuery();
+
+      if (rs.next()) {
+        int rows = rs.getInt(1);
+        if (rows > 0) {
+          isPostLiked = true;
+        }
+      }
+
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    } finally {
+      closeResource(pstmt, conn, rs);
+    }
+
+    return isPostLiked;
+  }
+
   public boolean deletePost(int postSeq) {
     Connection conn = null;
     PreparedStatement pstmt = null;
