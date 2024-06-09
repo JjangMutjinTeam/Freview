@@ -18,10 +18,11 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberFoodTypeDAO {
 
   public void updateMemberFoodTypes(int memberSeq, List<String> foodTypeNames) {
+    log.info("foodTypeNames = " + foodTypeNames.toString());
     List<FoodTypeGubun> foodTypeGubuns;
     try {
       foodTypeGubuns = foodTypeNames.stream()
-          .map(FoodTypeGubun::from)
+          .map(FoodTypeGubun::fromName)
           .collect(Collectors.toList());
     } catch (IllegalFoodTypeException e) {
       throw e;
@@ -63,7 +64,7 @@ public class MemberFoodTypeDAO {
 
       int index = 1;
       for (FoodTypeGubun foodTypeGubun : foodTypeGubuns) {
-        selectPstmt.setString(index++, foodTypeGubun.getCodeName());
+        selectPstmt.setString(index++, foodTypeGubun.getName());
       }
 
       List<Integer> foodTypeSeqs = new ArrayList<>();
