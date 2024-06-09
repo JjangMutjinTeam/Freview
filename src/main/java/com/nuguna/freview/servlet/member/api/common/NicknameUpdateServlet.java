@@ -49,8 +49,10 @@ public class NicknameUpdateServlet extends HttpServlet {
       // TODO : 추후 Input Data가 NULL 인 경우 또한 처리해주어야 함.
       // TODO : 서블릿 필터에서 memberSeq의 유효성을 체크해준다고 가정
       int memberSeq = jsonObject.get("member_seq").getAsInt();
-      String fromNickname = jsonObject.get("from_nickname").getAsString();
       String toNickname = jsonObject.get("to_nickname").getAsString();
+
+      log.info("memberSeq = " + memberSeq);
+      log.info("to_nickname = " + toNickname);
 
       if (!memberUtilDAO.isValidMember(memberSeq)) {
         JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_BAD_REQUEST,
@@ -69,13 +71,6 @@ public class NicknameUpdateServlet extends HttpServlet {
       if (isExistNickname) {
         JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_BAD_REQUEST,
             new ResponseMessage<>("중복된 닉네임입니다. 다시 입력해주세요.", null), response, gson);
-        return;
-      }
-
-      // 기존과 동일한 닉네임
-      if (fromNickname.equals(toNickname)) {
-        JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_BAD_REQUEST,
-            new ResponseMessage<>("기존과 동일한 닉네임입니다.", null), response, gson);
         return;
       }
 

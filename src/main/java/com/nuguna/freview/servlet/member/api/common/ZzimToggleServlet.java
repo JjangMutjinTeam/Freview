@@ -48,6 +48,13 @@ public class ZzimToggleServlet extends HttpServlet {
       // TODO : 서블릿 필터에서 memberSeq의 유효성을 체크해준다고 가정
       int fromMemberSeq = jsonObject.get("from_member_seq").getAsInt();
       int toMemberSeq = jsonObject.get("to_member_seq").getAsInt();
+
+      if (fromMemberSeq == toMemberSeq) {
+        JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_BAD_REQUEST,
+            new ResponseMessage<>("자기 자신은 찜할 수 없습니다.", null), response, gson);
+        return;
+      }
+
       if (!memberUtilDAO.isValidMember(fromMemberSeq) || !memberUtilDAO.isValidMember(
           toMemberSeq)) {
         JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_BAD_REQUEST,

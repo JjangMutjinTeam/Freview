@@ -1,12 +1,11 @@
 <%@ page import="com.nuguna.freview.dto.cust.brand.CustMyBrandInfoDto" %>
 <%@ page import="com.google.gson.Gson" %>
-<%@ page import="com.nuguna.freview.dto.boss.brand.BossMyBrandInfoDto" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <%
-    BossMyBrandInfoDto brandInfo = (BossMyBrandInfoDto) request.getAttribute("brandInfo");
+    CustMyBrandInfoDto brandInfo = (CustMyBrandInfoDto) request.getAttribute("brandInfo");
     Gson gson = new Gson();
 %>
 
@@ -109,39 +108,13 @@
                 <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
                     <img src="assets/img/basic/basic-profile-img.png" alt="Profile"
                          class="rounded-circle">
-                    <span id="store-name-holder-head"
-                          class="d-none d-md-block">${brandInfo.storeName}</span>
+                    <span id="nickname-holder-head"
+                          class="d-none d-md-block">${fromMemberNickname}</span>
                 </a><!-- End Profile Iamge Icon -->
             </li><!-- End Profile Nav -->
         </ul>
     </nav><!-- End Icons Navigation -->
 </header><!-- End Header -->
-
-<!-- ======= Sidebar ======= -->
-<aside id="sidebar" class="sidebar">
-    <ul class="sidebar-nav" id="sidebar-nav">
-        <li class="nav-item">
-            <a class="nav-link" data-bs-target="#components-nav"
-               href="#">
-                <i class="bi bi-person"></i><span>브랜딩</span>
-            </a>
-        </li><!-- End Components Nav -->
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="users-profile.html">
-                <i class="bi bi-layout-text-window-reverse"></i>
-                <span>활동</span>
-            </a>
-        </li><!-- End Profile Page Nav -->
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="pages-faq.html">
-                <i class="bi bi-envelope"></i>
-                <span>알림</span>
-            </a>
-        </li><!-- End F.A.Q Page Nav -->
-    </ul>
-</aside><!-- End Sidebar-->
 
 <main id="main" class="main">
 
@@ -156,7 +129,7 @@
                 <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
                     <img src="assets/img/basic/basic-profile-img.png" alt="Profile"
                          class="rounded-circle">
-                    <h2 id="store-name-holder-section">${brandInfo.storeName}</h2>
+                    <h2 id="nickname-holder-section">${brandInfo.nickname}</h2>
                     <div class="social-links mt-2 ri-heart-3-fill">
                         ${brandInfo.zzimCount}
                     </div>
@@ -171,16 +144,6 @@
 
                             <h5 class="card-title">Profile Details</h5>
 
-                            <!-- 스토어명 -->
-                            <div class="row">
-                                <div class="col-lg-3 col-md-4 label">스토어명</div>
-                                <div class="col-lg-8 col-md-6">
-                                    <input id="store-name-input" type="text"
-                                           value="<%= brandInfo.getStoreName() %>"
-                                           class="form-control" readonly>
-                                </div>
-                            </div>
-
                             <!-- 소개 -->
                             <div class="row">
                                 <div class="col-lg-3 col-md-4 label">소개</div>
@@ -190,8 +153,33 @@
                                            class="form-control" readonly>
                                 </div>
                             </div>
+                        </div>
 
-                            <!-- 활동분야 보여주기/등록하기 -->
+                        <!-- 닉네임 보여주기/등록하기 -->
+                        <div class="tab-pane fade show active profile-overview">
+                            <div class="row">
+                                <div class="col-lg-3 col-md-4 label">닉네임</div>
+                                <div class="col-lg-8 col-md-6">
+                                    <input type="text"
+                                           value="<%= brandInfo.getNickname() %>"
+                                           class="form-control" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 연령대 보여주기/등록하기 -->
+                        <div class="tab-pane fade show active profile-overview">
+                            <div class="row">
+                                <div class="col-lg-3 col-md-4 label">연령대</div>
+                                <div class="col-lg-8 col-md-6">
+                                    <input type="text"
+                                           value="<%= brandInfo.getAgeGroup() %>"
+                                           class="form-control" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade show active profile-overview">
                             <div class="row">
                                 <div class="col-lg-3 col-md-4 label">활동 분야</div>
                                 <div class="col-lg-8 col-md-6">
@@ -206,79 +194,83 @@
                                     </select>
                                 </div>
                             </div>
+                        </div>
 
-                            <script>
-                              // 서버에서 받아온 foodType 목록을 JSON 형태로 포함
-                              var selectedFoodTypes = JSON.parse(
-                                  '<%= gson.toJson(brandInfo.getFoodTypes()) %>');
+                        <script>
+                          // 서버에서 받아온 foodType 목록을 JSON 형태로 포함
+                          var selectedFoodTypes = JSON.parse(
+                              '<%= gson.toJson(brandInfo.getFoodTypes()) %>');
 
-                              // foodType 목록을 미리 선택된 상태로 설정
-                              document.addEventListener('DOMContentLoaded', function () {
-                                var foodTypeSelect = document.getElementById('food-type-select');
-                                for (var i = 0; i < foodTypeSelect.options.length; i++) {
-                                  if (selectedFoodTypes.includes(foodTypeSelect.options[i].value)) {
-                                    foodTypeSelect.options[i].selected = true;
-                                    foodTypeSelect.options[i].classList.add('selected-option');
-                                  }
-                                }
-                              });
-                            </script>
+                          // foodType 목록을 미리 선택된 상태로 설정
+                          document.addEventListener('DOMContentLoaded', function () {
+                            var foodTypeSelect = document.getElementById('food-type-select');
+                            for (var i = 0; i < foodTypeSelect.options.length; i++) {
+                              if (selectedFoodTypes.includes(foodTypeSelect.options[i].value)) {
+                                foodTypeSelect.options[i].selected = true;
+                                foodTypeSelect.options[i].classList.add('selected-option');
+                              }
+                            }
+                          });
+                        </script>
 
 
-                            <!-- 태그들 보여주기/등록하기 -->
+                        <!-- 태그들 보여주기/등록하기 -->
+                        <div class="tab-pane fade show active profile-overview">
                             <div class="row">
                                 <div class="col-lg-3 col-md-4 label">태그</div>
                                 <div class="col-lg-8 col-md-6">
-                                    <select id="tag-select" class="form-select" multiple size="4"
+                                    <select id="tag-select" class="form-select" multiple size="3"
                                             disabled>
-                                        <option value="단체석">단체석</option>
-                                        <option value="뷰 맛집">뷰 맛집</option>
-                                        <option value="오션뷰">오션뷰</option>
-                                        <option value="반려동물 환영">반려동물 환영</option>
+                                        <option value="초식">초식</option>
+                                        <option value="육식">육식</option>
+                                        <option value="빵빵이">빵빵이</option>
                                     </select>
                                 </div>
                             </div>
+                        </div>
+                        <script>
+                          $(document).ready(function () {
+                            var selectedTags = JSON.parse(
+                                '<%=gson.toJson(brandInfo.getTagInfos())%>');
 
-                            <script>
-                              $(document).ready(function () {
-                                var selectedTags = JSON.parse(
-                                    '<%=gson.toJson(brandInfo.getTagInfos())%>');
-
-                                function initializeTagSelect() {
-                                  var tagSelect = $('#tag-select');
-                                  tagSelect.find('option').each(function () {
-                                    if (selectedTags.includes($(this).val())) {
-                                      $(this).prop('selected', true);
-                                      $(this).addClass('selected-option');
-                                    } else {
-                                      $(this).prop('selected', false);
-                                      $(this).removeClass('selected-option');
-                                    }
-                                  });
+                            function initializeTagSelect() {
+                              var tagSelect = $('#tag-select');
+                              tagSelect.find('option').each(function () {
+                                if (selectedTags.includes($(this).val())) {
+                                  $(this).prop('selected', true);
+                                  $(this).addClass('selected-option');
+                                } else {
+                                  $(this).prop('selected', false);
+                                  $(this).removeClass('selected-option');
                                 }
+                              })
+                              ;
+                            }
 
-                                initializeTagSelect();
-                            </script>
-                            
-
+                            initializeTagSelect();
+                          }
+                        </script>
 </main><!-- End #main -->
 
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
     <div class="copyright">
-        &copy; Copyright <strong><span>JjangMutjinTeam</span></strong>. All Rights Reserved
+        &copy; Copyright <strong><span>JjangMutjinTeam</span></strong>. All
+        Rights Reserved
     </div>
     <div class="credits">
         Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
     </div>
 </footer><!-- End Footer -->
 
-<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+<a href="#"
+   class="back-to-top d-flex align-items-center justify-content-center"><i
         class="bi bi-arrow-up-short"></i></a>
 <!-- jquery  -->
 
 <!-- icon bootstrap -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+<script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 
