@@ -10,7 +10,14 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Components / Accordion - NiceAdmin Bootstrap Template</title>
+    <title>모집 게시판</title>
+    <%
+        Member loginUser = (Member) session.getAttribute("Member");
+        Integer memberSeq = loginUser.getMemberSeq();
+        String gubun = loginUser.getGubun();
+        request.setAttribute("gubun", gubun);
+        request.setAttribute("memberSeq", memberSeq);
+    %>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -40,6 +47,34 @@
         background-color: white !important;
       }
     </style>
+    <style>
+      .post-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px; /* 카드 사이의 간격을 설정합니다 */
+      }
+      .post-item {
+        flex: 0 0 calc(25% - 16px); /* 카드의 너비를 4등분하여 설정합니다. 카드 간격을 고려하여 너비를 계산합니다 */
+        box-sizing: border-box;
+        border: 1px solid #ddd; /* 카드 테두리 */
+        border-radius: 8px; /* 카드 모서리를 둥글게 */
+        padding: 16px; /* 카드 내부 여백 */
+        background-color: #fff; /* 카드 배경색 */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 카드 그림자 */
+        text-decoration: none; /* 링크의 기본 밑줄 제거 */
+        color: inherit; /* 링크의 기본 색상 상속 */
+      }
+      .post-item img.profile-img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 50%; /* 이미지 둥글게 */
+      }
+      .post-item h3, .post-item p {
+        margin: 8px 0; /* 제목과 내용의 여백 설정 */
+      }
+    </style>
+
+
     <!-- =======================================================
     * Template Name: NiceAdmin
     * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
@@ -538,7 +573,7 @@
 <main id="main" class="main">
 
     <div class="pagetitle">
-        <h1>공지게시판</h1>
+        <h1>모집 게시판</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
@@ -548,71 +583,36 @@
         </nav>
     </div><!-- End Page Title -->
 
-    <%
-        Member loginUser = (Member) session.getAttribute("Member");
-        Integer memberSeq = loginUser.getMemberSeq();
-        String gubun = loginUser.getGubun();
-        request.setAttribute("gubun", gubun);
-        request.setAttribute("memberSeq", memberSeq);
-    %>
-
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">새로운 공지글을 입력해주세요</h5>
+            <h5 class="card-title">모집 게시판</h5>
+            <p>매우 중요한 모집글이 올라옵니다 <br></p>
 
-            <!-- Form for creating a post -->
-            <form id="createPostForm" action="/noticeBoard/createPost" method="post">
-                <div class="mb-3">
-                    <label for="title" class="form-label">제목</label>
-                    <input type="text" class="form-control" id="title" name="title" required>
-                </div>
-                <div class="mb-3">
-                    <label for="content" class="form-label">내용</label>
-                    <textarea class="form-control" id="content" name="content" rows="15"
-                              required></textarea>
-                </div>
-                <input type="hidden" id="memberSeq" name="memberSeq" value="${memberSeq}">
-                <div class="d-flex justify-content-between">
-                    <button type="button" class="btn btn-secondary" onclick="location.href='/noticeBoard'">취소</button>                            onclick="location.href='/noticeBoard'">이전
-                    </button>
-                    <button type="submit" class="btn btn-primary">등록</button>
-                </div>
-            </form>
-            <!-- End Form for creating a post -->
+            <c:if test="${gubun.equals('B')}">
+            <div class="d-flex justify-content-end">
+                <a href="/mojipBoard/createPost" class="btn btn-primary">
+                    모집 등록
+                </a>
+            </div>
+            </c:if>
+
+            <!-- 게시글 리스트 추가 -->
+            <div class="post-list">
+                <c:forEach var="post" items="${postList}">
+                    <a href="/mojipboard/detail?postSeq=${post.postSeq}" class="post-item">
+                        <img src="${post.profilePhotoUrl}" alt="Profile" class="profile-img">
+                        <h5>${post.title}</h5>
+                        <p>모집 가게: ${post.storeName}</p>
+                        <p>모집 기간: ${post.applyStartDate} ~ ${post.applyEndDate} </p>
+                        <p>방문 날짜: ${post.experienceDate}</p>
+                        <p>좋아요 수: ${post.numberOfDdabong}</p>
+                    </a>
+                </c:forEach>
+            </div>
+            <!-- 게시글 리스트 끝 -->
 
         </div>
     </div>
-
-    <script>
-      document.getElementById('createPostForm').addEventListener('submit', function (event) {
-        event.preventDefault(); // Prevent the default form submission
-
-        var formData = new URLSearchParams(new FormData(this));
-
-        fetch('/noticeBoard/createPost', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: formData.toString()
-        })
-        .then(response => {
-          if (response.ok) {
-            return response.text().then(data => {
-              console.log(data);
-              alert('게시글이 성공적으로 등록되었습니다.');
-              location.replace("/noticeBoard")
-            })
-          } else {
-            response.text().then(data => {
-              console.error(data);
-              alert('게시글 등록에 실패했습니다. 다시 시도해 주세요.');
-            });
-          }
-        })
-        .catch(error => console.error('Error:', error));
-      });
-    </script>
 
 </main><!-- End #main -->
 

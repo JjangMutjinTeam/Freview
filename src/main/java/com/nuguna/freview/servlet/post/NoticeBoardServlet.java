@@ -1,5 +1,6 @@
 package com.nuguna.freview.servlet.post;
 
+import com.nuguna.freview.dao.post.NoticePostDAO;
 import com.nuguna.freview.dao.post.PostDAO;
 import com.nuguna.freview.entity.post.Post;
 import java.io.IOException;
@@ -13,7 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/noticeBoard")
 public class NoticeBoardServlet extends HttpServlet {
-  PostDAO postDAO = new PostDAO();
+
+  NoticePostDAO noticePostDAO = new NoticePostDAO();
 
   private final int LIMIT = 10;
 
@@ -29,7 +31,7 @@ public class NoticeBoardServlet extends HttpServlet {
       previousPostSeq = Integer.parseInt(req.getParameter("previousPostSeq"));
     }
 
-    List<Post> postList = postDAO.selectPostByCursorPaging(postGubun, previousPostSeq, LIMIT);
+    List<Post> postList = noticePostDAO.selectNoticePostByCursorPaging(postGubun, previousPostSeq, LIMIT);
     req.setAttribute("postList", postList);
 
     RequestDispatcher rd = req.getRequestDispatcher("/common-notice-board-y.jsp");

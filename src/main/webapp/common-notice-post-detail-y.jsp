@@ -1,3 +1,4 @@
+<%@ page import="com.nuguna.freview.entity.member.Member" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -10,6 +11,15 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
     <title>공지글 상세보기</title>
+    <%
+        Member loginUser = (Member) session.getAttribute("Member");
+        Integer memberSeq = loginUser.getMemberSeq();
+        String gubun = loginUser.getGubun();
+        request.setAttribute("gubun", gubun);
+        request.setAttribute("memberSeq", memberSeq);
+    %>
+    gubun
+    memberSeq
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -569,9 +579,13 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="card-title mb-0">공지</h5>
+                    <c:if test="${memberSeq == POST.memberSeq}">
                     <div>
                         <button type="button" class="btn btn-danger" onclick="confirmDelete()">삭제</button>
                         <button type="button" class="btn btn-primary" onclick="editPost()">수정</button>
+                    </div>
+                    </c:if>
+                    <div>
                         <button type="button" class="btn btn-primary" onclick="location.href='/noticeBoard'">목록으로</button>
                     </div>
                 </div>
@@ -588,7 +602,7 @@
                         </tr>
                         <tr>
                             <th class="fixed-width">작성자</th>
-                            <td>사이트 관리자</td>
+                            <td>${POST.memberSeq}</td>
                         </tr>
                         <tr>
                             <th class="fixed-width">작성일자</th>
