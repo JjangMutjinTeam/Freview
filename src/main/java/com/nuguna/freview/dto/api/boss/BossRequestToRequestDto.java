@@ -16,4 +16,5 @@ public class BossRequestToRequestDto {
   String status;
   String createdAt;
   String nickname;
+  String experienceDate;
 }

@@ -6,6 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class BossRequestMozzipListDto {
+//  Integer seq;
   Integer bossSeq;
   String title;
   String applyStartDate;

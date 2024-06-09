@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class BossRequestDAO {
@@ -34,7 +35,8 @@ public class BossRequestDAO {
       pstmt.setInt(1, bossSeq);
       rs = pstmt.executeQuery();
       while(rs.next()) {
-        bossSeq = rs.getInt("member_seq");
+//        int seq = rs.getInt("seq");
+        int memberSeq = rs.getInt("member_seq");
         String title = rs.getString("title");
         String applyStartDate = rs.getString("apply_start_date");
         String applyEndDate = rs.getString("apply_end_date");
@@ -42,7 +44,7 @@ public class BossRequestDAO {
         String createDate = rs.getString("created_at");
         int viewCount = rs.getInt("view_count");
         bossMozzipList.add(
-            new BossRequestMozzipListDto( bossSeq, title, applyStartDate,
+            new BossRequestMozzipListDto( memberSeq, title, applyStartDate,
                 applyEndDate, experienceDate, createDate, viewCount )
         );
       }
@@ -129,7 +131,8 @@ public class BossRequestDAO {
         String status = rs.getString("status");
         String createDate = rs.getString("created_at");
         String nickname = rs.getString("nickname");
-        toRequestList.add( new BossRequestToRequestDto(seq, fromMemberSeq, fromPost, comeDate, comeOrNot, reviewOrNot, benefitDetail, status,createDate, nickname));
+        String experienceDate = getExperienceDate(fromPost);
+        toRequestList.add( new BossRequestToRequestDto(seq, fromMemberSeq, fromPost, comeDate, comeOrNot, reviewOrNot, benefitDetail, status,createDate, nickname, experienceDate));
       }
     }  catch (SQLException e) {
       throw new RuntimeException("SQLException: 사장님이 체험단에게 제안한 리스트를 불러오는 도중 문제가 발생했습니다.", e);
@@ -138,5 +141,30 @@ public class BossRequestDAO {
     }
     return toRequestList;
   }
+
+  public String getExperienceDate(int postSeq) {
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+
+    String sql = "SELECT experience_date from post where post_seq = ?";
+    try {
+      conn = getConnection();
+      pstmt = conn.prepareStatement(sql);
+      pstmt.setInt(1, postSeq);
+      rs = pstmt.executeQuery();
+      if (rs.next()) {
+        return rs.getString("experience_date");
+      }
+
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    } finally {
+      closeResource(pstmt, conn);
+    }
+
+    return null;
+  }
+
 
 }

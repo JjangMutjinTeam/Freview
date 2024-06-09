@@ -39,13 +39,17 @@
     <!-- Template Main CSS File -->
     <link href="assets/css/style.css" rel="stylesheet">
 
-    <!-- =======================================================
-    * Template Name: NiceAdmin
-    * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
-    * Updated: Apr 20 2024 with Bootstrap v5.3.3
-    * Author: BootstrapMade.com
-    * License: https://bootstrapmade.com/license/
-    ======================================================== -->
+  <!-- =======================================================
+  * Template Name: NiceAdmin
+  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+  * Updated: Apr 20 2024 with Bootstrap v5.3.3
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+  <!-- add css-->
+  <link rel="stylesheet" href="assets/css/style-h.css" />
+  <!-- JQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 </head>
 
 <body>
@@ -317,13 +321,12 @@
         </li>
         <!-- End Profile Page Nav -->
 
-        <li class="nav-item">
-            <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/boss-brand-info.jsp">
-                <i class="bi bi-person"></i>
-                <span>개인정보수정</span>
-            </a>
-        </li><!-- End Register Page Nav -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#">
+          <i class="bi bi-person"></i>
+          <span>개인정보수정</span>
+        </a>
+      </li><!-- End Register Page Nav -->
 
     </ul>
 
@@ -332,65 +335,44 @@
 <main id="main" class="main">
 
     <section class="section profile">
-        <div class="row">
-            <div class="col-xl-12">
-                <div class="card">
-                    <div class="card-body pt-3">
-                        <!-- Bordered Tabs -->
-                        <ul class="nav nav-tabs nav-tabs-bordered">
-                            <li class="nav-item">
-                                <button class="nav-link active" data-bs-toggle="tab"
-                                        data-bs-target="#receivedBtn">받은 알림
-                                </button>
-                            </li>
-                            <li class="nav-item">
-                                <button class="nav-link" data-bs-toggle="tab"
-                                        data-bs-target="#requestBtn">보낸 알림
-                                </button>
-                            </li>
-                        </ul>
-                        <div class="tab-content pt-2">
-                            <div class="tab-pane show fade active profile-edit pt-6"
-                                 id="receivedBtn">
-                                <!-- received -->
-                                <form method="get"
-                                      action="${pageContext.request.contextPath}/api/boss/my-notification/received-inform">
-                                    <!-- 나를 찜 -->
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <h5 class="card-title">From.OOO </h5>
-                                            <p> ____ 님이 나를 찜 하였습니다.</p>
-                                        </div>
-                                    </div>
-                                    <!-- 나를 좋아요 -->
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <h5 class="card-title">From.OOO </h5>
-                                            <p> ____님이 내 게시글을 좋아요했습니다.</p>
-                                        </div>
-                                    </div>
-                                </form><!-- End Profile Edit Form -->
+      <div class="row">
+        <div class="col-xl-12">
+          <div class="card">
+            <div class="card-body pt-3">
+              <!-- Bordered Tabs -->
+              <ul class="nav nav-tabs nav-tabs-bordered">
+                <li class="nav-item">
+                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#receivedBtn">받은 알림</button>
+                </li>
+                <li class="nav-item">
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#requestBtn" id="SendInform">보낸 알림</button>
+                </li>
+              </ul>
+              <div class="tab-content pt-1">
+                <div class="tab-pane show fade active profile-edit pt-6" id="receivedBtn">
+                  <!-- received -->
+                  <form >
+                    <!-- 나를 찜 & 좋아요 -->
+                    <div  id="bossReceivedZzim">
 
-                            </div>
-                            <div class="tab-pane fade active pt-6" id="requestBtn">
-                                <!-- Settings Form -->
-                                <form method="get"
-                                      action="${pageContext.request.contextPath}/api/boss/my-notification/send-inform">
-                                    <!-- 내가 찜 -->
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <h5 class="card-title">To.OOO </h5>
-                                            <p> ____ 님을 찜 하였습니다.</p>
-                                        </div>
-                                    </div>
-                                    <!-- 내가 좋아요 -->
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <h5 class="card-title">To.OOO </h5>
-                                            <p> ____님의 게시글을 좋아요했습니다.</p>
-                                        </div>
-                                    </div>
-                                </form><!-- End settings Form -->
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div class="tab-content pt-2">
+                <div class="tab-pane fade active pt-6" id="requestBtn" >
+                  <!-- Settings Form -->
+                  <form>
+                    <!-- 내가 찜 &  -->
+                    <div id="bossSendInform">
+
+                    </div>
+                    <%--                    <div class="card" id="bossRequestList">--%>
+                    <%--                      <div class="card-body" >--%>
+                    <%--                        <h5 class="card-title">To.OOO </h5>--%>
+                    <%--                        <p> ____ 님을 찜 하였습니다.</p>--%>
+                    <%--                      </div>--%>
+                    <%--                    </div>--%>
 
                             </div>
                         </div>
@@ -430,33 +412,88 @@
 <script src="assets/vendor/tinymce/tinymce.min.js"></script>
 <script src="assets/vendor/php-email-form/validate.js"></script>
 
-<!-- Template Main JS File -->
-<script src="assets/js/main.js"></script>
-<!-- JQuery -->
-<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-<script>
-  $(function () {
+  <!-- Template Main JS File -->
+  <script src="assets/js/main.js"></script>
+
+  <script>
+  $(function(){
+
     $.ajax({ // receivedBtn
       method: "GET",
-      url: "<%=request.getContextPath()%>/ReceivedInformServlet",
+      url: "<%=request.getContextPath()%>/api/boss/my-notification/received-inform",
       dataType: "json",
+      error: function (data) { console.log("여기 에러다 : ", data); },
       success: function (data) {
-        console.log("데이터 수신 완료:", data);
-        // 받은 데이터를 처리
-        // var zzimInfos = data.zzimInfos;
-        // var ddabongInfos = data.ddabongInfos;
-        //
-        // console.log("받은 알림", zzimInfos);
-        // console.log("보낸 알림", ddabongInfos);
-      },
-      errors: function (data) {
-        console.log("이건에러", data);
+        // console.log("데이터 수신 완료:", data);
+        // 받은 데이터를 처리 == zzimInfos 배열의 각 요소에서 필요한 데이터 추출
+        var zzimInfosReceived = data.zzimInfos;
+        var bossReceivedDdabong = data.ddabongInfos;
+        var htmlStr = "<div>"
+        $.map(zzimInfosReceived, function (val, idx) {
+          // console.log(idx);
+          htmlStr += "<div class='card'>";
+          htmlStr += "<div class='card-body'>"
+          htmlStr += "<h5 class='card-title'><br> From. " + val["nickname"] + "</h5>";
+          htmlStr += "<p><a href='<%=request.getContextPath()%>/brand-page?member_seq=" + val["seq"]
+                  + "'>" + val["nickname"] + "</a>님이 나를 찜하였습니다.</p>";
+          htmlStr += "</div>";
+          htmlStr += "</div>";
+        });
+        $.map(bossReceivedDdabong, function (val, idx) {
+          htmlStr += "<div class='card'>";
+          htmlStr += "<div class='card-body'>";
+          htmlStr += "<h5 class='card-title'>From. " + val["nickname"] + "</h5>";
+          htmlStr += "<p><a href='<%=request.getContextPath()%>/brand-page?post_seq=" + val["postSeq"]
+                  + "'>" + val["nickname"] + "</a>님이 내 글을 좋아요♥했습니다.</p>";
+          htmlStr += "</div>";
+          htmlStr += "</div>";
+        });
+        htmlStr += "</div>";
+        $("#bossReceivedZzim").html(htmlStr);
       }
     });
 
-    // $("#requestBtn").click(function(){
-    //
-    // });
+
+    $("#SendInform").click(function() { // bossReceivedDdabong
+      $.ajax({
+        method: "GET",
+        url: "<%=request.getContextPath()%>/api/boss/my-notification/send-inform",
+        dataType: "json",
+        error: function (data) { console.log("여기 에러다 : ", data); },
+        success: function (data) {
+          // console.log("얘는 sendServlet:", data.zzimInfos);
+          // console.log("데이터 ddabong : ", data.ddabongInfos);
+          // 받은 데이터를 처리 ==  ?? 배열의 각 요소에서 필요한 데이터 추출
+          // 받은 데이터를 처리
+          // zzimInfos 배열의 각 요소에서 필요한 데이터 추출
+          var bossSendZzim = data.zzimInfos;
+          var bossSendDdabong = data.zzimInfos;
+          var htmlStr = "<div>"
+          // 수정할 부분
+          $.map(bossSendZzim, function (val, idx) {
+             htmlStr += "<div class='card'>";
+             htmlStr += "<div class='card-body'>";
+             htmlStr += "<h5 class='card-title'>TO. " + val["nickname"] + "</h5>";
+             htmlStr += "<p><a href='<%=request.getContextPath()%>/brand-page?member_seq=" + val["seq"]
+                     + "'>" + val["nickname"] + "</a>님을 찜하였습니다.</p>";
+             htmlStr += "</div>";
+             htmlStr += "</div>";
+           });
+           $.map(bossSendDdabong, function (val, idx) { // 변수명은 알아볼 수 있게 자유롭게 선택
+             htmlStr += "<div class='card'>";
+             htmlStr += "<div class='card-body'>";
+             htmlStr += "<h5 class='card-title'>TO. " + val["nickname"] + "</h5>";
+             htmlStr += "<p><a href='<%=request.getContextPath()%>/brand-page?member_seq=" + val["seq"]
+                     + "'>" + val["nickname"] + "</a>님이 내 글을 좋아요♥ 했습니다.</p>";
+             htmlStr += "</div>";
+             htmlStr += "</div>";
+           });
+          htmlStr += "</div>";
+          $("#bossSendInform").html(htmlStr);
+        }
+      });
+    });
+
   });
 
 </script>

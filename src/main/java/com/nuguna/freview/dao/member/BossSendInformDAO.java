@@ -53,8 +53,9 @@ public class BossSendInformDAO {
     PreparedStatement pstmt = null;
     ResultSet rs;
 
-    String sql = "SELECT p.post_seq, p.title, d.`member_seq`"
+    String sql = "SELECT p.post_seq, p.title, m.member_seq "
         + "FROM post p "
+        + "INNER JOIN member m ON m.member_seq = p.member_seq "
         + "INNER JOIN ( "
         + "    SELECT d.member_seq, d.post_seq "
         + "    FROM ddabong d "

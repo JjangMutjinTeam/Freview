@@ -40,30 +40,37 @@ public class RequestServlet extends HttpServlet {
       try {
         EncodingUtil.setEncodingToUTF8AndJson(request, response);
 
-       JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
-       int bossSeq = jsonObject.get("member_seq").getAsInt();
-        //int bossSeq = 118;
-
-
+//       JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
+//       int bossSeq = jsonObject.get("member_seq").getAsInt();
+        int bossSeq = 118;
 
         List<BossRequestMozzipListDto> mozzipList = BossRequestDAO.bossMozzipList(bossSeq);
-        JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
-            new ResponseMessage<>("내가 작성한 모집글 리스트 요청 완료.", mozzipList) , response, gson);
-
         List<BossRequestReceivedDto> ReceivedRequest = BossRequestDAO.bossReceivedRequest(bossSeq);
-        JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
-            new ResponseMessage<>("사장님에게 지원한 사람들의 리스트", ReceivedRequest) , response, gson);
-
         List<BossRequestToRequestDto> ToRequestList = BossRequestDAO.bossToRequest(bossSeq);
-        JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
-            new ResponseMessage<>("사장님이 제안한 사람들의 리스트", ToRequestList) , response, gson);
 
+//        List<BossRequestMozzipListDto> mozzipList = BossRequestDAO.bossMozzipList(bossSeq);
+//        JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
+//            new ResponseMessage<>("내가 작성한 모집글 리스트 요청 완료.", mozzipList) , response, gson);
+//
+//        List<BossRequestReceivedDto> ReceivedRequest = BossRequestDAO.bossReceivedRequest(bossSeq);
+//        JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
+//            new ResponseMessage<>("사장님에게 지원한 사람들의 리스트", ReceivedRequest) , response, gson);
+//
+//        List<BossRequestToRequestDto> ToRequestList = BossRequestDAO.bossToRequest(bossSeq);
+//        JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
+//            new ResponseMessage<>("사장님이 제안한 사람들의 리스트", ToRequestList) , response, gson);
 
+        // JSON으로 응답을 생성
+        PrintWriter out = response.getWriter();
 
         Map<String, Object> responseData = new HashMap<>();
-        responseData.put("MOZZIP_LIST", mozzipList);
-        responseData.put("RECEIVED_REQUEST", ReceivedRequest);
-        responseData.put("TO_REQUEST", ToRequestList);
+        responseData.put("bossMozzipList", mozzipList);
+        responseData.put("receivedRequest", ReceivedRequest);
+        responseData.put("ToRequestList", ToRequestList);
+
+        out.println(gson.toJson(responseData));
+        out.flush();
+
 
       } catch (IOException e) {
         throw new RuntimeException(e);
