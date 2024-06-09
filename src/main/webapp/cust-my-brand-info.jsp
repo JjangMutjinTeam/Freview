@@ -479,6 +479,7 @@
                                         'food-type-cancel-btn').style.display = 'none';
                                     document.getElementById(
                                         'food-type-update-btn').style.display = 'inline-block';
+
                                     var foodTypeSelect = document.getElementById(
                                         'food-type-select');
                                     for (var i = 0; i < foodTypeSelect.options.length; i++) {
@@ -552,7 +553,6 @@
                                 });
                               });
                             </script>
-
                             <!-- 태그들 보여주기/등록하기 -->
                             <div class="row">
                                 <div class="col-lg-3 col-md-4 label">태그</div>
@@ -621,7 +621,6 @@
                                   });
 
                                   $.ajax({
-
                                     url: '<%=request.getContextPath()%>/api/my-brand/tag',
                                     method: 'POST',
                                     data: JSON.stringify({
