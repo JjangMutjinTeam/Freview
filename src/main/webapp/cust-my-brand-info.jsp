@@ -1,9 +1,37 @@
+<%@ page import="com.nuguna.freview.dto.cust.brand.CustMyBrandInfoDto" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="com.nuguna.freview.entity.member.Member" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
+<%
+    CustMyBrandInfoDto brandInfo = (CustMyBrandInfoDto) request.getAttribute("brandInfo");
+%>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+    <style>
+      .tag-button {
+        display: inline-block;
+        margin: 5px;
+        padding: 5px 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .selected-tag {
+        display: inline-block;
+        margin: 5px;
+        padding: 5px 10px;
+        border: 1px solid #007bff;
+        border-radius: 5px;
+        background-color: #007bff;
+        color: white;
+      }
+    </style>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
@@ -33,12 +61,30 @@
     <link href="assets/css/style.css" rel="stylesheet">
     <link href="assets/css/style-h.css" rel="stylesheet">
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
     <!-- icon bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
           rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
           crossorigin="anonymous">
 
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script>
+      function toggleFoodType(foodType) {
+        var input = document.getElementById('foodTypesInput');
+        var currentValue = input.value.split(',').filter(Boolean);
+        var index = currentValue.indexOf(foodType);
+
+        if (index >= 0) {
+          currentValue.splice(index, 1);
+        } else {
+          currentValue.push(foodType);
+        }
+        input.value = currentValue.join(',');
+      }
+    </script>
     <!-- =======================================================
     * Template Name: NiceAdmin
     * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
@@ -52,10 +98,9 @@
 
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center">
-
     <div class="d-flex align-items-center justify-content-between">
         <a href="index.html" class="logo d-flex align-items-center">
-            <img src="assets/img/logo-vertical.png" alt="">
+            <img src="assets/img/logo/logo-vertical.png" alt="">
             <span class="d-none d-lg-block">Freeview</span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
@@ -64,160 +109,40 @@
     <nav class="header-nav ms-auto">
         <ul class="d-flex align-items-center">
             <li class="nav-item dropdown pe-3">
-
-                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#"
-                   data-bs-toggle="dropdown">
-                    <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
-                    <span class="d-none d-md-block dropdown-toggle ps-2">K. Anderson</span>
+                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
+                    <img src="${brandInfo.profilePhotoUrl}" alt="Profile"
+                         class="rounded-circle">
+                    <span class="d-none d-md-block">${brandInfo.nickname}</span>
                 </a><!-- End Profile Iamge Icon -->
-
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-                    <li class="dropdown-header">
-                        <h6>Kevin Anderson</h6>
-                        <span>Web Designer</span>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center"
-                           href="users-profile.html">
-                            <i class="bi bi-person"></i>
-                            <span>My Profile</span>
-                        </a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center"
-                           href="users-profile.html">
-                            <i class="bi bi-gear"></i>
-                            <span>Account Settings</span>
-                        </a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
-                            <i class="bi bi-question-circle"></i>
-                            <span>Need Help?</span>
-                        </a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="#">
-                            <i class="bi bi-box-arrow-right"></i>
-                            <span>Sign Out</span>
-                        </a>
-                    </li>
-
-                </ul><!-- End Profile Dropdown Items -->
             </li><!-- End Profile Nav -->
-
         </ul>
     </nav><!-- End Icons Navigation -->
-
 </header><!-- End Header -->
 
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
-
     <ul class="sidebar-nav" id="sidebar-nav">
-
         <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#components-nav"
+            <a class="nav-link" data-bs-target="#components-nav"
                href="#">
-                <i class="bi bi-menu-button-wide"></i><span>나의 브랜딩 페이지</span>
+                <i class="bi bi-person"></i><span>브랜딩</span>
             </a>
         </li><!-- End Components Nav -->
 
-
         <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse"
-               href="#">
-                <i class="bi bi-gem"></i><span>Icons</span><i
-                    class="bi bi-chevron-down ms-auto"></i>
-            </a>
-            <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="icons-bootstrap.html">
-                        <i class="bi bi-circle"></i><span>Bootstrap Icons</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="icons-remix.html">
-                        <i class="bi bi-circle"></i><span>Remix Icons</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="icons-boxicons.html">
-                        <i class="bi bi-circle"></i><span>Boxicons</span>
-                    </a>
-                </li>
-            </ul>
-        </li><!-- End Icons Nav -->
-
-        <li class="nav-heading">Pages</li>
-
-        <li class="nav-item">
-            <a class="nav-link " href="users-profile.html">
-                <i class="bi bi-person"></i>
-                <span>Profile</span>
+            <a class="nav-link collapsed" href="users-profile.html">
+                <i class="bi bi-layout-text-window-reverse"></i>
+                <span>활동</span>
             </a>
         </li><!-- End Profile Page Nav -->
 
         <li class="nav-item">
             <a class="nav-link collapsed" href="pages-faq.html">
-                <i class="bi bi-question-circle"></i>
-                <span>F.A.Q</span>
+                <i class="bi bi-envelope"></i>
+                <span>알림</span>
             </a>
         </li><!-- End F.A.Q Page Nav -->
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="pages-contact.html">
-                <i class="bi bi-envelope"></i>
-                <span>Contact</span>
-            </a>
-        </li><!-- End Contact Page Nav -->
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="pages-register.html">
-                <i class="bi bi-card-list"></i>
-                <span>Register</span>
-            </a>
-        </li><!-- End Register Page Nav -->
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="pages-login.html">
-                <i class="bi bi-box-arrow-in-right"></i>
-                <span>Login</span>
-            </a>
-        </li><!-- End Login Page Nav -->
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="pages-error-404.html">
-                <i class="bi bi-dash-circle"></i>
-                <span>Error 404</span>
-            </a>
-        </li><!-- End Error 404 Page Nav -->
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="pages-blank.html">
-                <i class="bi bi-file-earmark"></i>
-                <span>Blank</span>
-            </a>
-        </li><!-- End Blank Page Nav -->
-
     </ul>
-
 </aside><!-- End Sidebar-->
 
 <main id="main" class="main">
@@ -228,321 +153,270 @@
 
     <section class="section profile">
         <div class="row">
-
             <div class="card">
-
                 <!-- profile  -->
                 <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-                    <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
-                    <h2>Kevin Anderson</h2>
-                    <div class="social-links mt-2">
-                        <a href="#" class="binheart"><i class="bi bi-heart"></i></a>
+                    <img src="assets/img/basic/basic-profile-img.png" alt="Profile"
+                         class="rounded-circle">
+                    <h2>${brandInfo.nickname}</h2>
+                    <div class="social-links mt-2 ri-heart-3-fill">
+                        ${brandInfo.zzimCount}
                     </div>
-                    <textarea class="form-control" id="exampleFormControlTextarea1" readonly
-                              class="form-control-plaintext" rows="3"> member-introduce </textarea>
                 </div>
 
                 <div class="card-body pt-3">
                     <!-- Bordered Tabs -->
-
                     <div class="tab-content pt-2">
 
                         <div class="tab-pane fade show active profile-overview"
                              id="profile-overview">
-                            <form method="get" action="BrandInfoServlet">
 
-                                <h5 class="card-title">Profile Details</h5>
+                            <h5 class="card-title">Profile Details</h5>
 
-                                <div class="row">
-                                    <div class="col-lg-3 col-md-4 label">스토어 연락처</div>
-                                    <div class="col-lg-8 col-md-6"> store-email</div>
-                                    <input class="col-lg-1 col-md-2" type="submit" value="수정">
+                            <!-- 자기소개 -->
+                            <div class="row">
+                                <div class="col-lg-3 col-md-4 label">소개</div>
+                                <div class="col-lg-8 col-md-6">
+                                    <input type="text" name="to_nickname"
+                                           value="<%= brandInfo.getIntroduce() %>"
+                                           class="form-control" readonly>
                                 </div>
-
-                                <div class="row">
-                                    <div class="col-lg-3 col-md-4 label">업체명</div>
-                                    <div class="col-lg-8 col-md-6"> store-name</div>
-                                    <input class="col-lg-1 col-md-2" type="submit" value="수정">
+                                <div class="col-lg-1 col-md-2">
+                                    <button type="button" class="btn btn-primary edit-btn">수정
+                                    </button>
+                                    <button type="button" class="btn btn-success send-btn"
+                                            style="display: none;">전송
+                                    </button>
+                                    <button type="button" class="btn btn-secondary cancel-btn"
+                                            style="display: none;">취소
+                                    </button>
                                 </div>
-
-                                <div class="row">
-                                    <div class="col-lg-3 col-md-4 label">사업자 번호</div>
-                                    <div class="col-lg-8 col-md-6"> business-number</div>
-                                    <input class="col-lg-1 col-md-2" type="submit" value="수정">
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-lg-3 col-md-4 label">스토어 주소</div>
-                                    <div class="col-lg-8 col-md-6">store address</div>
-                                    <input class="col-lg-1 col-md-2" type="submit" value="수정">
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-lg-3 col-md-4 label">분야</div>
-                                    <div class="col-lg-8 col-md-6"> store-food-type</div>
-                                    <input class="col-lg-1 col-md-2" type="submit" value="수정">
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-lg-3 col-md-4 label">태그</div>
-                                    <div class="col-lg-8 col-md-6"> store-tag</div>
-                                    <input class="col-lg-1 col-md-2" type="submit" value="수정">
-                                </div>
-
-                            </form>
-                            <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
-
-                                <!-- Profile Edit Form -->
-                                <form>
-                                    <div class="row mb-3">
-                                        <label for="profileImage"
-                                               class="col-md-4 col-lg-3 col-form-label">Profile
-                                            Image</label>
-                                        <div class="col-md-8 col-lg-9">
-                                            <img src="assets/img/profile-img.jpg" alt="Profile">
-                                            <div class="pt-2">
-                                                <a href="#" class="btn btn-primary btn-sm"
-                                                   title="Upload new profile image"><i
-                                                        class="bi bi-upload"></i></a>
-                                                <a href="#" class="btn btn-danger btn-sm"
-                                                   title="Remove my profile image"><i
-                                                        class="bi bi-trash"></i></a>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-3">
-                                        <label for="fullName"
-                                               class="col-md-4 col-lg-3 col-form-label">Full
-                                            Name</label>
-                                        <div class="col-md-8 col-lg-9">
-                                            <input name="fullName" type="text" class="form-control"
-                                                   id="fullName" value="Kevin Anderson">
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-3">
-                                        <label for="about" class="col-md-4 col-lg-3 col-form-label">About</label>
-                                        <div class="col-md-8 col-lg-9">
-                                            <textarea name="about" class="form-control" id="about"
-                                                      style="height: 100px">Sunt est soluta temporibus accusantium neque nam maiores cumque temporibus. Tempora libero non est unde veniam est qui dolor. Ut sunt iure rerum quae quisquam autem eveniet perspiciatis odit. Fuga sequi sed ea saepe at unde.</textarea>
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-3">
-                                        <label for="company"
-                                               class="col-md-4 col-lg-3 col-form-label">Company</label>
-                                        <div class="col-md-8 col-lg-9">
-                                            <input name="company" type="text" class="form-control"
-                                                   id="company"
-                                                   value="Lueilwitz, Wisoky and Leuschke">
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-3">
-                                        <label for="Job" class="col-md-4 col-lg-3 col-form-label">Job</label>
-                                        <div class="col-md-8 col-lg-9">
-                                            <input name="job" type="text" class="form-control"
-                                                   id="Job" value="Web Designer">
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-3">
-                                        <label for="Country"
-                                               class="col-md-4 col-lg-3 col-form-label">Country</label>
-                                        <div class="col-md-8 col-lg-9">
-                                            <input name="country" type="text" class="form-control"
-                                                   id="Country" value="USA">
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-3">
-                                        <label for="Address"
-                                               class="col-md-4 col-lg-3 col-form-label">Address</label>
-                                        <div class="col-md-8 col-lg-9">
-                                            <input name="address" type="text" class="form-control"
-                                                   id="Address"
-                                                   value="A108 Adam Street, New York, NY 535022">
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-3">
-                                        <label for="Phone" class="col-md-4 col-lg-3 col-form-label">Phone</label>
-                                        <div class="col-md-8 col-lg-9">
-                                            <input name="phone" type="text" class="form-control"
-                                                   id="Phone" value="(436) 486-3538 x29071">
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-3">
-                                        <label for="Email" class="col-md-4 col-lg-3 col-form-label">Email</label>
-                                        <div class="col-md-8 col-lg-9">
-                                            <input name="email" type="email" class="form-control"
-                                                   id="Email" value="k.anderson@example.com">
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-3">
-                                        <label for="Twitter"
-                                               class="col-md-4 col-lg-3 col-form-label">Twitter
-                                            Profile</label>
-                                        <div class="col-md-8 col-lg-9">
-                                            <input name="twitter" type="text" class="form-control"
-                                                   id="Twitter" value="https://twitter.com/#">
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-3">
-                                        <label for="Facebook"
-                                               class="col-md-4 col-lg-3 col-form-label">Facebook
-                                            Profile</label>
-                                        <div class="col-md-8 col-lg-9">
-                                            <input name="facebook" type="text" class="form-control"
-                                                   id="Facebook" value="https://facebook.com/#">
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-3">
-                                        <label for="Instagram"
-                                               class="col-md-4 col-lg-3 col-form-label">Instagram
-                                            Profile</label>
-                                        <div class="col-md-8 col-lg-9">
-                                            <input name="instagram" type="text" class="form-control"
-                                                   id="Instagram" value="https://instagram.com/#">
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-3">
-                                        <label for="Linkedin"
-                                               class="col-md-4 col-lg-3 col-form-label">Linkedin
-                                            Profile</label>
-                                        <div class="col-md-8 col-lg-9">
-                                            <input name="linkedin" type="text" class="form-control"
-                                                   id="Linkedin" value="https://linkedin.com/#">
-                                        </div>
-                                    </div>
-
-                                    <div class="text-center">
-                                        <button type="submit" class="btn btn-primary">Save Changes
-                                        </button>
-                                    </div>
-                                </form><!-- End Profile Edit Form -->
-
                             </div>
 
-                            <div class="tab-pane fade pt-3" id="profile-settings">
-
-                                <!-- Settings Form -->
-                                <form>
-
-                                    <div class="row mb-3">
-                                        <label for="fullName"
-                                               class="col-md-4 col-lg-3 col-form-label">Email
-                                            Notifications</label>
-                                        <div class="col-md-8 col-lg-9">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox"
-                                                       id="changesMade" checked>
-                                                <label class="form-check-label" for="changesMade">
-                                                    Changes made to your account
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox"
-                                                       id="newProducts" checked>
-                                                <label class="form-check-label" for="newProducts">
-                                                    Information on new products and services
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox"
-                                                       id="proOffers">
-                                                <label class="form-check-label" for="proOffers">
-                                                    Marketing and promo offers
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox"
-                                                       id="securityNotify" checked disabled>
-                                                <label class="form-check-label"
-                                                       for="securityNotify">
-                                                    Security alerts
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="text-center">
-                                        <button type="submit" class="btn btn-primary">Save Changes
-                                        </button>
-                                    </div>
-                                </form><!-- End settings Form -->
-
+                            <!-- 닉네임 보여주기/등록하기 -->
+                            <div class="row">
+                                <div class="col-lg-3 col-md-4 label">닉네임</div>
+                                <div class="col-lg-8 col-md-6">
+                                    <input id="nickname-input" type="text" name="to_nickname"
+                                           value="<%= brandInfo.getNickname() %>"
+                                           class="form-control" readonly>
+                                </div>
+                                <div class="col-lg-1 col-md-2">
+                                    <button type="button" class="btn btn-primary edit-btn"
+                                            id="nickname-update-btn">수정
+                                    </button>
+                                    <button type="button" class="btn btn-success send-btn"
+                                            style="display: none;" id="nickname-submit-btn">전송
+                                    </button>
+                                    <button type="button" class="btn btn-secondary cancel-btn"
+                                            style="display: none;" id="nickname-cancel-btn">취소
+                                    </button>
+                                </div>
                             </div>
 
-                            <div class="tab-pane fade pt-3" id="profile-change-password">
-                                <!-- Change Password Form -->
-                                <form>
+                            <script>
+                              $(document).ready(function () {
+                                $("#nickname-cancel-btn").click(function () {
+                                  $("#nickname-cancel-btn").hide();
+                                  $("#nickname-submit-btn").hide();
+                                  $("#nickname-update-btn").show();
+                                  $('#nickname-input').prop('readonly', false);
+                                });
 
-                                    <div class="row mb-3">
-                                        <label for="currentPassword"
-                                               class="col-md-4 col-lg-3 col-form-label">Current
-                                            Password</label>
-                                        <div class="col-md-8 col-lg-9">
-                                            <input name="password" type="password"
-                                                   class="form-control" id="currentPassword">
-                                        </div>
-                                    </div>
+                                $("#nickname-update-btn").click(function () {
+                                  $("#nickname-update-btn").hide();
+                                  $("#nickname-cancel-btn").show();
+                                  $("#nickname-submit-btn").show();
+                                  $('#nickname-input').prop('readonly', false);
+                                });
 
-                                    <div class="row mb-3">
-                                        <label for="newPassword"
-                                               class="col-md-4 col-lg-3 col-form-label">New
-                                            Password</label>
-                                        <div class="col-md-8 col-lg-9">
-                                            <input name="newpassword" type="password"
-                                                   class="form-control" id="newPassword">
-                                        </div>
-                                    </div>
+                                $("#nickname-submit-btn").click(function () {
+                                  var newNickname = $('#nickname-input').val();
+                                  // Ajax 요청
+                                  $.ajax({
+                                    url: '<%=request.getContextPath()%>/api/my-brand/nickname',
+                                    method: 'POST',
+                                    data: JSON.stringify({
+                                      'member_seq': ${member_seq},
+                                      'to_nickname': newNickname
+                                    }),
+                                    success: function (response) {
+                                      // 성공적으로 응답을 받았을 때 처리
+                                      $('#nickname-input').val(response.item).prop('readonly',
+                                          true);
+                                      $("#nickname-submit-btn").hide();
+                                      $("#nickname-cancel-btn").hide();
+                                      $("#nickname-update-btn").show();
+                                    },
+                                    error: function (error) {
+                                      // 실패 시 처리
+                                      console.log(error);
+                                      alert('닉네임 변경에 실패하였습니다.');
+                                    }
+                                  });
+                                });
+                              });
+                            </script>
 
-                                    <div class="row mb-3">
-                                        <label for="renewPassword"
-                                               class="col-md-4 col-lg-3 col-form-label">Re-enter New
-                                            Password</label>
-                                        <div class="col-md-8 col-lg-9">
-                                            <input name="renewpassword" type="password"
-                                                   class="form-control" id="renewPassword">
-                                        </div>
-                                    </div>
-
-                                    <div class="text-center">
-                                        <button type="submit" class="btn btn-primary">Change
-                                            Password
-                                        </button>
-                                    </div>
-                                </form><!-- End Change Password Form -->
-
+                            <!-- 연령대 보여주기/등록하기 -->
+                            <div class="row">
+                                <div class="col-lg-3 col-md-4 label">연령대</div>
+                                <div class="col-lg-8 col-md-6">
+                                    <input type="text" name="to_age_group"
+                                           value="<%= brandInfo.getAgeGroup() %>"
+                                           class="form-control" readonly>
+                                </div>
+                                <div class="col-lg-1 col-md-2">
+                                    <button type="button" class="btn btn-primary edit-btn">수정
+                                    </button>
+                                    <button type="button" class="btn btn-success send-btn"
+                                            style="display: none;">전송
+                                    </button>
+                                    <button type="button" class="btn btn-secondary cancel-btn"
+                                            style="display: none;">취소
+                                    </button>
+                                </div>
                             </div>
 
-                        </div><!-- End Bordered Tabs -->
+                            <!-- 활동분야 보여주기/등록하기 -->
+                            <div class="row">
+                                <div class="col-lg-3 col-md-4 label">활동 분야</div>
+                                <div class="col-lg-8 col-md-6">
+                                    <input type="hidden" name="to_food_types" id="foodTypesInput"
+                                           class="form-control" readonly
+                                           value="<%
+                                       if (brandInfo.getFoodTypes() != null && !brandInfo.getFoodTypes().isEmpty()) {
+                                           for (int i = 0; i < brandInfo.getFoodTypes().size(); i++) {
+                                               out.print(brandInfo.getFoodTypes().get(i));
+                                               if (i < brandInfo.getFoodTypes().size() - 1) {
+                                                   out.print(",");
+                                               }
+                                           }
+                                       }
+                                   %>">
+                                    <div id="foodTypesContainer" class="selected-tags">
+                                        <%
+                                            String[] defaultFoodTypes = {"한식", "양식", "중식", "일식",
+                                                    "빵&베이커리", "기타"};
+                                            for (String foodType : defaultFoodTypes) {
+                                        %>
+                                        <span class="selected-tag foodtype-button"
+                                              onclick="toggleFoodType('<%= foodType %>')"><%= foodType %></span>
+                                        <%
+                                            }
+                                        %>
+                                    </div>
+                                </div>
+                                <div class="col-lg-1 col-md-2">
+                                    <button type="button" class="btn btn-primary edit-btn">수정
+                                    </button>
+                                    <button type="button" class="btn btn-success send-btn"
+                                            style="display: none;">전송
+                                    </button>
+                                    <button type="button" class="btn btn-secondary cancel-btn"
+                                            style="display: none;">취소
+                                    </button>
+                                </div>
+                            </div>
 
+                            <script>
+                              $(document).ready(function () {
+                                $('.foodtype-button').click(function () {
+                                  var foodType = $(this).text();
+                                  var input = $('#foodTypesInput');
+                                  var currentValue = input.val().split(',').filter(Boolean);
+                                  var index = currentValue.indexOf(foodType);
+
+                                  if (index >= 0) {
+                                    currentValue.splice(index, 1);
+                                  } else {
+                                    currentValue.push(foodType);
+                                  }
+                                  input.val(currentValue.join(','));
+
+                                  // 선택된 활동 분야 스타일 변경
+                                  $(this).toggleClass('selected');
+                                });
+                              });
+                            </script>
+
+                            <style>
+                              .selected-tag.foodtype-button {
+                                display: inline-block;
+                                margin: 5px;
+                                padding: 5px 10px;
+                                border: 1px solid #ff007f;
+                                border-radius: 5px;
+                                cursor: pointer;
+                                background-color: #ff007f;
+                                color: white;
+                              }
+
+                              .selected-tag.foodtype-button.selected {
+                                background-color: #ff007f;
+                                color: white;
+                              }
+                            </style>
+
+                            <!-- 태그들 보여주기/등록하기 -->
+                            <div class="row">
+                                <div class="col-lg-3 col-md-4 label">태그</div>
+                                <div class="col-lg-8 col-md-6">
+                                    <input type="hidden" name="to_tags"
+                                           value="${brandInfo.tagInfos}"
+                                           class="form-control">
+                                    <div class="selected-tags mb-3"></div>
+                                    <div class="tag-buttons">
+                                        <span class="tag-button" data-tag="초식">초식</span>
+                                        <span class="tag-button" data-tag="육식">육식</span>
+                                        <span class="tag-button" data-tag="빵빵이">빵빵이</span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-1 col-md-2">
+                                    <button type="button" class="btn btn-primary edit-btn">수정
+                                    </button>
+                                    <button type="button" class="btn btn-success send-btn"
+                                            style="display: none;">전송
+                                    </button>
+                                    <button type="button" class="btn btn-secondary cancel-btn"
+                                            style="display: none;">취소
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 리뷰로그들 보여주기/ URL 등록하기 -->
+                        <div class="row">
+                            <div class="col-lg-3 col-md-4 label">리뷰 로그</div>
+                            <div class="col-lg-8 col-md-6">
+                                <input type="text" name="to_review_url"
+                                       value="${brandInfo.reviewInfos}"
+                                       class="form-control" readonly>
+                            </div>
+                            <div class="col-lg-1 col-md-2">
+                                <button type="button" class="btn btn-primary edit-btn">수정
+                                </button>
+                                <button type="button" class="btn btn-success send-btn"
+                                        style="display: none;">전송
+                                </button>
+                                <button type="button" class="btn btn-secondary cancel-btn"
+                                        style="display: none;">취소
+                                </button>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
+                        </div>
                     </div>
-
                 </div>
-            </div>
-    </section>
 
 </main><!-- End #main -->
 
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
     <div class="copyright">
-        &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
+        &copy; Copyright <strong><span>JjangMutjinTeam</span></strong>. All Rights Reserved
     </div>
     <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
         Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
     </div>
 </footer><!-- End Footer -->
@@ -554,8 +428,77 @@
         integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
         crossorigin="anonymous"></script>
 <script>
+  $(document).ready(function () {
+    $('.edit-btn').click(function () {
+      $(this).hide();
+      $(this).siblings('.send-btn, .cancel-btn').show();
+      var row = $(this).closest('.row');
+      row.find('input').prop('readonly', false);
+      if (row.find('.tag-buttons').length > 0) {
+        row.find('.tag-buttons').show();
+        row.find('input[name="to_tags"]').hide();
+      }
+    });
 
+    $('.cancel-btn').click(function () {
+      $(this).hide();
+      $(this).siblings('.send-btn').hide();
+      $(this).siblings('.edit-btn').show();
+      var row = $(this).closest('.row');
+      row.find('input').prop('readonly', true);
+      if (row.find('.tag-buttons').length > 0) {
+        row.find('.tag-buttons').hide();
+        row.find('input[name="to_tags"]').show();
+      }
+    });
 
+    $('.send-btn').click(function () {
+      var row = $(this).closest('.row');
+      var inputField = row.find('input');
+      var fieldName = inputField.attr('name');
+      var fieldValue = inputField.val();
+      var formData = {};
+      formData[fieldName] = fieldValue;
+
+      if (fieldName === "to_tags") {
+        var selectedTags = [];
+        row.find('.selected-tag').each(function () {
+          selectedTags.push($(this).data('tag'));
+        });
+        formData[fieldName] = selectedTags.join(', ');
+      }
+
+      $.ajax({
+        url: 'BrandInfoServlet',
+        method: 'POST',
+        data: formData,
+        success: function (response) {
+          alert('성공적으로 수정되었습니다.');
+          inputField.prop('readonly', true);
+          $(this).hide();
+          $(this).siblings('.cancel-btn').hide();
+          $(this).siblings('.edit-btn').show();
+          if (fieldName === "to_tags") {
+            row.find('.tag-buttons').hide();
+            row.find('input[name="to_tags"]').show();
+          }
+        }
+      });
+    });
+
+    $('.tag-button').click(function () {
+      var tag = $(this).data('tag');
+      $('<span class="selected-tag" data-tag="' + tag + '">' + tag + '</span>').appendTo(
+          '.selected-tags');
+      $(this).hide();
+    });
+
+    $(document).on('click', '.selected-tag', function () {
+      var tag = $(this).data('tag');
+      $('.tag-button[data-tag="' + tag + '"]').show();
+      $(this).remove();
+    });
+  });
 </script>
 
 <!-- icon bootstrap -->
@@ -575,6 +518,7 @@
 
 <!-- Template Main JS File -->
 <script src="assets/js/main.js"></script>
+
 
 </body>
 

@@ -54,7 +54,7 @@
 <header id="header" class="header fixed-top d-flex align-items-center">
     <div class="d-flex align-items-center justify-content-between">
         <a href="index.html" class="logo d-flex align-items-center">
-            <img src="assets/img/logo-vertical.png" alt="">
+            <img src="assets/img/logo/logo-vertical.png" alt="">
             <span class="d-none d-lg-block">Freeview</span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
@@ -64,7 +64,7 @@
         <ul class="d-flex align-items-center">
             <li class="nav-item dropdown pe-3">
                 <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
-                    <img src="assets/img/basic-profile-img.png" alt="Profile"
+                    <img src="assets/img/basic/basic-profile-img.png" alt="Profile"
                          class="rounded-circle">
                     <span class="d-none d-md-block">미셸</span>
                 </a><!-- End Profile Iamge Icon -->
@@ -112,13 +112,14 @@
 
                 <!-- profile  -->
                 <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-                    <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
-                    <h2>Kevin Anderson</h2>
-                    <div class="social-links mt-2">
-                        <a href="#" class="binheart"><i class="bi bi-heart"></i></a>
+                    <img src="assets/img/basic/basic-profile-img.png" alt="Profile"
+                         class="rounded-circle">
+                    <h2>미셸</h2>
+                    <div class="social-links mt-2 ri-heart-3-fill">
+                        10
                     </div>
                     <textarea class="form-control" id="exampleFormControlTextarea1" readonly
-                              class="form-control-plaintext" rows="3"> member-introduce </textarea>
+                              class="form-control-plaintext" rows="3"> 자기소개 </textarea>
                 </div>
 
                 <div class="card-body pt-3">
