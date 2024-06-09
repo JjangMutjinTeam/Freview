@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.nuguna.freview.dao.member.common.MemberFoodTypeDAO;
+import com.nuguna.freview.dao.member.common.MemberUtilDAO;
 import com.nuguna.freview.dto.common.ResponseMessage;
 import com.nuguna.freview.exception.IllegalFoodTypeException;
 import com.nuguna.freview.util.EncodingUtil;
@@ -26,12 +27,14 @@ import lombok.extern.slf4j.Slf4j;
 public class FoodTypeUpdateServlet extends HttpServlet {
 
   private Gson gson;
+  private MemberUtilDAO memberUtilDAO;
   private MemberFoodTypeDAO memberFoodTypeDAO;
 
   @Override
   public void init() throws ServletException {
-    log.info("Cust - FoodTypeUpdateServlet 초기화");
+    log.info("FoodTypeUpdateServlet 초기화");
     gson = new Gson();
+    memberUtilDAO = new MemberUtilDAO();
     memberFoodTypeDAO = new MemberFoodTypeDAO();
   }
 
@@ -41,7 +44,7 @@ public class FoodTypeUpdateServlet extends HttpServlet {
 
     EncodingUtil.setEncodingToUTF8AndJson(request, response);
 
-    log.info("Cust - FoodTypeUpdateServlet.doPost");
+    log.info("FoodTypeUpdateServlet.doPost");
 
     try {
       JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
@@ -50,6 +53,13 @@ public class FoodTypeUpdateServlet extends HttpServlet {
       // TODO : 서블릿 필터에서 memberSeq의 유효성을 체크해준다고 가정
       int memberSeq = jsonObject.get("member_seq").getAsInt();
       JsonArray foodTypes = jsonObject.get("to_food_types").getAsJsonArray();
+
+      if (!memberUtilDAO.isValidMember(memberSeq)) {
+        JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_BAD_REQUEST,
+            new ResponseMessage<>("주어진 member_seq에 해당하는 멤버가 존재하지 않습니다.", foodTypes), response,
+            gson);
+        return;
+      }
 
       List<String> foodTypeNames = foodTypes.asList().stream()
           .map(JsonElement::getAsString)
