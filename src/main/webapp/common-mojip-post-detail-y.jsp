@@ -61,7 +61,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh;
+        height: 20vh;
       }
       .button-container div {
         margin: 0 10px;
@@ -581,9 +581,13 @@
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="card-title mb-0">모집글 상세보기</h5>
                     <div>
-                        <button type="button" class="btn btn-danger" onclick="confirmDelete()">삭제</button>
-                        <button type="button" class="btn btn-primary" onclick="editPost()">수정</button>
-                        <button type="button" class="btn btn-secondary" onclick="location.href='/mojipBoard'">목록으로</button>
+                        <button type="button" class="btn btn-danger" onclick="confirmDelete()">삭제
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="editPost()">수정
+                        </button>
+                        <button type="button" class="btn btn-secondary"
+                                onclick="location.href='/mojipBoard'">목록으로
+                        </button>
                     </div>
                 </div>
                 <div class="d-flex mb-4">
@@ -596,13 +600,19 @@
                 </div>
                 <form id="postForm" action="/mojipBoard/detail/update" method="post">
                     <input type="hidden" name="postSeq" value="${mojipPost.postSeq}">
+                    <input type="hidden" name="writerSeq" value="${mojipPost.memberSeq}">
+
+<%--                    TODO: applicant의 seq는 현재 로그인한 사람의 seq여야 함--%>
+                    <input type="hidden" name="applicantSeq" value="11">
+
                     <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
                         <tbody>
                         <tr>
                             <th class="fixed-width">제목</th>
                             <td>
                                 <span id="titleView">${mojipPost.title}</span>
-                                <input type="text" class="form-control d-none" id="titleEdit" name="title" value="${mojipPost.title}">
+                                <input type="text" class="form-control d-none" id="titleEdit"
+                                       name="title" value="${mojipPost.title}">
                             </td>
                         </tr>
                         <tr>
@@ -622,8 +632,10 @@
                         <tr>
                             <th class="fixed-width">내용</th>
                             <td>
-                                <span id="contentView" style="white-space: pre-line;">${mojipPost.content}</span>
-                                <textarea class="form-control d-none" id="contentEdit" name="content" rows="10">${mojipPost.content}</textarea>
+                                <span id="contentView"
+                                      style="white-space: pre-line;">${mojipPost.content}</span>
+                                <textarea class="form-control d-none" id="contentEdit"
+                                          name="content" rows="10">${mojipPost.content}</textarea>
                             </td>
                         </tr>
                         <tr>
@@ -634,37 +646,63 @@
                     </table>
                     <div id="editButtons" class="d-none">
                         <button type="submit" class="btn btn-primary">완료</button>
-                        <button type="button" class="btn btn-secondary" onclick="cancelEdit()">취소</button>
+                        <button type="button" class="btn btn-secondary" onclick="cancelEdit()">취소
+                        </button>
                     </div>
                 </form>
+                <div class="button-container">
+                    <div>
+                        <button type="button" class="btn btn-primary">좋아요</button>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#applyModal">지원하기</button>
+                    </div>
+                </div>
             </div>
             <body>
             </body>
         </div>
-        <div class="button-container">
-            <div>
-                <button type="button" class="btn btn-primary">좋아요</button>
-            </div>
-            <div>
-                <button type="button" class="btn btn-primary">지원하기</button>
+    </div>
+
+    <!-- Apply Confirmation Modal -->
+    <div class="modal fade" id="applyModal" tabindex="-1" aria-labelledby="applyModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="applyModalLabel">지원 확인</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    정말 지원하겠습니까?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="applyPost()">확인</button>
+                </div>
             </div>
         </div>
     </div>
 
 
     <!-- Delete Confirmation Modal -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="deleteModalLabel">삭제 확인</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     정말 삭제하겠습니까?
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소
+                    </button>
                     <button type="button" class="btn btn-danger" onclick="deletePost()">확인</button>
                 </div>
             </div>
@@ -689,12 +727,47 @@
         document.getElementById('editButtons').classList.add('d-none');
       }
 
+      function applyPost() {
+        var postSeq = document.querySelector('input[name="postSeq"]').value;
+        var writerSeq = document.querySelector('input[name="writerSeq"]').value;
+        var applicantSeq = document.querySelector('input[name="applicantSeq"]').value;
+
+        var formData = new URLSearchParams();
+        formData.append('postSeq', postSeq);
+        formData.append('writerSeq', writerSeq);
+        formData.append('applicantSeq', applicantSeq);
+
+
+        fetch('/mojipBoard/detail/apply', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: formData.toString()
+        })
+        .then(response => {
+          if (response.ok) {
+            return response.text().then(data => {
+              console.log(data);
+              alert('성공적으로 지원되었습니다.');
+              location.reload();
+            });
+          } else {
+            response.text().then(data => {
+              console.error(data);
+              alert('지원에 실패했습니다. 다시 시도해 주세요.');
+            });
+          }
+        })
+        .catch(error => console.error('Error:', error));
+      }
+
       function confirmDelete() {
         var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
         deleteModal.show();
       }
 
-      document.getElementById('postForm').addEventListener('submit', function(event) {
+      document.getElementById('postForm').addEventListener('submit', function (event) {
         event.preventDefault();
 
         var formData = new URLSearchParams(new FormData(this));
@@ -731,7 +804,7 @@
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
           },
-          body: new URLSearchParams({ postSeq: postSeq }).toString()
+          body: new URLSearchParams({postSeq: postSeq}).toString()
         })
         .then(response => {
           if (response.ok) {
