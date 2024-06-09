@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 public class BossReceivedDdabongDto {
   Integer seq;
+  String nickname;
   Integer postSeq;
   String title;
   String type;

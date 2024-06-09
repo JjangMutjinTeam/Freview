@@ -5,17 +5,24 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.nuguna.freview.dao.member.BossRequestDAO;
 import com.nuguna.freview.dto.api.boss.BossRequestMozzipListDto;
+import com.nuguna.freview.dto.api.boss.BossRequestReceivedDto;
+import com.nuguna.freview.dto.api.boss.BossRequestToRequestDto;
 import com.nuguna.freview.dto.common.ResponseMessage;
 import com.nuguna.freview.util.EncodingUtil;
 import com.nuguna.freview.util.JsonRequestUtil;
 import com.nuguna.freview.util.JsonResponseUtil;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.common.util.report.qual.ReportOverride;
 
 @Slf4j
 @WebServlet("/api/boss/my-request")
@@ -33,13 +40,31 @@ public class RequestServlet extends HttpServlet {
       try {
         EncodingUtil.setEncodingToUTF8AndJson(request, response);
 
-        JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
-        int bossSeq = jsonObject.get("member_seq").getAsInt();
+       JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
+       int bossSeq = jsonObject.get("member_seq").getAsInt();
+        //int bossSeq = 118;
+
 
 
         List<BossRequestMozzipListDto> mozzipList = BossRequestDAO.bossMozzipList(bossSeq);
         JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
-            new ResponseMessage<>("나를 찜한 유저들의 정보를 성공적으로 가져왔습니다.", mozzipList) , response, gson);
+            new ResponseMessage<>("내가 작성한 모집글 리스트 요청 완료.", mozzipList) , response, gson);
+
+        List<BossRequestReceivedDto> ReceivedRequest = BossRequestDAO.bossReceivedRequest(bossSeq);
+        JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
+            new ResponseMessage<>("사장님에게 지원한 사람들의 리스트", ReceivedRequest) , response, gson);
+
+        List<BossRequestToRequestDto> ToRequestList = BossRequestDAO.bossToRequest(bossSeq);
+        JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
+            new ResponseMessage<>("사장님이 제안한 사람들의 리스트", ToRequestList) , response, gson);
+
+
+
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put("MOZZIP_LIST", mozzipList);
+        responseData.put("RECEIVED_REQUEST", ReceivedRequest);
+        responseData.put("TO_REQUEST", ToRequestList);
+
       } catch (IOException e) {
         throw new RuntimeException(e);
       } catch (JsonParseException e) {

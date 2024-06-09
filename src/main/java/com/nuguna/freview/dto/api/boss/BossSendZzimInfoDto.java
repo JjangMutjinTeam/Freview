@@ -8,4 +8,5 @@ import lombok.Getter;
 public class BossSendZzimInfoDto {
   Integer seq;
   String nickname;
+  String type;
 }

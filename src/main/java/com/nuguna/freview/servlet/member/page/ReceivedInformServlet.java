@@ -10,7 +10,10 @@ import com.nuguna.freview.dto.common.ResponseMessage;
 import com.nuguna.freview.util.EncodingUtil;
 import com.nuguna.freview.util.JsonRequestUtil;
 import com.nuguna.freview.util.JsonResponseUtil;
+import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.WebServlet;
@@ -35,16 +38,16 @@ public class ReceivedInformServlet extends HttpServlet  {
     try {
       JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
       int bossSeq = jsonObject.get("member_seq").getAsInt();
+//      int bossSeq = 118;
 
       List<BossReceivedZzimInfoDto> zzimInfos = BossReceivedInformDAO.receivedZzimDAO(
           bossSeq);
-
       List<BossReceivedDdabongDto> ddabongInfos = BossReceivedInformDAO.receivedDdabongDAO(
           bossSeq);
 
+
       JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
           new ResponseMessage<>("나를 찜한 유저들의 정보를 성공적으로 가져왔습니다.", zzimInfos), response, gson);
-
       JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
           new ResponseMessage<>("내가 따봉한 게시글들의 정보를 성공적으로 가져왔습니다.", ddabongInfos), response, gson);
 

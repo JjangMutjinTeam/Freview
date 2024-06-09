@@ -36,7 +36,7 @@ public class BossSendInformDAO {
       while(rs.next()){
         int memberSeq = rs.getInt("member_seq");
         String nickname = rs.getString("nickname");
-        zzimInfos.add(new BossSendZzimInfoDto(memberSeq, nickname));
+        zzimInfos.add(new BossSendZzimInfoDto(memberSeq, nickname,"ZZIM"));
       }
     } catch (SQLException e) {
       throw new RuntimeException("SQLException: 찜하기 도중 문제가 발생했습니다.", e);
@@ -73,7 +73,7 @@ public class BossSendInformDAO {
         int memberSeq = rs.getInt("member_seq");
         int postSeq = rs.getInt("post_seq");
         String title = rs.getString("title");
-        ddabongInfos.add(new BossSendDdabongDto(memberSeq, postSeq, title));
+        ddabongInfos.add(new BossSendDdabongDto(memberSeq, postSeq, title, "DDABONG"));
       }
     } catch (SQLException e) {
       throw new RuntimeException("SQLException: 따봉 도중 문제가 발생했습니다.", e);
