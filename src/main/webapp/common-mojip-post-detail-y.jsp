@@ -654,6 +654,7 @@
                     <c:choose>
                         <c:when test="${isLiked}">
                             <button type="button" class="btn btn-primary"><i
+                                    onclick="cancelLike(${mojipPost.postSeq}, ${applicantSeq})"><i
                                     class="bi bi-heart-fill me-1"></i> 좋아요
                             </button>
                         </c:when>
@@ -854,6 +855,31 @@
         .catch(error => {
           console.error('Error:', error);
           alert('좋아요를 추가하는 도중 오류가 발생했습니다.');
+        });
+      }
+
+      function cancelLike(postSeq, applicantSeq) {
+        fetch('/ddabongCancel', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: new URLSearchParams({
+            postSeq: postSeq,
+            //TODO: 접속자의 세션 seq로 변경 필요
+            applicantSeq: 11
+          }).toString()
+        })
+        .then(response => {
+          if (response.ok) {
+            location.reload();
+          } else {
+            alert('좋아요를 취소하는 데 실패했습니다. 다시 시도해 주세요.');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('좋아요를 취소하는 도중 오류가 발생했습니다.');
         });
       }
     </script>
