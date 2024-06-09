@@ -91,4 +91,61 @@ public class MemberUtilDAO {
     return isMatched;
   }
 
+  public String selectMemberNickname(int memberSeq) {
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+
+    String sql = "SELECT member.nickname "
+        + "FROM MEMBER "
+        + "WHERE member_seq = ?";
+
+    String nickname = null;
+    try {
+      conn = getConnection();
+      pstmt = conn.prepareStatement(sql);
+      pstmt.setInt(1, memberSeq);
+      rs = pstmt.executeQuery();
+      while (rs.next()) {
+        nickname = rs.getString("nickname");
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException("SQLException : 닉네임 조회 도중 예외 발생", e);
+    } finally {
+      closeResource(rs);
+      closeResource(pstmt, conn);
+    }
+    return nickname;
+  }
+
+  public String selectStoreName(int memberSeq) {
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+
+    String sql = "SELECT sbi.store_name "
+        + "FROM store_business_info as sbi "
+        + "WHERE sbi.business_number = "
+        + "(SELECT business_number "
+        + "FROM MEMBER as m "
+        + "WHERE m.member_seq = ?)";
+
+    String nickname = null;
+    try {
+      conn = getConnection();
+      pstmt = conn.prepareStatement(sql);
+      pstmt.setInt(1, memberSeq);
+      rs = pstmt.executeQuery();
+      while (rs.next()) {
+        nickname = rs.getString("store_name");
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException("SQLException : 스토어명 조회 도중 예외 발생", e);
+    } finally {
+      closeResource(rs);
+      closeResource(pstmt, conn);
+    }
+    return nickname;
+  }
+
 }
