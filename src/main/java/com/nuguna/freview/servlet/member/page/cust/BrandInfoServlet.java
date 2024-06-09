@@ -1,7 +1,9 @@
 package com.nuguna.freview.servlet.member.page.cust;
 
+import com.nuguna.freview.dao.member.boss.page.BossMyBrandInfoDAO;
 import com.nuguna.freview.dao.member.common.MemberUtilDAO;
 import com.nuguna.freview.dao.member.cust.page.CustMyBrandInfoDAO;
+import com.nuguna.freview.dto.boss.brand.BossMyBrandInfoDto;
 import com.nuguna.freview.dto.cust.brand.CustMyBrandInfoDto;
 import com.nuguna.freview.entity.member.MemberGubun;
 import java.io.IOException;
@@ -18,12 +20,14 @@ import lombok.extern.slf4j.Slf4j;
 public class BrandInfoServlet extends HttpServlet {
 
   private MemberUtilDAO memberUtilDAO;
+  private BossMyBrandInfoDAO bossMyBrandInfoDAO;
   private CustMyBrandInfoDAO custMyBrandInfoDAO;
 
   @Override
   public void init() throws ServletException {
     log.info("BrandInfoServlet 초기화");
     memberUtilDAO = new MemberUtilDAO();
+    bossMyBrandInfoDAO = new BossMyBrandInfoDAO();
     custMyBrandInfoDAO = new CustMyBrandInfoDAO();
   }
 
@@ -52,7 +56,19 @@ public class BrandInfoServlet extends HttpServlet {
       String fromMemberNickname = memberUtilDAO.selectMemberNickname(fromMemberSeq);
 
       if (memberGubun.isBoss()) {
-
+        BossMyBrandInfoDto brandInfo = bossMyBrandInfoDAO.getBossBrandInfo(memberSeq);
+        log.info("brandInfo = " + brandInfo);
+        request.setAttribute("member_seq", memberSeq);
+        request.setAttribute("brandInfo", brandInfo);
+        if (memberGubunFrom.isCust()) {
+          request.setAttribute("fromMemberNickname", fromMemberNickname);
+        } else if (memberGubun.isBoss()) {
+          request.setAttribute("fromMemberNickname", fromMemberNickname);
+        } else {
+          request.setAttribute("fromMemberNickname", "어드민");
+        }
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/boss-brand-info.jsp");
+        dispatcher.forward(request, response);
       } else if (memberGubun.isCust()) {
         CustMyBrandInfoDto brandInfo = custMyBrandInfoDAO.getCustBrandInfo(memberSeq);
         log.info("brandInfo = " + brandInfo);
@@ -62,11 +78,9 @@ public class BrandInfoServlet extends HttpServlet {
         RequestDispatcher dispatcher = request.getRequestDispatcher("/cust-brand-info.jsp");
         dispatcher.forward(request, response);
       }
-
     } catch (Exception e) {
       response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
           e.getMessage());
     }
-
   }
 }
