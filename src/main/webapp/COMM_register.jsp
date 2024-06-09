@@ -63,8 +63,9 @@
 
                         <div class="d-flex justify-content-center py-4">
                             <a href="index.html" class="logo d-flex align-items-center w-auto">
-                                <img src="assets/img/logo.png" alt="">
-                                <span class="d-none d-lg-block">NiceAdmin</span>
+                                <img src="assets/img/logo/logo-vertical.png" alt="" style="width: 50px;
+    margin-top: 20px;">
+                                <span class="d-none d-lg-block">Freview</span>
                             </a>
                         </div><!-- End Logo -->
 

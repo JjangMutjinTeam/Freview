@@ -471,6 +471,14 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
 
   });
 
+  $(".mogip").slick({
+
+    infinite: true,
+    slidesToShow: 3,
+    slidesToScroll: 3
+
+      });
+
 
 })
 
