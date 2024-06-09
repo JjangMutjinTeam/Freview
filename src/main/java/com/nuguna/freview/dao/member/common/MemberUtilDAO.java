@@ -91,4 +91,31 @@ public class MemberUtilDAO {
     return isMatched;
   }
 
+  public String selectMemberNickname(int memberSeq) {
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+
+    String sql = "SELECT member.nickname "
+        + "FROM MEMBER "
+        + "WHERE member_seq = ?";
+
+    String nickname = null;
+    try {
+      conn = getConnection();
+      pstmt = conn.prepareStatement(sql);
+      pstmt.setInt(1, memberSeq);
+      rs = pstmt.executeQuery();
+      while (rs.next()) {
+        nickname = rs.getString("nickname");
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException("SQLException : 소개 변경 도중 예외 발생", e);
+    } finally {
+      closeResource(rs);
+      closeResource(pstmt, conn);
+    }
+    return nickname;
+  }
+
 }

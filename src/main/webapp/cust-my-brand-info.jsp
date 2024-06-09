@@ -655,7 +655,7 @@
                               });
                             </script>
 
-                            <!-- 리뷰로그들 보여주기/ URL 등록하기 -->
+                            <%--<!-- 리뷰로그들 보여주기/ URL 등록하기 -->
                             <div class="row">
                                 <div class="col-lg-3 col-md-4 label">리뷰 로그</div>
                                 <div class="col-lg-8 col-md-6">
@@ -677,7 +677,7 @@
                             <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
                             </div>
                         </div>
-                    </div>
+                    </div>--%>
 
 </main><!-- End #main -->
 
