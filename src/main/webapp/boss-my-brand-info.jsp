@@ -9,8 +9,6 @@
     BossMyBrandInfoDto brandInfo = (BossMyBrandInfoDto) request.getAttribute("brandInfo");
     Gson gson = new Gson();
 %>
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -73,7 +71,6 @@
     <link href="assets/css/style-h.css" rel="stylesheet">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-
     <!-- icon bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
           rel="stylesheet"
@@ -168,7 +165,6 @@
 
                         <div class="tab-pane fade show active profile-overview"
                              id="profile-overview">
-
                             <h5 class="card-title">Profile Details</h5>
 
                             <!-- 스토어명 -->
@@ -540,7 +536,6 @@
                             </div>
                         </div>
                     </div>--%>
-
 </main><!-- End #main -->
 
 <!-- ======= Footer ======= -->
@@ -574,7 +569,6 @@
 
 <!-- Template Main JS File -->
 <script src="assets/js/main.js"></script>
-
 
 </body>
 

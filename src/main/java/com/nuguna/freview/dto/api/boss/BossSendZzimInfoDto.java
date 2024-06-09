@@ -5,10 +5,8 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class BossReceivedZzimInfoDto {
-
+public class BossSendZzimInfoDto {
   Integer seq;
   String nickname;
   String type;
-
 }

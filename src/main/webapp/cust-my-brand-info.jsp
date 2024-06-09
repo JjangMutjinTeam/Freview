@@ -81,6 +81,7 @@
 
     <link rel="stylesheet"
           href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
     <!-- =======================================================
     * Template Name: NiceAdmin
     * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
@@ -478,7 +479,6 @@
                                         'food-type-cancel-btn').style.display = 'none';
                                     document.getElementById(
                                         'food-type-update-btn').style.display = 'inline-block';
-
                                     var foodTypeSelect = document.getElementById(
                                         'food-type-select');
                                     for (var i = 0; i < foodTypeSelect.options.length; i++) {
@@ -552,7 +552,6 @@
                                 });
                               });
                             </script>
-
 
                             <!-- 태그들 보여주기/등록하기 -->
                             <div class="row">
