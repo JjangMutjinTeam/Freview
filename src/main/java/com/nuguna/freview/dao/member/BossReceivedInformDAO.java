@@ -38,6 +38,7 @@ public class BossReceivedInformDAO {
         int memberSeq = rs.getInt("member_seq");
         String nickname = rs.getString("nickname");
         zzimInfos.add(new BossReceivedZzimInfoDto(memberSeq, nickname, "ZZIM"));
+        System.out.println(zzimInfos.get(0));
       }
     } catch (SQLException e) {
       throw new RuntimeException("SQLException: 찜하기 도중 문제가 발생했습니다.", e);
@@ -63,13 +64,11 @@ public class BossReceivedInformDAO {
         + "WHERE p.member_seq = ? ";
 
     List<BossReceivedDdabongDto> ddabongInfos = new ArrayList<>();
-    System.out.println("나 통과");
     try {
       conn = getConnection();
       pstmt = conn.prepareStatement(sql);
       pstmt.setInt(1, bossSeq);
       rs = pstmt.executeQuery();
-      System.out.println("얘 통과");
       while (rs.next()){
         int memberSeq = rs.getInt("member_seq");
         int postSeq = rs.getInt("post_seq");
@@ -77,7 +76,6 @@ public class BossReceivedInformDAO {
         String nickname = rs.getString("nickname");
         ddabongInfos.add(new BossReceivedDdabongDto(memberSeq, nickname, postSeq, title, "DDABONG"));
       }
-      System.out.println("얘 통과");
     } catch (SQLException e) {
       throw new RuntimeException("SQLException: 따봉 도중 문제가 발생했습니다.", e);
     } finally {
