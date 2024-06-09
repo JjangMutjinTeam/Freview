@@ -1,10 +1,12 @@
 <%@ page import="com.nuguna.freview.dto.cust.brand.CustMyBrandInfoDto" %>
+<%@ page import="com.google.gson.Gson" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <%
     CustMyBrandInfoDto brandInfo = (CustMyBrandInfoDto) request.getAttribute("brandInfo");
+    Gson gson = new Gson();
 %>
 
 
@@ -32,6 +34,12 @@
         color: white;
       }
     </style>
+    <style>
+      .selected-option {
+        background-color: lightgreen; /* 연초록색으로 선택된 옵션 표시 */
+      }
+    </style>
+
     <style>
       .form-control {
         width: 100%;
@@ -252,11 +260,12 @@
                                       $("#introduce-submit-btn").hide();
                                       $("#introduce-cancel-btn").hide();
                                       $("#introduce-update-btn").show();
+                                      alert('닉네임 변경에 실패하였습니다.');
                                     },
                                     error: function (error) {
                                       // 실패 시 처리
                                       console.log(error);
-                                      alert('소개글 변경에 실패하였습니다.');
+                                      alert('닉네임 변경에 실패하였습니다.');
                                     }
                                   });
                                 });
@@ -319,6 +328,7 @@
                                       $("#nickname-submit-btn").hide();
                                       $("#nickname-cancel-btn").hide();
                                       $("#nickname-update-btn").show();
+                                      alert('닉네임 변경 변경에 성공하였습니다.');
                                     },
                                     error: function (error) {
                                       // 실패 시 처리
@@ -386,6 +396,7 @@
                                           $("#age-group-submit-btn").hide();
                                           $("#age-group-cancel-btn").hide();
                                           $("#age-group-update-btn").show();
+                                          alert('연령대 변경 변경에 성공하였습니다.');
                                         },
                                         error: function (error) {
                                           // 실패 시 처리
@@ -412,129 +423,155 @@
                                 </div>
                             </div>
 
-                            <script>
-                              $(document).ready(function () {
-                                $("#age-group-cancel-btn").click(function () {
-                                  $("#age-group-cancel-btn").hide();
-                                  $("#age-group-submit-btn").hide();
-                                  $("#age-group-update-btn").show();
-                                  $('#age-group-input').prop('readonly', false);
-                                });
-
-                                $("#age-group-update-btn").click(function () {
-                                  $("#age-group-update-btn").hide();
-                                  $("#age-group-cancel-btn").show();
-                                  $("#age-group-submit-btn").show();
-                                  $('#age-group-input').prop('readonly', false);
-                                });
-
-                                $("#age-group-submit-btn").click(function () {
-                                  var newAgeGroup = $('#age-group-input').val();
-                                  // Ajax 요청
-                                  $.ajax({
-                                    url: '<%=request.getContextPath()%>/api/cust/my-brand/age-group',
-                                    method: 'POST',
-                                    data: JSON.stringify({
-                                      'member_seq': ${member_seq},
-                                      'to_age_group': newAgeGroup
-                                    }),
-                                    success: function (response) {
-                                      // 성공적으로 응답을 받았을 때 처리
-                                      $('#age-group-input').val(response.item).prop('readonly',
-                                          true);
-                                      $("#age-group-submit-btn").hide();
-                                      $("#age-group-cancel-btn").hide();
-                                      $("#age-group-update-btn").show();
-                                    },
-                                    error: function (error) {
-                                      // 실패 시 처리
-                                      console.log(error);
-                                      alert('닉네임 변경에 실패하였습니다.');
-                                    }
-                                  });
-                                });
-                              });
-                            </script>
-
-                            <!-- 활동분야 보여주기/등록하기 -->
                             <div class="row">
                                 <div class="col-lg-3 col-md-4 label">활동 분야</div>
                                 <div class="col-lg-8 col-md-6">
-                                    <input type="hidden" name="to_food_types" id="foodTypesInput"
-                                           class="form-control" readonly
-                                           value="<%
-                                       if (brandInfo.getFoodTypes() != null && !brandInfo.getFoodTypes().isEmpty()) {
-                                           for (int i = 0; i < brandInfo.getFoodTypes().size(); i++) {
-                                               out.print(brandInfo.getFoodTypes().get(i));
-                                               if (i < brandInfo.getFoodTypes().size() - 1) {
-                                                   out.print(",");
-                                               }
-                                           }
-                                       }
-                                   %>">
-                                    <div id="foodTypesContainer" class="selected-tags">
-                                        <%
-                                            String[] defaultFoodTypes = {"한식", "양식", "중식", "일식",
-                                                    "빵&베이커리", "기타"};
-                                            for (String foodType : defaultFoodTypes) {
-                                        %>
-                                        <span class="selected-tag foodtype-button"
-                                              onclick="toggleFoodType('<%= foodType %>')"><%= foodType %></span>
-                                        <%
-                                            }
-                                        %>
-                                    </div>
+                                    <select id="food-type-select" class="form-select" multiple
+                                            size="6">
+                                        <option value="한식">한식</option>
+                                        <option value="양식">양식</option>
+                                        <option value="중식">중식</option>
+                                        <option value="일식">일식</option>
+                                        <option value="빵&베이커리">빵&베이커리</option>
+                                        <option value="기타">기타</option>
+                                    </select>
                                 </div>
                                 <div class="col-lg-1 col-md-2">
-                                    <button type="button" class="btn btn-primary edit-btn">수정
+                                    <button id="food-type-update-btn" type="button"
+                                            class="btn btn-primary edit-btn">수정
                                     </button>
-                                    <button type="button" class="btn btn-success send-btn"
-                                            style="display: none;">전송
+                                    <button id="food-type-submit-btn" type="button"
+                                            class="btn btn-success send-btn" style="display: none;">
+                                        전송
                                     </button>
-                                    <button type="button" class="btn btn-secondary cancel-btn"
+                                    <button id="food-type-cancel-btn" type="button"
+                                            class="btn btn-secondary cancel-btn"
                                             style="display: none;">취소
                                     </button>
                                 </div>
                             </div>
 
                             <script>
-                              $(document).ready(function () {
-                                $('.foodtype-button').click(function () {
-                                  var foodType = $(this).text();
-                                  var input = $('#foodTypesInput');
-                                  var currentValue = input.val().split(',').filter(Boolean);
-                                  var index = currentValue.indexOf(foodType);
+                              // 서버에서 받아온 foodType 목록을 JSON 형태로 포함
+                              var selectedFoodTypes = JSON.parse(
+                                  '<%= gson.toJson(brandInfo.getFoodTypes()) %>');
 
-                                  if (index >= 0) {
-                                    currentValue.splice(index, 1);
-                                  } else {
-                                    currentValue.push(foodType);
+                              // foodType 목록을 미리 선택된 상태로 설정
+                              document.addEventListener('DOMContentLoaded', function () {
+                                var foodTypeSelect = document.getElementById('food-type-select');
+                                for (var i = 0; i < foodTypeSelect.options.length; i++) {
+                                  if (selectedFoodTypes.includes(foodTypeSelect.options[i].value)) {
+                                    foodTypeSelect.options[i].selected = true;
+                                    foodTypeSelect.options[i].classList.add('selected-option');
                                   }
-                                  input.val(currentValue.join(','));
+                                }
+                              });
 
-                                  // 선택된 활동 분야 스타일 변경
-                                  $(this).toggleClass('selected');
+                              document.getElementById('food-type-update-btn').addEventListener(
+                                  'click', function () {
+                                    document.getElementById(
+                                        'food-type-submit-btn').style.display = 'inline-block';
+                                    document.getElementById(
+                                        'food-type-cancel-btn').style.display = 'inline-block';
+                                    document.getElementById(
+                                        'food-type-update-btn').style.display = 'none';
+
+                                    // 현재 선택된 옵션들을 유지
+                                    var foodTypeSelect = document.getElementById(
+                                        'food-type-select');
+                                    for (var i = 0; i < foodTypeSelect.options.length; i++) {
+                                      if (foodTypeSelect.options[i].selected) {
+                                        foodTypeSelect.options[i].classList.add('selected-option');
+                                      } else {
+                                        foodTypeSelect.options[i].classList.remove(
+                                            'selected-option');
+                                      }
+                                    }
+                                  });
+
+                              document.getElementById('food-type-cancel-btn').addEventListener(
+                                  'click', function () {
+                                    document.getElementById(
+                                        'food-type-submit-btn').style.display = 'none';
+                                    document.getElementById(
+                                        'food-type-cancel-btn').style.display = 'none';
+                                    document.getElementById(
+                                        'food-type-update-btn').style.display = 'inline-block';
+
+                                    // 선택된 옵션 상태 복구
+                                    var foodTypeSelect = document.getElementById(
+                                        'food-type-select');
+                                    for (var i = 0; i < foodTypeSelect.options.length; i++) {
+                                      if (selectedFoodTypes.includes(
+                                          foodTypeSelect.options[i].value)) {
+                                        foodTypeSelect.options[i].selected = true;
+                                        foodTypeSelect.options[i].classList.add('selected-option');
+                                      } else {
+                                        foodTypeSelect.options[i].selected = false;
+                                        foodTypeSelect.options[i].classList.remove(
+                                            'selected-option');
+                                      }
+                                    }
+                                  });
+
+                              $("#food-type-submit-btn").click(function () {
+                                var selectedFoodTypes = Array.from(
+                                    $("#food-type-select option:selected")).map(
+                                    option => option.value);
+
+                                // Ajax 요청
+                                $.ajax({
+                                  url: '<%=request.getContextPath()%>/api/my-brand/food-type',
+                                  method: 'POST',
+                                  contentType: 'application/json',
+                                  data: JSON.stringify({
+                                    'member_seq': ${member_seq},
+                                    'to_food_types': selectedFoodTypes
+                                  }),
+                                  success: function (response) {
+                                    // 서버로부터 받은 음식 유형 목록
+                                    var foodTypesFromServer = response.item;
+
+                                    $("#food-type-submit-btn").hide();
+                                    $("#food-type-cancel-btn").hide();
+                                    $("#food-type-update-btn").show();
+
+                                    // select 요소 가져오기
+                                    var foodTypeSelect = document.getElementById(
+                                        'food-type-select');
+
+                                    // 현재 select 요소에 있는 옵션들 저장
+                                    var currentOptions = Array.from(foodTypeSelect.options).map(
+                                        option => option.value);
+
+                                    // 새로운 옵션 목록
+                                    var newOptions = new Set(
+                                        [...currentOptions, ...foodTypesFromServer]);
+
+                                    // select 요소 초기화
+                                    foodTypeSelect.innerHTML = '';
+
+                                    // 모든 옵션을 select 요소에 추가
+                                    newOptions.forEach(function (foodType) {
+                                      var option = document.createElement('option');
+                                      option.value = foodType;
+                                      option.text = foodType;
+                                      if (foodTypesFromServer.includes(foodType)) {
+                                        option.selected = true;
+                                        option.classList.add('selected-option');
+                                      }
+                                      foodTypeSelect.appendChild(option);
+                                    });
+                                    alert('활동 분야 변경에 성공하였습니다.');
+                                  },
+                                  error: function (error) {
+                                    // 실패 시 처리
+                                    console.log(error);
+                                    alert('활동 분야 변경에 실패하였습니다.');
+                                  }
                                 });
                               });
                             </script>
-
-                            <style>
-                              .selected-tag.foodtype-button {
-                                display: inline-block;
-                                margin: 5px;
-                                padding: 5px 10px;
-                                border: 1px solid #ff007f;
-                                border-radius: 5px;
-                                cursor: pointer;
-                                background-color: #ff007f;
-                                color: white;
-                              }
-
-                              .selected-tag.foodtype-button.selected {
-                                background-color: #ff007f;
-                                color: white;
-                              }
-                            </style>
 
                             <!-- 태그들 보여주기/등록하기 -->
                             <div class="row">
