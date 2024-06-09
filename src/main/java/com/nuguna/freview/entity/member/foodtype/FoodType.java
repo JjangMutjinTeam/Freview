@@ -14,13 +14,13 @@ import lombok.ToString;
 public class FoodType {
 
   private Integer foodTypeSeq;
-  private FoodTypeGubun name;
+  private FoodTypeGubun codeName;
 
-  public String getName() {
-    return name != null ? name.getCode() : null;
+  public String getCodeName() {
+    return codeName != null ? codeName.getCodeName() : null;
   }
 
   public void setName(String name) {
-    this.name = FoodTypeGubun.from(name);
+    this.codeName = FoodTypeGubun.from(name);
   }
 }

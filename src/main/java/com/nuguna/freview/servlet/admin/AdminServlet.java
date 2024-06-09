@@ -7,19 +7,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet
+@WebServlet("/AdminPage")
 public class AdminServlet extends HttpServlet {
 
   @Override
-  public void init() throws ServletException {
-  }
-
-  @Override
-  protected void service(HttpServletRequest req, HttpServletResponse resp)
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
-  }
-
-  @Override
-  public void destroy() {
+    resp.sendRedirect(req.getContextPath() + "/AdminPage/user");
   }
 }

@@ -18,6 +18,7 @@ public class Review {
   private Integer custSeq;
   private Integer bossSeq;
   private String url;
+  private Timestamp visitedDate;
   private Timestamp createdAt;
   private Timestamp updatedAt;
   private ReviewStatus status;
