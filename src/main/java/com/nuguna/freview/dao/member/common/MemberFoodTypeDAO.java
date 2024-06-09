@@ -1,4 +1,4 @@
-package com.nuguna.freview.dao.member;
+package com.nuguna.freview.dao.member.common;
 
 import static com.nuguna.freview.util.DbUtil.closeResource;
 import static com.nuguna.freview.util.DbUtil.getConnection;
@@ -15,10 +15,9 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class CustFoodTypeDAO {
+public class MemberFoodTypeDAO {
 
-  public void updateFoodType(int memberSeq, List<String> foodTypeNames) {
-
+  public void updateMemberFoodTypes(int memberSeq, List<String> foodTypeNames) {
     List<FoodTypeGubun> foodTypeGubuns;
     try {
       foodTypeGubuns = foodTypeNames.stream()
@@ -66,15 +65,18 @@ public class CustFoodTypeDAO {
       for (FoodTypeGubun foodTypeGubun : foodTypeGubuns) {
         selectPstmt.setString(index++, foodTypeGubun.getCodeName());
       }
-      rs = selectPstmt.executeQuery();
 
       List<Integer> foodTypeSeqs = new ArrayList<>();
-      log.info("RS : " + rs.toString());
-      while (rs.next()) {
-        foodTypeSeqs.add(rs.getInt("food_type_seq"));
+      if (index > 1) {
+        rs = selectPstmt.executeQuery();
+        log.info("select 성공");
+        while (rs.next()) {
+          foodTypeSeqs.add(rs.getInt("food_type_seq"));
+        }
       }
 
       log.info(foodTypeSeqs.toString());
+
       // 3. 선택된 FoodTypeSeq들을 Member와 매핑해준다.
       insertPstmt = conn.prepareStatement(insertSql);
       for (Integer foodTypeSeq : foodTypeSeqs) {

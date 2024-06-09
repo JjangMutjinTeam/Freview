@@ -1,4 +1,4 @@
-package com.nuguna.freview.servlet.member.api.cust.mybrand;
+package com.nuguna.freview.servlet.member.page.cust;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -18,15 +18,15 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@WebServlet("/api/cust/my-brand/age-group")
-public class AgeGroupUpdateServlet extends HttpServlet {
+@WebServlet("/my-info")
+public class BrandInfoServlet extends HttpServlet {
 
   private Gson gson;
   private CustAgeGroupDAO custAgeGroupDAO;
 
   @Override
   public void init() throws ServletException {
-    log.info("Cust - AgeGroupUpdateServlet 초기화");
+    log.info("AgeGroupUpdateServlet 초기화");
     gson = new Gson();
     custAgeGroupDAO = new CustAgeGroupDAO();
   }
@@ -37,7 +37,7 @@ public class AgeGroupUpdateServlet extends HttpServlet {
 
     EncodingUtil.setEncodingToUTF8AndJson(request, response);
 
-    log.info("Cust - AgeGroupUpdateServlet.doPost");
+    log.info("AgeGroupUpdateServlet.doPost");
 
     try {
       JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);

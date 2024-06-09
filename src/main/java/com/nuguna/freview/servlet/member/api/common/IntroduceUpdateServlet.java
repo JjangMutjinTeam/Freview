@@ -1,9 +1,10 @@
-package com.nuguna.freview.servlet.member.api.cust.mybrand;
+package com.nuguna.freview.servlet.member.api.common;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.nuguna.freview.dao.member.CustIntroduceDAO;
+import com.nuguna.freview.dao.member.common.MemberBrandInfoDAO;
+import com.nuguna.freview.dao.member.common.MemberUtilDAO;
 import com.nuguna.freview.dto.common.ResponseMessage;
 import com.nuguna.freview.util.EncodingUtil;
 import com.nuguna.freview.util.JsonRequestUtil;
@@ -17,17 +18,19 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@WebServlet("/api/cust/my-brand/introduce")
+@WebServlet("/api/my-brand/introduce")
 public class IntroduceUpdateServlet extends HttpServlet {
 
   private Gson gson;
-  private CustIntroduceDAO custIntroduceDAO;
+  private MemberUtilDAO memberUtilDAO;
+  private MemberBrandInfoDAO memberBrandInfoDAO;
 
   @Override
   public void init() throws ServletException {
-    log.info("IntroduceUpdateServlet 초기화");
+    log.info("Cust - IntroduceUpdateServlet 초기화");
     gson = new Gson();
-    custIntroduceDAO = new CustIntroduceDAO();
+    memberUtilDAO = new MemberUtilDAO();
+    memberBrandInfoDAO = new MemberBrandInfoDAO();
   }
 
   @Override
@@ -36,7 +39,7 @@ public class IntroduceUpdateServlet extends HttpServlet {
 
     EncodingUtil.setEncodingToUTF8AndJson(request, response);
 
-    log.info("IntroduceUpdateServlet.doPost");
+    log.info("Cust - IntroduceUpdateServlet.doPost");
 
     try {
       JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
@@ -46,7 +49,13 @@ public class IntroduceUpdateServlet extends HttpServlet {
       int memberSeq = jsonObject.get("member_seq").getAsInt();
       String toIntroduce = jsonObject.get("to_introduce").getAsString();
 
-      custIntroduceDAO.updateIntroduce(memberSeq, toIntroduce);
+      if (!memberUtilDAO.isValidMember(memberSeq)) {
+        JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_BAD_REQUEST,
+            new ResponseMessage<>("주어진 member_seq에 해당하는 멤버가 존재하지 않습니다.", toIntroduce), response,
+            gson);
+        return;
+      }
+      memberBrandInfoDAO.updateIntroduce(memberSeq, toIntroduce);
       JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
           new ResponseMessage<>("성공적으로 수정했습니다.", toIntroduce), response, gson);
     } catch (JsonParseException e) {

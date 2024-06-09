@@ -1,14 +1,10 @@
 package com.nuguna.freview.dao.member;
 
-import static com.nuguna.freview.config.DbConfig.DB_PW;
-import static com.nuguna.freview.config.DbConfig.DB_URL;
-import static com.nuguna.freview.config.DbConfig.DB_USER;
-import static com.nuguna.freview.config.DbConfig.DRIVER_NAME;
 import static com.nuguna.freview.util.DbUtil.closeResource;
+import static com.nuguna.freview.util.DbUtil.getConnection;
 
 import com.nuguna.freview.dto.MemberRecommendationInfo;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -70,18 +66,5 @@ public class MemberDAO {
     } finally {
       closeResource(pstmt, conn, rs);
     }
-  }
-
-  private Connection getConnection() {
-    Connection conn = null;
-    try {
-      Class.forName(DRIVER_NAME);
-      conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PW);
-    } catch (ClassNotFoundException e) {
-      log.error("JDBC Driver not found");
-    } catch (SQLException e) {
-      log.error("connection failed");
-    }
-    return conn;
   }
 }
