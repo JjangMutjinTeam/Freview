@@ -1,3 +1,4 @@
+<%@ page import="com.nuguna.freview.entity.member.Member" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -10,6 +11,13 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
     <title>모집 게시판</title>
+    <%
+        Member loginUser = (Member) session.getAttribute("Member");
+        Integer memberSeq = loginUser.getMemberSeq();
+        String gubun = loginUser.getGubun();
+        request.setAttribute("gubun", gubun);
+        request.setAttribute("memberSeq", memberSeq);
+    %>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -580,11 +588,13 @@
             <h5 class="card-title">모집 게시판</h5>
             <p>매우 중요한 모집글이 올라옵니다 <br></p>
 
+            <c:if test="${gubun.equals('B')}">
             <div class="d-flex justify-content-end">
                 <a href="/mojipBoard/createPost" class="btn btn-primary">
                     모집 등록
                 </a>
             </div>
+            </c:if>
 
             <!-- 게시글 리스트 추가 -->
             <div class="post-list">

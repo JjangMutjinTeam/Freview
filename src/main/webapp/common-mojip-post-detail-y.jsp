@@ -1,3 +1,4 @@
+<%@ page import="com.nuguna.freview.entity.member.Member" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -10,6 +11,14 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
     <title>모집글 상세보기</title>
+    <%
+        Member loginUser = (Member) session.getAttribute("Member");
+        Integer memberSeq = loginUser.getMemberSeq();
+        String gubun = loginUser.getGubun();
+        request.setAttribute("gubun", gubun);
+        request.setAttribute("memberSeq", memberSeq);
+    %>
+
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -565,7 +574,7 @@
 <main id="main" class="main">
 
     <div class="pagetitle">
-        <h1>공지게시판</h1>
+        <h1>모집게시판</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
@@ -581,10 +590,12 @@
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="card-title mb-0">모집글 상세보기</h5>
                     <div>
-                        <button type="button" class="btn btn-danger" onclick="confirmDelete()">삭제
-                        </button>
-                        <button type="button" class="btn btn-primary" onclick="editPost()">수정
-                        </button>
+                        <c:if test="${memberSeq == mojipPost.memberSeq || gubun == 'A'}">
+                        <button type="button" class="btn btn-danger" onclick="confirmDelete()">삭제</button>
+                        </c:if>
+                        <c:if test="${memberSeq == mojipPost.memberSeq}">
+                        <button type="button" class="btn btn-primary" onclick="editPost()">수정</button>
+                        </c:if>
                         <button type="button" class="btn btn-secondary"
                                 onclick="location.href='/mojipBoard'">목록으로
                         </button>
@@ -665,9 +676,11 @@
                             </button>
                         </c:otherwise>
                     </c:choose>
+                    <c:if test="${gubun == 'C'}">
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                             data-bs-target="#applyModal">지원하기
                     </button>
+                    </c:if>
                 </div>
             </div>
             <body>

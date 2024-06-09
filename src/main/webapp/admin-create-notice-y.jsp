@@ -1,3 +1,4 @@
+<%@ page import="com.nuguna.freview.entity.member.Member" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -548,13 +549,10 @@
     </div><!-- End Page Title -->
 
     <%
-        //TODO: 로그인 기능 구현 후 session 의 구분에 따라 '등록' 버튼 활성화
-        Integer memberSeq;
-        if (session.getAttribute("memberSeq") != null) {
-            memberSeq = (Integer) session.getAttribute("memberSeq");
-        } else {
-            memberSeq = 52;
-        }
+        Member loginUser = (Member) session.getAttribute("Member");
+        Integer memberSeq = loginUser.getMemberSeq();
+        String gubun = loginUser.getGubun();
+        request.setAttribute("gubun", gubun);
         request.setAttribute("memberSeq", memberSeq);
     %>
 

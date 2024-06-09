@@ -1,3 +1,4 @@
+<%@ page import="com.nuguna.freview.entity.member.Member" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -9,7 +10,14 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Components / Accordion - NiceAdmin Bootstrap Template</title>
+    <title>공지게시판</title>
+    <%
+        Member loginUser = (Member) session.getAttribute("Member");
+        Integer memberSeq = loginUser.getMemberSeq();
+        String gubun = loginUser.getGubun();
+        request.setAttribute("gubun", gubun);
+        request.setAttribute("memberSeq", memberSeq);
+    %>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -552,11 +560,13 @@
             <h5 class="card-title">공지 게시판</h5>
             <p>매우 중요한 공지가 올라옵니다 <br></p>
 
+            <c:if test="${gubun == 'A'}">
             <div class="d-flex justify-content-end">
                 <a href="/noticeBoard/createPost" class="btn btn-primary">
                     공지 등록
                 </a>
             </div>
+            </c:if>
             <!-- Table with stripped rows -->
             <table class="table">
                 <thead>
@@ -578,8 +588,6 @@
                 </c:forEach>
                 </tbody>
             </table>
-            <!-- End Table with stripped rows -->
-
             <div class="d-flex justify-content-between">
                 <c:if test="${previousPostSeq != Integer.MAX_VALUE}">
                     <a class="btn btn-primary" href="?previousPostSeq=${postList[0].postSeq + 11}">이전</a>

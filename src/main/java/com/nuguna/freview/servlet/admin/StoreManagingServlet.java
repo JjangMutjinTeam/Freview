@@ -22,7 +22,6 @@ public class StoreManagingServlet extends HttpServlet {
     req.setCharacterEncoding("UTF-8");
     resp.setContentType("text/html;charset=UTF-8");
     List<StoreAndBoss> storeAndBossList = adminDAO.selectStoreBusinessInfo();
-    System.out.println(storeAndBossList);
     req.setAttribute("storeAndBossList", storeAndBossList);
     RequestDispatcher rd = req.getRequestDispatcher("/admin-mg-stores-y.jsp");
     rd.forward(req, resp);
