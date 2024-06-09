@@ -8,9 +8,9 @@ import lombok.ToString;
 @ToString
 @RequiredArgsConstructor
 public enum MemberGubun {
-  A("A"),
-  B("B"),
-  C("C");
+  ADMIN("A"),
+  BOSS("B"),
+  CUST("C");
 
   private final String code;
 
@@ -21,5 +21,17 @@ public enum MemberGubun {
       }
     }
     throw new IllegalArgumentException("유효하지 않은 MemberGubun 입력 : " + code);
+  }
+  
+  public boolean isAdmin() {
+    return this == ADMIN;
+  }
+
+  public boolean isBoss() {
+    return this == BOSS;
+  }
+
+  public boolean isCust() {
+    return this == CUST;
   }
 }

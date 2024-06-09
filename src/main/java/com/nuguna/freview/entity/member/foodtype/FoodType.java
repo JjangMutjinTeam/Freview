@@ -3,24 +3,22 @@ package com.nuguna.freview.entity.member.foodtype;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 @Getter
-@Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class FoodType {
 
   private Integer foodTypeSeq;
-  private FoodTypeGubun name;
+  private FoodTypeGubun foodTypeGubun;
 
-  public String getName() {
-    return name != null ? name.getCode() : null;
+  public String getCode() {
+    return foodTypeGubun != null ? foodTypeGubun.getCode() : null;
   }
 
-  public void setName(String name) {
-    this.name = FoodTypeGubun.from(name);
+  public String getName() {
+    return foodTypeGubun != null ? foodTypeGubun.getName() : null;
   }
 }
