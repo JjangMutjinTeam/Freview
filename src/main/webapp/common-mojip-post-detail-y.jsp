@@ -602,7 +602,7 @@
                     <input type="hidden" name="postSeq" value="${mojipPost.postSeq}">
                     <input type="hidden" name="writerSeq" value="${mojipPost.memberSeq}">
 
-<%--                    TODO: applicant의 seq는 현재 로그인한 사람의 seq여야 함--%>
+                    <%--                    TODO: applicant의 seq는 현재 로그인한 사람의 seq여야 함--%>
                     <input type="hidden" name="applicantSeq" value="11">
 
                     <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
@@ -651,12 +651,22 @@
                     </div>
                 </form>
                 <div class="button-container">
-                    <div>
-                        <button type="button" class="btn btn-primary">좋아요</button>
-                    </div>
-                    <div>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#applyModal">지원하기</button>
-                    </div>
+                    <c:choose>
+                        <c:when test="${isLiked}">
+                            <button type="button" class="btn btn-primary"><i
+                                    class="bi bi-heart-fill me-1"></i> 좋아요
+                            </button>
+                        </c:when>
+                        <c:otherwise>
+                            <button type="button" class="btn btn-primary"
+                                    onclick="addLike(${mojipPost.postSeq}, ${applicantSeq})"><i
+                                    class="bi bi-heart me-1"></i> 좋아요
+                            </button>
+                        </c:otherwise>
+                    </c:choose>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#applyModal">지원하기
+                    </button>
                 </div>
             </div>
             <body>
@@ -736,7 +746,6 @@
         formData.append('postSeq', postSeq);
         formData.append('writerSeq', writerSeq);
         formData.append('applicantSeq', applicantSeq);
-
 
         fetch('/mojipBoard/detail/apply', {
           method: 'POST',
@@ -821,6 +830,31 @@
           }
         })
         .catch(error => console.error('Error:', error));
+      }
+
+      function addLike(postSeq, applicantSeq) {
+        fetch('/ddabongAdd', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: new URLSearchParams({
+            postSeq: postSeq,
+            //TODO: 접속자의 세션 seq로 변경 필요
+            applicantSeq: 11
+          }).toString()
+        })
+        .then(response => {
+          if (response.ok) {
+            location.reload();
+          } else {
+            alert('좋아요를 추가하는 데 실패했습니다. 다시 시도해 주세요.');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('좋아요를 추가하는 도중 오류가 발생했습니다.');
+        });
       }
     </script>
 
