@@ -59,8 +59,7 @@ public class MojipPostDAO {
       "    m.gubun, " +
       "    m.business_number, " +
       "    m.profile_photo_url, " +
-      "    GROUP_CONCAT(DISTINCT ft.name ORDER BY ft.name ASC SEPARATOR ', ') AS food_type_names, "
-      +
+      "    GROUP_CONCAT(DISTINCT ft.name ORDER BY ft.name ASC SEPARATOR ', ') AS food_type_names, " +
       "    GROUP_CONCAT(DISTINCT t.name ORDER BY t.name ASC SEPARATOR ', ') AS tag_names, " +
       "    s.store_name, " +
       "    p.title, " +
@@ -83,8 +82,8 @@ public class MojipPostDAO {
       "    tag t ON mt.tag_seq = t.tag_seq " +
       "LEFT JOIN " +
       "    store_business_info s ON m.business_number = s.business_number " +
-      "WHERE" +
-      "     p.gubun = ? " +
+      "WHERE " +
+      "     p.gubun = ? AND " +
       "     p.post_seq = ? " +
       "GROUP BY " +
       "    p.post_seq, m.member_seq, m.gubun, m.business_number, m.profile_photo_url, s.store_name, p.title, p.apply_start_date, p.apply_end_date, p.experience_date, p.content";
