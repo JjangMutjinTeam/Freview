@@ -3,6 +3,7 @@ package com.nuguna.freview.dao.post;
 import static com.nuguna.freview.util.DbUtil.closeResource;
 import static com.nuguna.freview.util.DbUtil.getConnection;
 
+import com.nuguna.freview.entity.post.Ddabong;
 import com.nuguna.freview.entity.post.Post;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,6 +21,33 @@ public class PostDAO {
   private final String DELETE_POST_BY_SEQ = "DELETE FROM post WHERE post_seq = ?";
 
   private final String SELECT_POST_LIKED = "SELECT count(*) from ddabong where member_seq = ? and post_seq = ?";
+
+  private final String INSERT_POST_DDABONG = "INSERT into ddabong(member_seq, post_seq, created_at) values(?, ?, ?)";
+
+  public boolean insertPost(Ddabong ddabong) {
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+
+    boolean isInserted = false;
+    try {
+      conn = getConnection();
+      pstmt = conn.prepareStatement(INSERT_POST_DDABONG);
+      pstmt.setInt(1, ddabong.getMemberSeq());
+      pstmt.setInt(2, ddabong.getPostSeq());
+      pstmt.setTimestamp(3, ddabong.getCreatedAt());
+      int rows = pstmt.executeUpdate();
+
+      if (rows> 0) {
+        isInserted = true;
+      }
+
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+
+    return isInserted;
+  }
 
   public boolean isLikedPost(int memberSeq, int postSeq) {
     Connection conn = null;
