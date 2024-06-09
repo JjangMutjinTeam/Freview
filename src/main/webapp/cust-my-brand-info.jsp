@@ -173,25 +173,72 @@
 
                             <h5 class="card-title">Profile Details</h5>
 
-                            <!-- 자기소개 -->
+                            <!-- 소개 -->
                             <div class="row">
                                 <div class="col-lg-3 col-md-4 label">소개</div>
                                 <div class="col-lg-8 col-md-6">
-                                    <input type="text" name="to_nickname"
+                                    <input id="introduce-input" type="text" name="to_nickname"
                                            value="<%= brandInfo.getIntroduce() %>"
                                            class="form-control" readonly>
                                 </div>
                                 <div class="col-lg-1 col-md-2">
-                                    <button type="button" class="btn btn-primary edit-btn">수정
+                                    <button id="introduce-update-btn" type="button"
+                                            class="btn btn-primary edit-btn">수정
                                     </button>
-                                    <button type="button" class="btn btn-success send-btn"
+                                    <button id="introduce-submit-btn" type="button"
+                                            class="btn btn-success send-btn"
                                             style="display: none;">전송
                                     </button>
-                                    <button type="button" class="btn btn-secondary cancel-btn"
+                                    <button id="introduce-cancel-btn" type="button"
+                                            class="btn btn-secondary cancel-btn"
                                             style="display: none;">취소
                                     </button>
                                 </div>
                             </div>
+
+                            <script>
+                              $(document).ready(function () {
+                                $("#introduce-cancel-btn").click(function () {
+                                  $("#introduce-cancel-btn").hide();
+                                  $("#introduce-submit-btn").hide();
+                                  $("#introduce-update-btn").show();
+                                  $('#introduce-input').prop('readonly', false);
+                                });
+
+                                $("#introduce-update-btn").click(function () {
+                                  $("#introduce-update-btn").hide();
+                                  $("#introduce-cancel-btn").show();
+                                  $("#introduce-submit-btn").show();
+                                  $('#introduce-input').prop('readonly', false);
+                                });
+
+                                $("#introduce-submit-btn").click(function () {
+                                  var newIntroduce = $('#introduce-input').val();
+                                  // Ajax 요청
+                                  $.ajax({
+                                    url: '<%=request.getContextPath()%>/api/my-brand/introduce',
+                                    method: 'POST',
+                                    data: JSON.stringify({
+                                      'member_seq': ${member_seq},
+                                      'to_introduce': newIntroduce
+                                    }),
+                                    success: function (response) {
+                                      // 성공적으로 응답을 받았을 때 처리
+                                      $('#introduce-input').val(response.item).prop('readonly',
+                                          true);
+                                      $("#introduce-submit-btn").hide();
+                                      $("#introduce-cancel-btn").hide();
+                                      $("#introduce-update-btn").show();
+                                    },
+                                    error: function (error) {
+                                      // 실패 시 처리
+                                      console.log(error);
+                                      alert('소개글 변경에 실패하였습니다.');
+                                    }
+                                  });
+                                });
+                              });
+                            </script>
 
                             <!-- 닉네임 보여주기/등록하기 -->
                             <div class="row">
