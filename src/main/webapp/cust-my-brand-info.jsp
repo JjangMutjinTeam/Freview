@@ -176,7 +176,7 @@
                                 <div class="col-lg-3 col-md-4 label">소개</div>
                                 <div class="col-lg-8 col-md-6">
                                     <input id="introduce-input" type="text" name="to_nickname"
-                                           value="<%= brandInfo.getIntroduce() %>"
+                                           value="<%= brandInfo.getIntroduce() == null? "" : brandInfo.getIntroduce() %>"
                                            class="form-control" readonly>
                                 </div>
                                 <div class="col-lg-1 col-md-2">
@@ -227,12 +227,12 @@
                                       $("#introduce-submit-btn").hide();
                                       $("#introduce-cancel-btn").hide();
                                       $("#introduce-update-btn").show();
-                                      alert('닉네임 변경에 실패하였습니다.');
+                                      alert('소개글 변경에 성공했습니다.');
                                     },
                                     error: function (error) {
                                       // 실패 시 처리
                                       console.log(error);
-                                      alert('닉네임 변경에 실패하였습니다.');
+                                      alert('소개글 변경에 실패하였습니다.');
                                     }
                                   });
                                 });
@@ -629,7 +629,7 @@
                                     }),
                                     success: function (response) {
                                       console.log(response.item);
-                                      alert('성공적으로 수정되었습니다.');
+                                      alert('태그 변경에 성공하였습니다.');
                                       $('#tag-select').prop('disabled', true);
                                       $('#tag-submit-btn').hide();
                                       $('#tag-cancel-btn').hide();
@@ -652,30 +652,6 @@
                                 });
                               });
                             </script>
-
-                            <%--<!-- 리뷰로그들 보여주기/ URL 등록하기 -->
-                            <div class="row">
-                                <div class="col-lg-3 col-md-4 label">리뷰 로그</div>
-                                <div class="col-lg-8 col-md-6">
-                                    <input type="text" name="to_review_url"
-                                           value="${brandInfo.reviewInfos}"
-                                           class="form-control" readonly>
-                                </div>
-                                <div class="col-lg-1 col-md-2">
-                                    <button type="button" class="btn btn-primary edit-btn">수정
-                                    </button>
-                                    <button type="button" class="btn btn-success send-btn"
-                                            style="display: none;">전송
-                                    </button>
-                                    <button type="button" class="btn btn-secondary cancel-btn"
-                                            style="display: none;">취소
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
-                            </div>
-                        </div>
-                    </div>--%>
 
 </main><!-- End #main -->
 

@@ -36,10 +36,9 @@ public class BrandInfoServlet extends HttpServlet {
       throws ServletException, IOException {
 
     try {
-
       int memberSeq = Integer.parseInt(request.getParameter("member_seq"));
       int fromMemberSeq = Integer.parseInt(
-          request.getParameter("from_member_seq")); // from_member_seq = 세션으로 가져오면 됨.
+          request.getParameter("from_member_seq")); // from_member_seq = 이것이 세션
 
       MemberGubun memberGubun = memberUtilDAO.selectMemberGubun(memberSeq);
       if (memberGubun == null) {
@@ -53,28 +52,30 @@ public class BrandInfoServlet extends HttpServlet {
             "유효하지 않은 유저에 대한 요청입니다.");
       }
 
-      String fromMemberNickname = memberUtilDAO.selectMemberNickname(fromMemberSeq);
+      String fromMemberNickname = null;
+      if (memberGubunFrom.isBoss()) {
+        fromMemberNickname = memberUtilDAO.selectStoreName(fromMemberSeq);
+      } else if (memberGubunFrom.isCust()) {
+        fromMemberNickname = memberUtilDAO.selectMemberNickname(fromMemberSeq);
+      }
+
+      if (memberGubunFrom.isCust() || memberGubunFrom.isBoss()) {
+        request.setAttribute("fromMemberNickname", fromMemberNickname);
+      } else {
+        request.setAttribute("fromMemberNickname", "어드민");
+      }
+      request.setAttribute("member_seq", memberSeq);
 
       if (memberGubun.isBoss()) {
         BossMyBrandInfoDto brandInfo = bossMyBrandInfoDAO.getBossBrandInfo(memberSeq);
         log.info("brandInfo = " + brandInfo);
-        request.setAttribute("member_seq", memberSeq);
         request.setAttribute("brandInfo", brandInfo);
-        if (memberGubunFrom.isCust()) {
-          request.setAttribute("fromMemberNickname", fromMemberNickname);
-        } else if (memberGubun.isBoss()) {
-          request.setAttribute("fromMemberNickname", fromMemberNickname);
-        } else {
-          request.setAttribute("fromMemberNickname", "어드민");
-        }
         RequestDispatcher dispatcher = request.getRequestDispatcher("/boss-brand-info.jsp");
         dispatcher.forward(request, response);
       } else if (memberGubun.isCust()) {
         CustMyBrandInfoDto brandInfo = custMyBrandInfoDAO.getCustBrandInfo(memberSeq);
         log.info("brandInfo = " + brandInfo);
-        request.setAttribute("member_seq", memberSeq);
         request.setAttribute("brandInfo", brandInfo);
-        request.setAttribute("fromMemberNickname", fromMemberNickname);
         RequestDispatcher dispatcher = request.getRequestDispatcher("/cust-brand-info.jsp");
         dispatcher.forward(request, response);
       }

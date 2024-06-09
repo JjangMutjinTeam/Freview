@@ -110,38 +110,13 @@
                     <img src="assets/img/basic/basic-profile-img.png" alt="Profile"
                          class="rounded-circle">
                     <span id="store-name-holder-head"
-                          class="d-none d-md-block">${brandInfo.storeName}</span>
+                          class="d-none d-md-block">${fromMemberNickname}</span>
                 </a><!-- End Profile Iamge Icon -->
             </li><!-- End Profile Nav -->
         </ul>
     </nav><!-- End Icons Navigation -->
 </header><!-- End Header -->
 
-<!-- ======= Sidebar ======= -->
-<aside id="sidebar" class="sidebar">
-    <ul class="sidebar-nav" id="sidebar-nav">
-        <li class="nav-item">
-            <a class="nav-link" data-bs-target="#components-nav"
-               href="#">
-                <i class="bi bi-person"></i><span>브랜딩</span>
-            </a>
-        </li><!-- End Components Nav -->
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="users-profile.html">
-                <i class="bi bi-layout-text-window-reverse"></i>
-                <span>활동</span>
-            </a>
-        </li><!-- End Profile Page Nav -->
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="pages-faq.html">
-                <i class="bi bi-envelope"></i>
-                <span>알림</span>
-            </a>
-        </li><!-- End F.A.Q Page Nav -->
-    </ul>
-</aside><!-- End Sidebar-->
 
 <main id="main" class="main">
 
@@ -186,7 +161,7 @@
                                 <div class="col-lg-3 col-md-4 label">소개</div>
                                 <div class="col-lg-8 col-md-6">
                                     <input id="introduce-input" type="text"
-                                           value="<%= brandInfo.getIntroduce() %>"
+                                           value="<%= brandInfo.getIntroduce() == null? "" : brandInfo.getIntroduce() %>"
                                            class="form-control" readonly>
                                 </div>
                             </div>
@@ -259,7 +234,7 @@
 
                                 initializeTagSelect();
                             </script>
-                            
+
 
 </main><!-- End #main -->
 
