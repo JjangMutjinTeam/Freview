@@ -32,6 +32,28 @@
         color: white;
       }
     </style>
+    <style>
+      .form-control {
+        width: 100%;
+        height: 38px;
+        padding: 6px 12px;
+        font-size: 14px;
+        line-height: 1.42857143;
+        color: #555;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+      }
+
+      .form-control-readonly {
+        background-color: #e9ecef;
+        opacity: 1;
+      }
+    </style>
+
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
@@ -110,9 +132,10 @@
         <ul class="d-flex align-items-center">
             <li class="nav-item dropdown pe-3">
                 <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
-                    <img src="${brandInfo.profilePhotoUrl}" alt="Profile"
+                    <img src="assets/img/basic/basic-profile-img.png" alt="Profile"
                          class="rounded-circle">
-                    <span class="d-none d-md-block">${brandInfo.nickname}</span>
+                    <span id="nickname-holder-head"
+                          class="d-none d-md-block">${brandInfo.nickname}</span>
                 </a><!-- End Profile Iamge Icon -->
             </li><!-- End Profile Nav -->
         </ul>
@@ -158,7 +181,7 @@
                 <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
                     <img src="assets/img/basic/basic-profile-img.png" alt="Profile"
                          class="rounded-circle">
-                    <h2>${brandInfo.nickname}</h2>
+                    <h2 id="nickname-holder-section">${brandInfo.nickname}</h2>
                     <div class="social-links mt-2 ri-heart-3-fill">
                         ${brandInfo.zzimCount}
                     </div>
@@ -291,6 +314,8 @@
                                       // 성공적으로 응답을 받았을 때 처리
                                       $('#nickname-input').val(response.item).prop('readonly',
                                           true);
+                                      $("#nickname-holder-head").text(response.item);
+                                      $("#nickname-holder-section").text(response.item);
                                       $("#nickname-submit-btn").hide();
                                       $("#nickname-cancel-btn").hide();
                                       $("#nickname-update-btn").show();
@@ -308,22 +333,128 @@
                             <!-- 연령대 보여주기/등록하기 -->
                             <div class="row">
                                 <div class="col-lg-3 col-md-4 label">연령대</div>
-                                <div class="col-lg-8 col-md-6">
-                                    <input type="text" name="to_age_group"
-                                           value="<%= brandInfo.getAgeGroup() %>"
-                                           class="form-control" readonly>
-                                </div>
+                                <select id="age-group-input"
+                                        class="form-control form-control-readonly col-lg-8 col-md-6"
+                                        aria-label="Default select example" disabled>
+                                    <%
+                                        String[] ageGroups = {"10대", "20대", "30대", "40대", "50대",
+                                                "60대", "70대", "80대", "90대"};
+                                        String selectedAgeGroup = brandInfo.getAgeGroup();
+                                    %>
+                                    <%
+                                        for (String ageGroup : ageGroups) {
+                                    %>
+                                    <option value="<%= ageGroup %>" <%=
+                                    ageGroup.equals(selectedAgeGroup) ? "selected"
+                                            : "" %>><%= ageGroup %>
+                                    </option>
+                                    <%
+                                        }
+                                    %>
+                                </select>
+
+                                <script>
+                                  $(document).ready(function () {
+                                    $("#age-group-cancel-btn").click(function () {
+                                      $("#age-group-cancel-btn").hide();
+                                      $("#age-group-submit-btn").hide();
+                                      $("#age-group-update-btn").show();
+                                      $('#age-group-input').prop('disabled', true);
+                                    });
+
+                                    $("#age-group-update-btn").click(function () {
+                                      $("#age-group-update-btn").hide();
+                                      $("#age-group-cancel-btn").show();
+                                      $("#age-group-submit-btn").show();
+                                      $('#age-group-input').prop('disabled', false);
+                                    });
+
+                                    $("#age-group-submit-btn").click(function () {
+                                      var newAgeGroup = $('#age-group-input').val();
+                                      // Ajax 요청
+                                      $.ajax({
+                                        url: '<%=request.getContextPath()%>/api/cust/my-brand/age-group',
+                                        method: 'POST',
+                                        data: JSON.stringify({
+                                          'member_seq': ${member_seq},
+                                          'to_age_group': newAgeGroup
+                                        }),
+                                        success: function (response) {
+                                          // 성공적으로 응답을 받았을 때 처리
+                                          $('#age-group-input').val(response.item).prop('disabled',
+                                              true);
+                                          $("#age-group-submit-btn").hide();
+                                          $("#age-group-cancel-btn").hide();
+                                          $("#age-group-update-btn").show();
+                                        },
+                                        error: function (error) {
+                                          // 실패 시 처리
+                                          console.log(error);
+                                          alert('연령대 변경에 실패하였습니다.');
+                                        }
+                                      });
+                                    });
+                                  });
+                                </script>
+
                                 <div class="col-lg-1 col-md-2">
-                                    <button type="button" class="btn btn-primary edit-btn">수정
+                                    <button id="age-group-update-btn" type="button"
+                                            class="btn btn-primary edit-btn">수정
                                     </button>
-                                    <button type="button" class="btn btn-success send-btn"
+                                    <button id="age-group-submit-btn"
+                                            type="button" class="btn btn-success send-btn"
                                             style="display: none;">전송
                                     </button>
-                                    <button type="button" class="btn btn-secondary cancel-btn"
+                                    <button id="age-group-cancel-btn"
+                                            type="button" class="btn btn-secondary cancel-btn"
                                             style="display: none;">취소
                                     </button>
                                 </div>
                             </div>
+
+                            <script>
+                              $(document).ready(function () {
+                                $("#age-group-cancel-btn").click(function () {
+                                  $("#age-group-cancel-btn").hide();
+                                  $("#age-group-submit-btn").hide();
+                                  $("#age-group-update-btn").show();
+                                  $('#age-group-input').prop('readonly', false);
+                                });
+
+                                $("#age-group-update-btn").click(function () {
+                                  $("#age-group-update-btn").hide();
+                                  $("#age-group-cancel-btn").show();
+                                  $("#age-group-submit-btn").show();
+                                  $('#age-group-input').prop('readonly', false);
+                                });
+
+                                $("#age-group-submit-btn").click(function () {
+                                  var newAgeGroup = $('#age-group-input').val();
+                                  // Ajax 요청
+                                  $.ajax({
+                                    url: '<%=request.getContextPath()%>/api/cust/my-brand/age-group',
+                                    method: 'POST',
+                                    data: JSON.stringify({
+                                      'member_seq': ${member_seq},
+                                      'to_age_group': newAgeGroup
+                                    }),
+                                    success: function (response) {
+                                      // 성공적으로 응답을 받았을 때 처리
+                                      $('#age-group-input').val(response.item).prop('readonly',
+                                          true);
+                                      $("#age-group-submit-btn").hide();
+                                      $("#age-group-cancel-btn").hide();
+                                      $("#age-group-update-btn").show();
+                                    },
+                                    error: function (error) {
+                                      // 실패 시 처리
+                                      console.log(error);
+                                      alert('닉네임 변경에 실패하였습니다.');
+                                    }
+                                  });
+                                });
+                              });
+                            </script>
 
                             <!-- 활동분야 보여주기/등록하기 -->
                             <div class="row">
