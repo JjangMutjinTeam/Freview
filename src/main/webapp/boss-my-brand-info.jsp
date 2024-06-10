@@ -1,6 +1,7 @@
 <%@ page import="com.nuguna.freview.dto.cust.brand.CustMyBrandInfoDto" %>
 <%@ page import="com.google.gson.Gson" %>
 <%@ page import="com.nuguna.freview.dto.boss.brand.BossMyBrandInfoDto" %>
+<%@ page import="com.nuguna.freview.entity.member.Member" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -8,6 +9,11 @@
 <%
     BossMyBrandInfoDto brandInfo = (BossMyBrandInfoDto) request.getAttribute("brandInfo");
     Gson gson = new Gson();
+    Member member = null;
+    if (session.getAttribute("Member") != null) {
+        member = (Member) session.getAttribute("Member");
+    }
+    int memberSeq = member.getMemberSeq();
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -94,7 +100,8 @@
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center">
     <div class="d-flex align-items-center justify-content-between">
-        <a href="index.html" class="logo d-flex align-items-center">
+        <a href="/main?seq=<%=memberSeq%>&pagecode=Requester"
+           class="logo d-flex align-items-center">
             <img src="assets/img/logo/logo-vertical.png" alt="">
             <span class="d-none d-lg-block">Freeview</span>
         </a>
@@ -126,7 +133,7 @@
         </li><!-- End Components Nav -->
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="users-profile.html">
+            <a class="nav-link collapsed" href="/boss-received-request.jsp">
                 <i class="bi bi-layout-text-window-reverse"></i>
                 <span>활동</span>
             </a>

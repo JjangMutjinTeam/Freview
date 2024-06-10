@@ -128,14 +128,20 @@ public class AuthServlet extends HttpServlet {
         }
         else if(user.getGubun().equals("B")){
           HttpSession session = req.getSession();
-          session.setAttribute("BOSS",user);
+          session.setAttribute("Member",user);
           RequestDispatcher rd = req.getRequestDispatcher("COMM_BOSSmain.jsp");
           rd.forward(req,resp);
         } else if(user.getGubun().equals("C")){
           HttpSession session = req.getSession();
-          session.setAttribute("REVIEWER",user);
+          session.setAttribute("Member",user);
           RequestDispatcher rd = req.getRequestDispatcher("COMM_REVIEWERmain.jsp");
           rd.forward(req,resp);
+        }
+        else if(user.getGubun().equals("A")){
+          HttpSession session = req.getSession();
+          session.setAttribute("Member",user);
+          System.out.println("user : " + user);
+          resp.sendRedirect(req.getContextPath() + "/AdminPage/user");
         }
 
     }
