@@ -363,7 +363,7 @@
                   <td>${status.index+1}</td>
                   <td>${member.gubun}</td>
                   <td>${member.nickname}</td>
-                  <td><a href="MemberBrandingServlet?gubun=${member.gubun}&mid=${member.mid}">${member.mid}</a></td> <!-- 서블릿으로 이동 -->
+                  <td><a href="/my-info?member_seq=${member.memberSeq}">${member.mid}</a></td>
                   <td>${member.createdAt}</td>
                   <td><button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="${member.mid}">x</button></td> <!-- 추가된 부분: 탈퇴 버튼 -->
                 </tr>
