@@ -53,7 +53,7 @@ public class BossSendInformDAO {
     PreparedStatement pstmt = null;
     ResultSet rs;
 
-    String sql = "SELECT p.post_seq, p.title, m.member_seq "
+    String sql = "SELECT p.post_seq, p.title, m.member_seq, m.nickname "
         + "FROM post p "
         + "INNER JOIN member m ON m.member_seq = p.member_seq "
         + "INNER JOIN ( "
@@ -65,16 +65,22 @@ public class BossSendInformDAO {
     List<BossSendDdabongDto> ddabongInfos = new ArrayList<>();
 
     try {
+      System.out.println("dao안 rs밖: "+bossSeq);
       conn = getConnection();
       pstmt = conn.prepareStatement(sql);
       pstmt.setInt(1, bossSeq);
       rs = pstmt.executeQuery();
-
-      while (rs.next()){
+      System.out.println("dao안 오호: "+bossSeq);
+      while(rs.next()){
+        System.out.println("rs내부");
         int memberSeq = rs.getInt("member_seq");
+        System.out.println(memberSeq);
         int postSeq = rs.getInt("post_seq");
+        System.out.println(postSeq);
         String title = rs.getString("title");
-        ddabongInfos.add(new BossSendDdabongDto(memberSeq, postSeq, title, "DDABONG"));
+        System.out.println(title);
+        String nickname = rs.getString("nickname");
+        ddabongInfos.add(new BossSendDdabongDto(memberSeq, postSeq, title, nickname, "DDABONG"));
       }
     } catch (SQLException e) {
       throw new RuntimeException("SQLException: 따봉 도중 문제가 발생했습니다.", e);
