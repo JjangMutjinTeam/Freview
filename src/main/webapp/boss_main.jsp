@@ -2,7 +2,8 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.nuguna.freview.dto.MainpageRequesterDTO" %>
 <%@ page import="com.nuguna.freview.dto.MainpageGongjiDTO" %>
-<%@ page import="com.nuguna.freview.dto.MainpageMemberInfoDTO" %><%--
+<%@ page import="com.nuguna.freview.dto.MainpageMemberInfoDTO" %>
+<%@ page import="com.nuguna.freview.entity.member.Member" %><%--
   Created by IntelliJ IDEA.
   User: rlagk
   Date: 2024-06-09
@@ -13,9 +14,13 @@
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%
-    MainpageMemberInfoDTO memberInfo = (MainpageMemberInfoDTO)request.getAttribute("memberInfo");
-    ArrayList<MainpageRequesterDTO> requesters = (ArrayList<MainpageRequesterDTO>)request.getAttribute("requesters");
-    ArrayList<MainpageGongjiDTO> gongjis = (ArrayList<MainpageGongjiDTO>)request.getAttribute("gongji");
+    MainpageMemberInfoDTO memberInfo = (MainpageMemberInfoDTO) request.getAttribute("memberInfo");
+    ArrayList<MainpageRequesterDTO> requesters = (ArrayList<MainpageRequesterDTO>) request.getAttribute(
+            "requesters");
+    ArrayList<MainpageGongjiDTO> gongjis = (ArrayList<MainpageGongjiDTO>) request.getAttribute(
+            "gongji");
+    Member member = (Member) session.getAttribute("Member");
+    int memberSeq = member.getMemberSeq();
 %>
 
 <!DOCTYPE html>
@@ -76,14 +81,14 @@
 <header id="header" class="header fixed-top d-flex align-items-center header-hr">
 
     <div class="d-flex align-items-center justify-content-between header-hr-left">
-            <a href="#" class="logo d-flex align-items-center">
-                <img src="assets/img/logo/logo-vertical.png" alt="" style="  width: 50px;
+        <a href="/main?pagecode=Boss" class="logo d-flex align-items-center">
+            <img src="assets/img/logo/logo-vertical.png" alt="" style="  width: 50px;
     margin-top: 20px;">
-                <span class="d-none d-lg-block">Freview</span>
+            <span class="d-none d-lg-block">Freview</span>
         </a>
     </div><!-- End Logo -->
     <div class="header-hr-right">
-        <a href="#" style="margin-right: 20px">
+        <a href="/my-info?member_seq=<%=memberSeq%>&seq=<%=memberSeq%>" style="margin-right: 20px">
             <%=memberInfo.getNickname()%>
             <img src="<%=memberInfo.getPhotoUrl()%>" alt=" " style="width: 30px;
     margin-top: 15px;">
@@ -93,61 +98,68 @@
 </header><!-- End Header -->
 
 <main id="main_wrap" class="main">
-    <div id ="main" style="margin:auto; margin-top:80px">
-    <div class="pagetitle">
-        <h1>메인페이지</h1>
-    </div><!-- End Page Title -->
-    <div class = "card">
-        <div class="card-header">
-            <h5>최근 활동한 체험단</h5>
-        </div>
-        <div class="card-body card-body-hr">
-            <%for(MainpageRequesterDTO dto : requesters){%>
-            <div class="post-list">
-                <a href="#" class="post-item">
-                    <figure>
-                    <%if(dto.getProfilePhotoUrl()==null){%>
-                        <img src="https://play-lh.googleusercontent.com/38AGKCqmbjZ9OuWx4YjssAz3Y0DTWbiM5HB0ove1pNBq_o9mtWfGszjZNxZdwt_vgHo=w240-h480-rw" alt="Profile" class="profile-img">
-                        <%} else{%>
-                    <img src="<%=dto.getProfilePhotoUrl()%>" alt="Profile" class="profile-img">
-                        <%}%>
-                    </figure>
-                    <h5><%=dto.getNickname()%></h5>
-                </a>
+    <div id="main" style="margin:auto; margin-top:80px">
+        <div class="pagetitle">
+            <h1>메인페이지</h1>
+        </div><!-- End Page Title -->
+        <div class="card">
+            <div class="card-header">
+                <h5>최근 활동한 체험단</h5>
             </div>
-            <%}%>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-header card-header-hr">
-            <h5>공지글</h5>
-            <a href="/auth?pagecode=login">공지글 게시판으로 가기</a>
-        </div>
-        <div class="card-body">
-            <!-- Table with stripped rows -->
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>번호</th>
-                    <th>제목</th>
-                    <th>작성일자</th>
-                    <th>수정일자</th>
-                </tr>
-                </thead>
-                <tbody>
-                <%for(MainpageGongjiDTO dto : gongjis){%>
-                <tr>
-                    <td><%=dto.getPostSeq()%></td>
-                    <td><a href="#"><%=dto.getTitle()%></a></td>
-                    <td><%=dto.getCreatedAt()%></td>
-                    <td><%=dto.getUpdatedAt()%></td>
-                </tr>
+            <div class="card-body card-body-hr">
+                <%for (MainpageRequesterDTO dto : requesters) {%>
+                <div class="post-list">
+                    <a href="#" class="post-item">
+                        <figure>
+                            <%if (dto.getProfilePhotoUrl() == null) {%>
+                            <img src="https://play-lh.googleusercontent.com/38AGKCqmbjZ9OuWx4YjssAz3Y0DTWbiM5HB0ove1pNBq_o9mtWfGszjZNxZdwt_vgHo=w240-h480-rw"
+                                 alt="Profile" class="profile-img">
+                            <%} else {%>
+                            <img src="<%=dto.getProfilePhotoUrl()%>" alt="Profile"
+                                 class="profile-img">
+                            <%}%>
+                        </figure>
+                        <h5><%=dto.getNickname()%>
+                        </h5>
+                    </a>
+                </div>
                 <%}%>
-                </tbody>
-            </table>
-            <!-- End Table with stripped rows -->
-
+            </div>
         </div>
+        <div class="card">
+            <div class="card-header card-header-hr">
+                <h5>공지글</h5>
+                <a href="/auth?pagecode=login">공지글 게시판으로 가기</a>
+            </div>
+            <div class="card-body">
+                <!-- Table with stripped rows -->
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>제목</th>
+                        <th>작성일자</th>
+                        <th>수정일자</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <%for (MainpageGongjiDTO dto : gongjis) {%>
+                    <tr>
+                        <td><%=dto.getPostSeq()%>
+                        </td>
+                        <td><a href="#"><%=dto.getTitle()%>
+                        </a></td>
+                        <td><%=dto.getCreatedAt()%>
+                        </td>
+                        <td><%=dto.getUpdatedAt()%>
+                        </td>
+                    </tr>
+                    <%}%>
+                    </tbody>
+                </table>
+                <!-- End Table with stripped rows -->
+
+            </div>
         </div>
     </div>
 </main><!-- End #main -->
@@ -161,10 +173,12 @@
         <!-- All the links in the footer should remain intact. -->
         <!— You can delete the links only if you purchased the pro version. —>
         <!— Licensing information: https://bootstrapmade.com/license/ —>
-        <!— Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ —>
+        <!— Purchase the pro version with working PHP/AJAX contact form:
+        https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ —>
         Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
     </div>
-</footer><!— End Footer —>
+</footer>
+<!— End Footer —>
 
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
         class="bi bi-arrow-up-short"></i></a>
