@@ -11,8 +11,12 @@
 <html lang="en">
 
 <%
-    Member loginUser = (Member) session.getAttribute("Member");
-    int memberSeq = loginUser.getMemberSeq();
+    Member loginUser = null;
+    int memberSeq = -1;
+    if(session.getAttribute("Member") != null) {
+        loginUser = (Member) session.getAttribute("Member");
+        memberSeq = loginUser.getMemberSeq();
+    }
 %>
 
 <head>

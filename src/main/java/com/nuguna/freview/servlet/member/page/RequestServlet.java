@@ -40,9 +40,9 @@ public class RequestServlet extends HttpServlet {
       try {
         EncodingUtil.setEncodingToUTF8AndJson(request, response);
 
-//       JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
-//       int bossSeq = jsonObject.get("member_seq").getAsInt();
-        int bossSeq = 118;
+       JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
+       int bossSeq = jsonObject.get("member_seq").getAsInt();
+//        int bossSeq = 118;
 
         List<BossRequestMozzipListDto> mozzipList = BossRequestDAO.bossMozzipList(bossSeq);
         List<BossRequestReceivedDto> ReceivedRequest = BossRequestDAO.bossReceivedRequest(bossSeq);
