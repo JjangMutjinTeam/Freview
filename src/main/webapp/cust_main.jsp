@@ -2,7 +2,8 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.nuguna.freview.dto.MainpageRequesterDTO" %>
 <%@ page import="com.nuguna.freview.dto.MainpageGongjiDTO" %>
-<%@ page import="com.nuguna.freview.dto.MainpageMemberInfoDTO" %><%--
+<%@ page import="com.nuguna.freview.dto.MainpageMemberInfoDTO" %>
+<%@ page import="com.nuguna.freview.entity.member.Member" %><%--
   Created by IntelliJ IDEA.
   User: rlagk
   Date: 2024-06-09
@@ -16,6 +17,8 @@
     ArrayList<MainpageMojipDTO> mojips = (ArrayList<MainpageMojipDTO>)request.getAttribute("mojips");
     ArrayList<MainpageGongjiDTO> gongjis = (ArrayList<MainpageGongjiDTO>)request.getAttribute("gongji");
     MainpageMemberInfoDTO memberInfo = (MainpageMemberInfoDTO)request.getAttribute("memberInfo");
+    Member user = (Member)session.getAttribute("Member");
+    int memberSeq = user.getMemberSeq();
 %>
 
 <!DOCTYPE html>
@@ -83,7 +86,7 @@
         </a>
     </div><!-- End Logo -->
     <div class="header-hr-right">
-        <a href="#" style="margin-right: 20px">
+        <a href="/my-info?member_seq=<%=memberSeq%>" style="margin-right: 20px">
             <%=memberInfo.getNickname()%>
             <img src="<%=memberInfo.getPhotoUrl()%>" alt=" " style="width: 30px;
     margin-top: 15px;">
@@ -105,7 +108,7 @@
             <div class="card-body card-body-hr">
                 <%for(MainpageMojipDTO dto : mojips){ %>
                 <div class="post-list">
-                    <a href="#" class="post-item">
+                    <a href="" class="post-item">
                         <figure>
                             <%if(dto.getThumbnailPhotoUrl()==null){%>
                             <img src="https://play-lh.googleusercontent.com/38AGKCqmbjZ9OuWx4YjssAz3Y0DTWbiM5HB0ove1pNBq_o9mtWfGszjZNxZdwt_vgHo=w240-h480-rw" alt="Profile" class="profile-img">
