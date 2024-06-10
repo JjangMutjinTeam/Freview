@@ -10,6 +10,7 @@ public class BossSendDdabongDto {
   Integer memberSeq;
   Integer postSeq;
   String title;
+  String nickname;
   String type;
 
 }

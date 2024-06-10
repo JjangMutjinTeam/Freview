@@ -50,6 +50,9 @@ public class SendInformServlet extends HttpServlet {
 
       System.out.println("zzimSendInfos:" + zzimSendInfos);
       System.out.println("ddabongSendInfos:" + ddabongSendInfos);
+      System.out.println(ddabongSendInfos.get(0).getPostSeq());
+      System.out.println(ddabongSendInfos.get(0).getTitle());
+      System.out.println(ddabongSendInfos.get(0).getMemberSeq());
       // JSON으로 응답을 생성
       PrintWriter out = response.getWriter();
 

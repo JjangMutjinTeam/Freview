@@ -443,8 +443,9 @@
           htmlStr += "<div class='card'>";
           htmlStr += "<div class='card-body'>";
           htmlStr += "<h5 class='card-title'>From. " + val["nickname"] + "</h5>";
-          htmlStr += "<p><a href='<%=request.getContextPath()%>/brand-page?post_seq=" + val["postSeq"]
-                  + "'>" + val["nickname"] + "</a>님이 내 글을 좋아요♥했습니다.</p>";
+          htmlStr += "<p>"+ val["nickname"] +"님이 내 글 <a href='<%=request.getContextPath()%>/mojipboard/detail?post_seq=" + val["postSeq"]
+                  + "'>";
+          htmlStr += val["title"] +"</a> 을 좋아요♥했습니다.</p>";
           htmlStr += "</div>";
           htmlStr += "</div>";
         });
@@ -467,7 +468,7 @@
           // 받은 데이터를 처리
           // zzimInfos 배열의 각 요소에서 필요한 데이터 추출
           var bossSendZzim = data.zzimInfos;
-          var bossSendDdabong = data.zzimInfos;
+          var bossSendDdabong = data.ddabongInfos;
           var htmlStr = "<div>"
           // 수정할 부분
           $.map(bossSendZzim, function (val, idx) {
@@ -479,17 +480,20 @@
              htmlStr += "</div>";
              htmlStr += "</div>";
            });
-           $.map(bossSendDdabong, function (val, idx) { // 변수명은 알아볼 수 있게 자유롭게 선택
-             htmlStr += "<div class='card'>";
-             htmlStr += "<div class='card-body'>";
-             htmlStr += "<h5 class='card-title'>TO. " + val["nickname"] + "</h5>";
-             htmlStr += "<p><a href='<%=request.getContextPath()%>/brand-page?member_seq=" + val["seq"]
-                     + "'>" + val["nickname"] + "</a>님이 내 글을 좋아요♥ 했습니다.</p>";
+           $.map(bossSendDdabong, function (val, idx) {
+             //console.log(postSeq);
+                htmlStr += "<div class='card'>";
+                htmlStr += "<div class='card-body'>";
+                htmlStr += "<h5 class='card-title'>TO. " + val["nickname"] + "</h5>";
+                htmlStr += "<p>"+ val["nickname"] ;
+                htmlStr += " 님의 글 <a href='<%=request.getContextPath()%>/mojipboard/detail?post_seq=" + val["postSeq"] + "'>";
+                htmlStr += val["title"] +"</a>을 좋아요♥ 했습니다.</p>";
+                htmlStr += "</div>";
+                htmlStr += "</div>";
+              });
              htmlStr += "</div>";
-             htmlStr += "</div>";
-           });
-          htmlStr += "</div>";
-          $("#bossSendInform").html(htmlStr);
+             $("#bossSendInform").html(htmlStr);
+             //console.log(bossSendDdabong);
         }
       });
     });
