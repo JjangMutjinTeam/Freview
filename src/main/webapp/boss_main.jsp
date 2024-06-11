@@ -119,8 +119,10 @@
                                  class="profile-img">
                             <%}%>
                         </figure>
-                        <h5><%=dto.getNickname()%>
-                        </h5>
+                        <a href="/my-info?member_seq=<%=dto.getMemberSeq()%>">
+                            <h5><%=dto.getNickname()%>
+                            </h5>
+                        </a>
                     </a>
                 </div>
                 <%}%>
@@ -129,7 +131,7 @@
         <div class="card">
             <div class="card-header card-header-hr">
                 <h5>공지글</h5>
-                <a href="/auth?pagecode=login">공지글 게시판으로 가기</a>
+                <a href="/noticeBoard">공지글 게시판으로 가기</a>
             </div>
             <div class="card-body">
                 <!-- Table with stripped rows -->
@@ -147,8 +149,9 @@
                     <tr>
                         <td><%=dto.getPostSeq()%>
                         </td>
-                        <td><a href="#"><%=dto.getTitle()%>
-                        </a></td>
+                        <td>
+                            <a href="/noticeBoard/detail?postId=<%=dto.getPostSeq()%>"><%=dto.getTitle()%>
+                            </a></td>
                         <td><%=dto.getCreatedAt()%>
                         </td>
                         <td><%=dto.getUpdatedAt()%>

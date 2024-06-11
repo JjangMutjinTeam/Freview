@@ -124,28 +124,43 @@
 
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
+
     <ul class="sidebar-nav" id="sidebar-nav">
-        <li class="nav-item">
-            <a class="nav-link" data-bs-target="#components-nav"
-               href="#">
-                <i class="bi bi-person"></i><span>브랜딩</span>
-            </a>
-        </li><!-- End Components Nav -->
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="/boss-received-request.jsp">
-                <i class="bi bi-layout-text-window-reverse"></i>
-                <span>활동</span>
+            <a class="nav-link collapsed" href="#">
+                <i class="bi bi-grid"></i>
+                <span>나의 브랜딩</span>
             </a>
-        </li><!-- End Profile Page Nav -->
+        </li><!-- End Dashboard Nav -->
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="pages-faq.html">
-                <i class="bi bi-envelope"></i>
+            <a class="nav-link collapsed"
+               href="${pageContext.request.contextPath}/boss-received-request.jsp">
+                <i class="bi bi-bell"></i>
                 <span>알림</span>
             </a>
-        </li><!-- End F.A.Q Page Nav -->
+        </li>
+        <!-- End Profile Page Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link " href="${pageContext.request.contextPath}/boss-my-request.jsp">
+                <i class="bi bi-card-checklist"></i>
+                <span>요청</span>
+            </a>
+        </li>
+        <!-- End Profile Page Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed"
+               href="#">
+                <i class="bi bi-person"></i>
+                <span>개인정보수정</span>
+            </a>
+        </li><!-- End Register Page Nav -->
+
     </ul>
+
 </aside><!-- End Sidebar-->
 
 <main id="main" class="main">

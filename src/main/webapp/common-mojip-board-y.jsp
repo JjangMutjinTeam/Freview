@@ -103,7 +103,8 @@
     <nav class="header-nav ms-auto">
         <ul class="d-flex align-items-center">
             <li class="nav-item dropdown pe-3">
-                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
+                <a class="nav-link nav-profile d-flex align-items-center pe-0"
+                   href="/my-info?member_seq=<%=memberSeq%>">
                     <img src="assets/img/basic/basic-profile-img.png" alt="Profile"
                          class="rounded-circle">
                     <span id="nickname-holder-head"
