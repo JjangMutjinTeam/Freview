@@ -67,6 +67,15 @@
     * Author: BootstrapMade.com
     * License: https://bootstrapmade.com/license/
     ======================================================== -->
+    <%--    세션의 member 정보를 전부 가져오기 (memberSeq, gubun 외)--%>
+    <%--    <div class="header-hr-right">--%>
+    <%--        <a href="/brand-page?gubun=${member.gubun}&mid=${member.mid}" style="margin-right: 20px">--%>
+    <%--            <%=memberInfo.getNickname()%>--%>
+    <%--            <img src="<%=memberInfo.getPhotoUrl()%>" alt=" " style="width: 30px;--%>
+    <%--    margin-top: 15px;">--%>
+    <%--        </a>--%>
+    <%--        <a href="COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>--%>
+    <%--    </div>--%>
 </head>
 
 <body>
@@ -129,12 +138,13 @@
                             <div class="col-xl-2">
                                 <div class="card">
                                     <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+                                        <a href="/MemberBrandingServlet?gubun=${boss.gubun}&mid=${boss.mid}">
                                         <a href="/MemberBrandingServlet?gubun=B&mid=${boss.mid}">
                                             <img src="${boss.profilePhotoUrl}" alt="Profile"
                                                  class="profile-img">
                                         </a>
                                         <h2>
-                                            <a href="/MemberBrandingServlet?gubun=B&mid=${boss.mid}">${boss.nickname}</a>
+                                            <a href="/MemberBrandingServlet?gubun=${boss.gubun}&mid=${boss.mid}">${boss.nickname}</a>
                                         </h2>
                                         <h3>${boss.foodTypes}</h3>
                                         <h3>${boss.tags}</h3>
@@ -152,12 +162,12 @@
                             <div class="col-xl-2">
                                 <div class="card">
                                     <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-                                        <a href="MemberBrandingServlet?gubun=C&mid=${customer.mid}">
+                                        <a href="/MemberBrandingServlet?gubun=${customer.gubun}&mid=${customer.mid}"${customer.mid}">
                                             <img src="${customer.profilePhotoUrl}" alt="Profile"
                                                  class="profile-img">
                                         </a>
                                         <h2>
-                                            <a href="MemberBrandingServlet?gubun=C&mid=${customer.mid}">${customer.nickname}</a>
+                                            <a href="/MemberBrandingServlet?gubun=${customer.gubun}&mid=${customer.mid}">${customer.nickname}</a>
                                         </h2>
                                         <h3>${customer.foodTypes}</h3>
                                         <h3>${customer.tags}</h3>
