@@ -18,8 +18,6 @@
         request.setAttribute("gubun", gubun);
         request.setAttribute("memberSeq", memberSeq);
     %>
-    gubun
-    memberSeq
     <meta content="" name="description">
     <meta content="" name="keywords">
 

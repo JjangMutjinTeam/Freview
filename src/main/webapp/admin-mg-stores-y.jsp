@@ -402,7 +402,7 @@
                                     <td>${status.index + 1}</td>
                                     <td>${store.storeName}</td>
                                     <td>${store.businessNumber}</td>
-                                    <td><a href="MemberBrandingServlet?mid=${store.mid}">${store.mid}</a></td>
+                                    <td><a href="/brand-page?member_seq=${store.mid}">${store.mid}</a></td>
                                     <td>${store.createdAt}</td>
                                     <td>
                                         <c:choose>

@@ -97,9 +97,6 @@
     </div><!-- End Page Title -->
 
     <%
-        Integer memberSeq;
-        Member loginUser = (Member) session.getAttribute("Member");
-        memberSeq = loginUser.getMemberSeq();
         request.setAttribute("memberSeq", memberSeq);
     %>
 

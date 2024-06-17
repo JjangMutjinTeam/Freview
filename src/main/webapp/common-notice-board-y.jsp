@@ -68,19 +68,15 @@
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
-
-    <nav class="header-nav ms-auto">
-        <ul class="d-flex align-items-center">
-            <li class="nav-item dropdown pe-3">
-                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
-                    <img src="assets/img/basic/basic-profile-img.png" alt="Profile"
-                         class="rounded-circle">
-                    <span id="nickname-holder-head"
-                          class="d-none d-md-block"><%=loginUser.getNickname()%></span>
-                </a><!-- End Profile Iamge Icon -->
-            </li><!-- End Profile Nav -->
-        </ul>
-    </nav><!-- End Icons Navigation -->
+<%--    세션의 member 정보를 전부 가져오기 (memberSeq, gubun 외)--%>
+<%--    <div class="header-hr-right">--%>
+<%--        <a href="/brand-page?gubun=${member.gubun}&mid=${member.mid}" style="margin-right: 20px">--%>
+<%--            <%=memberInfo.getNickname()%>--%>
+<%--            <img src="<%=memberInfo.getPhotoUrl()%>" alt=" " style="width: 30px;--%>
+<%--    margin-top: 15px;">--%>
+<%--        </a>--%>
+<%--        <a href="COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>--%>
+<%--    </div>--%>
 </header><!-- End Header -->
 <main id="main" class="main">
 

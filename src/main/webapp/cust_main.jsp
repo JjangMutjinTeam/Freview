@@ -89,7 +89,7 @@
         </a>
     </div><!-- End Logo -->
     <div class="header-hr-right">
-        <a href="/my-info?member_seq=<%=memberSeq%>" style="margin-right: 20px">
+        <a href="/brand-page?gubun=${member.gubun}&mid=${member.mid}" style="margin-right: 20px">
             <%=memberInfo.getNickname()%>
             <img src="<%=memberInfo.getPhotoUrl()%>" alt=" " style="width: 30px;
     margin-top: 15px;">
@@ -97,7 +97,6 @@
         <a href="COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
     </div>
 </header><!-- End Header -->
-
 <main id="main_wrap" class="main">
     <div id="main" style="margin:auto; margin-top:80px">
         <div class="pagetitle">
@@ -111,7 +110,7 @@
             <div class="card-body card-body-hr">
                 <%for (MainpageMojipDTO dto : mojips) { %>
                 <div class="post-list">
-                    <a href="#" class="post-item">
+                    <a href="/mojipboard/detail?postSeq=${postSeq}" class="post-item">
                         <figure>
                             <%if (dto.getThumbnailPhotoUrl() == null) {%>
                             <img src="https://play-lh.googleusercontent.com/38AGKCqmbjZ9OuWx4YjssAz3Y0DTWbiM5HB0ove1pNBq_o9mtWfGszjZNxZdwt_vgHo=w240-h480-rw"
@@ -139,7 +138,7 @@
         <div class="card">
             <div class="card-header card-header-hr">
                 <h5>공지글</h5>
-                <a href="/auth?pagecode=login">공지글 게시판으로 가기</a>
+                <a href="/noticeBoard">공지글 게시판으로 가기</a>
             </div>
             <div class="card-body">
                 <!-- Table with stripped rows -->

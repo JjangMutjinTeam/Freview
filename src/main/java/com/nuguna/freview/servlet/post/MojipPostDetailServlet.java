@@ -3,6 +3,7 @@ package com.nuguna.freview.servlet.post;
 import com.nuguna.freview.dao.post.MojipPostDAO;
 import com.nuguna.freview.dao.post.PostDAO;
 import com.nuguna.freview.dto.MojipPostDTO;
+import com.nuguna.freview.entity.member.Member;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,7 +21,7 @@ public class MojipPostDetailServlet extends HttpServlet {
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
     int postSeq = Integer.parseInt(req.getParameter("postSeq"));
-    int memberSeq = 11; //TODO: 로그인한 사용자의 memberSeq 필요
+    int memberSeq = ((Member) req.getSession().getAttribute("Member")).getMemberSeq();
 
     MojipPostDTO mojipPost = mojipPostDAO.getMojipPost(postSeq);
     boolean isLiked = postDAO.isLikedPost(memberSeq, postSeq);
