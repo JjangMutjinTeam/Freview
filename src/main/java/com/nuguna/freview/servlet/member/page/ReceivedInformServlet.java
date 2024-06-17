@@ -40,13 +40,13 @@ public class ReceivedInformServlet extends HttpServlet  {
 
     EncodingUtil.setEncodingToUTF8AndJson(request, response);
     try {
-      JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
-      int bossSeq = jsonObject.get("member_seq").getAsInt();
+//      JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
+//      int bossSeq = jsonObject.get("member_seq").getAsInt();
 //      System.out.println("bossSeq: " + bossSeq);
 //      System.out.println("bossSeq: "+request.getParameter("member_seq"));
 
 //      int bossSeq = Integer.parseInt(request.getParameter("member_Seq"));
-//      int bossSeq = 118;
+      int bossSeq = 118;
 
       List<BossReceivedZzimInfoDto> zzimInfos = BossReceivedInformDAO.receivedZzimDAO(bossSeq);
       List<BossReceivedDdabongDto> ddabongInfos = BossReceivedInformDAO.receivedDdabongDAO(bossSeq);

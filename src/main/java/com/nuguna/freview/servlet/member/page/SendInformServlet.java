@@ -36,8 +36,9 @@ public class SendInformServlet extends HttpServlet {
 
     EncodingUtil.setEncodingToUTF8AndJson(request, response);
     try {
-      JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
-      int bossSeq = jsonObject.get("member_seq").getAsInt();
+      int bossSeq = 118;
+//      JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
+//      int bossSeq = jsonObject.get("member_seq").getAsInt();
 
       List<BossSendZzimInfoDto> zzimSendInfos = BossSendInformDAO.sendZzimDAO(bossSeq);
       List<BossSendDdabongDto> ddabongSendInfos = BossSendInformDAO.sendDdabongDAO(bossSeq);
