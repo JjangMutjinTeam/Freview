@@ -16,14 +16,14 @@ public class Member {
 
   private Integer memberSeq;
   private MemberGubun gubun;
-  private String mid;
-  private String mpw;
+  private String id;
+  private String pw;
   private String nickname;
   private String email;
   private AgeGroup ageGroup;
   private String introduce;
   private String businessNumber;
-  private String storeLoc;
+  private String storeLocation;
   private String profilePhotoUrl;
   private Timestamp createdAt;
   private Timestamp updatedAt;
