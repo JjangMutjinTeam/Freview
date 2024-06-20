@@ -3,7 +3,7 @@ package com.nuguna.freview.dao.member;
 import static com.nuguna.freview.util.DbUtil.closeResource;
 import static com.nuguna.freview.util.DbUtil.getConnection;
 
-import com.nuguna.freview.dto.api.boss.BossSendDdabongDto;
+import com.nuguna.freview.dto.api.boss.BossSendLikesDto;
 import com.nuguna.freview.dto.api.boss.BossSendZzimInfoDto;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -48,7 +48,7 @@ public class BossSendInformDAO {
 
 
 //   사장님 -> 사장님 & 관리자 게시글 ddabong
-  public List<BossSendDdabongDto> sendDdabongDAO(int bossSeq) {
+  public List<BossSendLikesDto> sendDdabongDAO(int bossSeq) {
     Connection conn = null;
     PreparedStatement pstmt = null;
     ResultSet rs;
@@ -62,7 +62,7 @@ public class BossSendInformDAO {
         + "    WHERE d.member_seq = ? "
         + ") AS d ON p.post_seq = d.post_seq " ;
 
-    List<BossSendDdabongDto> ddabongInfos = new ArrayList<>();
+    List<BossSendLikesDto> ddabongInfos = new ArrayList<>();
 
     try {
       System.out.println("dao안 rs밖: "+bossSeq);
@@ -80,7 +80,7 @@ public class BossSendInformDAO {
         String title = rs.getString("title");
         System.out.println(title);
         String nickname = rs.getString("nickname");
-        ddabongInfos.add(new BossSendDdabongDto(memberSeq, postSeq, title, nickname, "DDABONG"));
+        ddabongInfos.add(new BossSendLikesDto(memberSeq, postSeq, title, nickname, "DDABONG"));
       }
     } catch (SQLException e) {
       throw new RuntimeException("SQLException: 따봉 도중 문제가 발생했습니다.", e);

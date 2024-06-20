@@ -3,7 +3,7 @@ package com.nuguna.freview.dao.post;
 import static com.nuguna.freview.util.DbUtil.closeResource;
 import static com.nuguna.freview.util.DbUtil.getConnection;
 
-import com.nuguna.freview.entity.post.Ddabong;
+import com.nuguna.freview.entity.post.Likes;
 import com.nuguna.freview.entity.post.Post;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -26,7 +26,7 @@ public class PostDAO {
 
   private final String DELETE_POST_DDABONG = "DELETE FROM ddabong WHERE member_seq = ? and post_seq = ?"; //TODO: ddabongSeq을 조건으로 사용할 수 있는지 고려
 
-  public boolean deleteDdabong(Ddabong ddabong) {
+  public boolean deleteDdabong(Likes ddabong) {
     Connection conn = null;
     PreparedStatement pstmt = null;
     ResultSet rs = null;
@@ -53,7 +53,7 @@ public class PostDAO {
     return isDeleted;
   }
 
-  public boolean insertDdabong(Ddabong ddabong) {
+  public boolean insertDdabong(Likes ddabong) {
     Connection conn = null;
     PreparedStatement pstmt = null;
     ResultSet rs = null;

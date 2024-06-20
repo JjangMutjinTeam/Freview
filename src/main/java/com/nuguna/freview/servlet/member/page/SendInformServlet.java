@@ -1,14 +1,12 @@
 package com.nuguna.freview.servlet.member.page;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.nuguna.freview.dao.member.BossSendInformDAO;
-import com.nuguna.freview.dto.api.boss.BossSendDdabongDto;
+import com.nuguna.freview.dto.api.boss.BossSendLikesDto;
 import com.nuguna.freview.dto.api.boss.BossSendZzimInfoDto;
 import com.nuguna.freview.dto.common.ResponseMessage;
 import com.nuguna.freview.util.EncodingUtil;
-import com.nuguna.freview.util.JsonRequestUtil;
 import com.nuguna.freview.util.JsonResponseUtil;
 import java.io.PrintWriter;
 import java.util.HashMap;
@@ -41,7 +39,7 @@ public class SendInformServlet extends HttpServlet {
 //      int bossSeq = jsonObject.get("member_seq").getAsInt();
 
       List<BossSendZzimInfoDto> zzimSendInfos = BossSendInformDAO.sendZzimDAO(bossSeq);
-      List<BossSendDdabongDto> ddabongSendInfos = BossSendInformDAO.sendDdabongDAO(bossSeq);
+      List<BossSendLikesDto> ddabongSendInfos = BossSendInformDAO.sendDdabongDAO(bossSeq);
 
 //      JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
 //          new ResponseMessage<>("내가 찜한 게시글의 정보를 성공적으로 가져왔습니다.", zzimSendInfos), response, gson);

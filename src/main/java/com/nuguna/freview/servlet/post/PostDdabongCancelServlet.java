@@ -1,7 +1,7 @@
 package com.nuguna.freview.servlet.post;
 
 import com.nuguna.freview.dao.post.PostDAO;
-import com.nuguna.freview.entity.post.Ddabong;
+import com.nuguna.freview.entity.post.Likes;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,7 +21,7 @@ public class PostDdabongCancelServlet extends HttpServlet {
     req.setCharacterEncoding("UTF-8");
     resp.setCharacterEncoding("UTF-8");
 
-    Ddabong ddabong = new Ddabong();
+    Likes ddabong = new Likes();
 
     //TODO: applicant -> '방문자'로 이름 수정할 것
     ddabong.setMemberSeq(Integer.valueOf(req.getParameter("applicantSeq")));

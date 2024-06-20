@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class BossReceivedDdabongDto {
+public class BossReceivedLikesDto {
   Integer seq;
   String nickname;
   Integer postSeq;

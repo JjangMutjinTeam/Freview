@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class BossSendDdabongDto {
+public class BossSendLikesDto {
 
   Integer memberSeq;
   Integer postSeq;

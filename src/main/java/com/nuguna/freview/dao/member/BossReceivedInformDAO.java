@@ -3,7 +3,7 @@ package com.nuguna.freview.dao.member;
 import static com.nuguna.freview.util.DbUtil.closeResource;
 import static com.nuguna.freview.util.DbUtil.getConnection;
 
-import com.nuguna.freview.dto.api.boss.BossReceivedDdabongDto;
+import com.nuguna.freview.dto.api.boss.BossReceivedLikesDto;
 import com.nuguna.freview.dto.api.boss.BossReceivedZzimInfoDto;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -51,7 +51,7 @@ public class BossReceivedInformDAO {
 
   // 받은 따봉
   // TODO : 쿼리문 수정 필요!
-  public List<BossReceivedDdabongDto> receivedDdabongDAO(int bossSeq) {
+  public List<BossReceivedLikesDto> receivedDdabongDAO(int bossSeq) {
     Connection conn = null;
     PreparedStatement pstmt = null;
     ResultSet rs;
@@ -62,7 +62,7 @@ public class BossReceivedInformDAO {
         + "INNER JOIN post p ON d.post_seq = p.`post_seq`"
         + "WHERE p.member_seq = ? ";
 
-    List<BossReceivedDdabongDto> ddabongInfos = new ArrayList<>();
+    List<BossReceivedLikesDto> ddabongInfos = new ArrayList<>();
     try {
       conn = getConnection();
       pstmt = conn.prepareStatement(sql);
@@ -73,7 +73,7 @@ public class BossReceivedInformDAO {
         int postSeq = rs.getInt("post_seq");
         String title = rs.getString("title");
         String nickname = rs.getString("nickname");
-        ddabongInfos.add(new BossReceivedDdabongDto(memberSeq, nickname, postSeq, title, "DDABONG"));
+        ddabongInfos.add(new BossReceivedLikesDto(memberSeq, nickname, postSeq, title, "DDABONG"));
       }
     } catch (SQLException e) {
       throw new RuntimeException("SQLException: 따봉 도중 문제가 발생했습니다.", e);

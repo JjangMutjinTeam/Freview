@@ -1,23 +1,17 @@
 package com.nuguna.freview.servlet.member.page;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.nuguna.freview.dao.member.BossReceivedInformDAO;
-import com.nuguna.freview.dto.api.boss.BossReceivedDdabongDto;
+import com.nuguna.freview.dto.api.boss.BossReceivedLikesDto;
 import com.nuguna.freview.dto.api.boss.BossReceivedZzimInfoDto;
-import com.nuguna.freview.dto.api.boss.BossResponseData;
 import com.nuguna.freview.dto.common.ResponseMessage;
 import com.nuguna.freview.util.EncodingUtil;
-import com.nuguna.freview.util.JsonRequestUtil;
-import com.nuguna.freview.util.JsonResponseObjectUtil;
 import com.nuguna.freview.util.JsonResponseUtil;
-import java.io.ObjectStreamException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.WebServlet;
@@ -49,7 +43,7 @@ public class ReceivedInformServlet extends HttpServlet  {
       int bossSeq = 118;
 
       List<BossReceivedZzimInfoDto> zzimInfos = BossReceivedInformDAO.receivedZzimDAO(bossSeq);
-      List<BossReceivedDdabongDto> ddabongInfos = BossReceivedInformDAO.receivedDdabongDAO(bossSeq);
+      List<BossReceivedLikesDto> ddabongInfos = BossReceivedInformDAO.receivedDdabongDAO(bossSeq);
 
       // JSON으로 응답을 생성
       PrintWriter out = response.getWriter();
