@@ -30,7 +30,7 @@ public class LoginDAO {
       throw new RuntimeException(e);
     }
     try {
-      String sql = "SELECT * FROM member WHERE mid=? AND mpw=?";
+      String sql = "SELECT * FROM member WHERE id=? AND pw=?";
       pstmt = conn.prepareStatement(sql);
       pstmt.setString(1, id);
       pstmt.setString(2, password);
