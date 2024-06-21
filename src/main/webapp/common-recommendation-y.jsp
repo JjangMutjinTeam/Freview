@@ -9,6 +9,12 @@
     String gubun = loginUser.getGubun();
     request.setAttribute("gubun", gubun);
     request.setAttribute("memberSeq", memberSeq);
+    String requestedMemberGubun = (String) request.getAttribute("requestedMemberGubun");
+
+    if (requestedMemberGubun == null) {
+        requestedMemberGubun = "B";
+    }
+    request.setAttribute("requestedMemberGubun", requestedMemberGubun);
 %>
 
 <!DOCTYPE html>
@@ -119,35 +125,77 @@
     <section class="section profile">
         <div class="row">
             <!-- Tabs navigation -->
-            <ul class="nav nav-tabs" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" id="boss-tab" data-bs-toggle="tab" href="#boss"
-                       role="tab" aria-controls="boss" aria-selected="true">Boss</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="customer-tab" data-bs-toggle="tab" href="#customer"
-                       role="tab" aria-controls="customer" aria-selected="false">Customer</a>
-                </li>
-            </ul>
+            <c:choose>
+                <c:when test="${requestedMemberGubun == 'B'}">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#boss"
+                               role="tab" aria-controls="boss" aria-selected="true">사장님</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#customer"
+                               role="tab" aria-controls="customer" aria-selected="false">체험단</a>
+                        </li>
+                    </ul>
+                </c:when>
+                <c:when test="${requestedMemberGubun == 'C'}">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link " data-bs-toggle="tab" href="#boss"
+                               role="tab" aria-controls="boss" aria-selected="true">사장님</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#customer"
+                               role="tab" aria-controls="customer" aria-selected="false">체험단</a>
+                        </li>
+                    </ul>
+                </c:when>
+            </c:choose>
+
             <div class="tab-content">
                 <!-- Boss Tab -->
-                <div class="tab-pane fade show active" id="boss" role="tabpanel"
+                <div class="tab-pane fade show <c:if test="${requestedMemberGubun == 'B'}">active</c:if>" id="boss" role="tabpanel"
                      aria-labelledby="boss-tab">
+
+                    <form action="/recommendation-filter" method="GET">
+                        <input type="hidden" id="memberGubunBoss" name="memberGubun" value='B'>
+                        <div>
+                            <h3>음식 유형</h3>
+                            <label><input type="checkbox" name="foodType" value="한식"> 한식</label>
+                            <label><input type="checkbox" name="foodType" value="양식"> 양식</label>
+                            <label><input type="checkbox" name="foodType" value="중식"> 중식</label>
+                            <label><input type="checkbox" name="foodType" value="일식"> 일식</label>
+                            <label><input type="checkbox" name="foodType" value="빵&베이커리"> 빵&베이커리</label>
+                            <label><input type="checkbox" name="foodType" value="기타"> 기타</label>
+                        </div>
+                        <div>
+                            <h3>태그</h3>
+                            <label><input type="checkbox" name="tag" value="단체석"> 단체석</label>
+                            <label><input type="checkbox" name="tag" value="뷰 맛집"> 뷰 맛집</label>
+                            <label><input type="checkbox" name="tag" value="오션뷰"> 오션뷰</label>
+                            <label><input type="checkbox" name="tag" value="반려동물 환영"> 반려동물 환영</label>
+                        </div>
+                        <div>
+                            <button type="submit">필터링</button>
+                        </div>
+                    </form>
+
                     <div class="row">
                         <c:forEach var="boss" items="${bossInfoList}">
                             <div class="col-xl-2">
                                 <div class="card">
                                     <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-                                        <a href="/MemberBrandingServlet?gubun=${boss.gubun}&mid=${boss.mid}">
-                                        <a href="/MemberBrandingServlet?gubun=B&mid=${boss.mid}">
-                                            <img src="${boss.profilePhotoUrl}" alt="Profile"
-                                                 class="profile-img">
+                                        <a href="/MemberBrandingServlet?gubun=B&id=${boss.id}">
+                                            <a href="/MemberBrandingServlet?gubun=B&id=${boss.id}">
+                                                <img src="${boss.profilePhotoUrl}" alt="Profile"
+                                                     class="profile-img">
+                                            </a>
+                                            <h2>
+                                                <a href="/MemberBrandingServlet?gubun=B&id=${boss.id}">${boss.nickname}</a>
+                                            </h2>
+                                            <h3>${boss.foodTypes}</h3>
+                                            <h3>${boss.tags}</h3>
                                         </a>
-                                        <h2>
-                                            <a href="/MemberBrandingServlet?gubun=${boss.gubun}&mid=${boss.mid}">${boss.nickname}</a>
-                                        </h2>
-                                        <h3>${boss.foodTypes}</h3>
-                                        <h3>${boss.tags}</h3>
                                     </div>
                                 </div>
                             </div>
@@ -155,19 +203,42 @@
                     </div>
                 </div>
                 <!-- Customer Tab -->
-                <div class="tab-pane fade" id="customer" role="tabpanel"
+                <div class="tab-pane fade show <c:if test="${requestedMemberGubun == 'C'}">active</c:if>" id="customer" role="tabpanel"
                      aria-labelledby="customer-tab">
+                    <form action="/recommendation-filter" method="GET">
+                        <input type="hidden" id="memberGubunCustomer" name="memberGubun" value='C'>
+
+                        <div>
+                            <h3>음식 유형</h3>
+                            <label><input type="checkbox" name="foodType" value="한식"> 한식</label>
+                            <label><input type="checkbox" name="foodType" value="양식"> 양식</label>
+                            <label><input type="checkbox" name="foodType" value="중식"> 중식</label>
+                            <label><input type="checkbox" name="foodType" value="일식"> 일식</label>
+                            <label><input type="checkbox" name="foodType" value="빵&베이커리"> 빵&베이커리</label>
+                            <label><input type="checkbox" name="foodType" value="기타"> 기타</label>
+                        </div>
+                        <div>
+                            <h3>태그</h3>
+                            <label><input type="checkbox" name="tag" value="초식"> 초식</label>
+                            <label><input type="checkbox" name="tag" value="육식"> 육식</label>
+                            <label><input type="checkbox" name="tag" value="빵빵이"> 빵빵이</label>
+                        </div>
+                        <div>
+                            <button type="submit">검색</button>
+                        </div>
+                    </form>
+
                     <div class="row">
                         <c:forEach var="customer" items="${customerInfoList}">
                             <div class="col-xl-2">
                                 <div class="card">
                                     <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-                                        <a href="/MemberBrandingServlet?gubun=${customer.gubun}&mid=${customer.mid}"${customer.mid}">
-                                            <img src="${customer.profilePhotoUrl}" alt="Profile"
-                                                 class="profile-img">
+                                        <a href="/MemberBrandingServlet?gubun=C&id=${customer.id}"${customer.id}">
+                                        <img src="${customer.profilePhotoUrl}" alt="Profile"
+                                             class="profile-img">
                                         </a>
                                         <h2>
-                                            <a href="/MemberBrandingServlet?gubun=${customer.gubun}&mid=${customer.mid}">${customer.nickname}</a>
+                                            <a href="/MemberBrandingServlet?gubunC&id=${customer.id}">${customer.nickname}</a>
                                         </h2>
                                         <h3>${customer.foodTypes}</h3>
                                         <h3>${customer.tags}</h3>
