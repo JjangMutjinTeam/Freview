@@ -17,7 +17,7 @@ public class MemberDAO {
 
   private final String SELECT_MEMBER_INFO =
       "SELECT " +
-          "    m.mid, " +
+          "    m.id, " +
           "    m.nickname, " +
           "    m.profile_photo_url, " +
           "    GROUP_CONCAT(DISTINCT ft.name) AS food_types, " +
@@ -51,7 +51,7 @@ public class MemberDAO {
 
       while (rs.next()) {
         MemberRecommendationInfo boss = new MemberRecommendationInfo();
-        boss.setMid(rs.getString("mid"));
+        boss.setId(rs.getString("id"));
         boss.setNickname(rs.getString("nickname"));
         boss.setProfilePhotoUrl(rs.getString("profile_photo_url"));
         boss.setFoodTypes(rs.getString("food_types"));
