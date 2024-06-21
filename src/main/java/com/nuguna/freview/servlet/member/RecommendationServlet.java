@@ -27,7 +27,7 @@ public class RecommendationServlet extends HttpServlet {
         MemberGubun.BOSS.getCode());
     req.setAttribute("bossInfoList", bossInfoList);
     List<MemberRecommendationInfo> customerInfoList = memberDAO.selectMemberInfo(
-        MemberGubun.CUST.getCode());
+        MemberGubun.CUSTOMER.getCode());
     req.setAttribute("customerInfoList", customerInfoList);
     RequestDispatcher rd = req.getRequestDispatcher("/common-recommendation-y.jsp");
     rd.forward(req, resp);
