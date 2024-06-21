@@ -59,12 +59,12 @@ public class MemberDAO {
 
         list.add(boss);
       }
-
-      return list;
     } catch (SQLException e) {
       throw new RuntimeException(e);
     } finally {
       closeResource(pstmt, conn, rs);
     }
+
+    return list;
   }
 }
