@@ -15,34 +15,62 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/recommendation")
 public class RecommendationServlet extends HttpServlet {
 
-  RecommendationMemberDAO recommendationMemberDAO = new RecommendationMemberDAO();
-
+  private RecommendationMemberDAO recommendationMemberDAO = new RecommendationMemberDAO();
   private final int LIMIT = 10;
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-      throws ServletException, IOException {
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     req.setCharacterEncoding("UTF-8");
     resp.setContentType("text/html;charset=UTF-8");
 
+    String requestedMemberGubun = getRequestedMemberGubun(req);
+    req.setAttribute("requestedMemberGubun", requestedMemberGubun);
+
+    int previousPostSeq = getPreviousPostSeq(req);
+    loadRecommendationLists(req, requestedMemberGubun, previousPostSeq);
+
+    RequestDispatcher rd = req.getRequestDispatcher("/common-recommendation-board-y.jsp");
+    rd.forward(req, resp);
+  }
+
+  private String getRequestedMemberGubun(HttpServletRequest req) {
     String requestedMemberGubun = "B"; // 기본값 설정
     if (req.getParameter("requestedMemberGubun") != null) {
       requestedMemberGubun = req.getParameter("requestedMemberGubun");
     }
-    req.setAttribute("requestedMemberGubun", requestedMemberGubun);
+    return requestedMemberGubun;
+  }
 
+  private int getPreviousPostSeq(HttpServletRequest req) {
     int previousPostSeq = Integer.MAX_VALUE;
     if (req.getParameter("previousPostSeq") != null) {
-      previousPostSeq = Integer.parseInt(req.getParameter("previousPostSeq"));
+      try {
+        previousPostSeq = Integer.parseInt(req.getParameter("previousPostSeq"));
+      } catch (NumberFormatException e) {
+        previousPostSeq = Integer.MAX_VALUE;
+      }
     }
+    return previousPostSeq;
+  }
 
-    List<MemberRecommendationInfo> bossInfoList = recommendationMemberDAO.selectMemberByCursorPaging(
-        MemberGubun.BOSS.getCode(), previousPostSeq, LIMIT);
-    req.setAttribute("bossInfoList", bossInfoList);
-    List<MemberRecommendationInfo> customerInfoList = recommendationMemberDAO.selectMemberByCursorPaging(
-        MemberGubun.CUSTOMER.getCode(), previousPostSeq, LIMIT);
-    req.setAttribute("customerInfoList", customerInfoList);
-    RequestDispatcher rd = req.getRequestDispatcher("/common-recommendation-board-y.jsp");
-    rd.forward(req, resp);
+  private void loadRecommendationLists(HttpServletRequest req, String memberGubun, int previousPostSeq) {
+    if ("B".equals(memberGubun)) {
+      List<MemberRecommendationInfo> bossInfoList = recommendationMemberDAO.selectMemberByCursorPaging(
+          MemberGubun.BOSS.getCode(), previousPostSeq, LIMIT);
+      req.setAttribute("bossInfoList", bossInfoList);
+
+      List<MemberRecommendationInfo> customerInfoList = recommendationMemberDAO.selectMemberByCursorPaging(
+          MemberGubun.CUSTOMER.getCode(), previousPostSeq, LIMIT);
+      req.setAttribute("customerInfoList", customerInfoList);
+    } else if ("C".equals(memberGubun)) {
+      List<MemberRecommendationInfo> customerInfoList = recommendationMemberDAO.selectMemberByCursorPaging(
+          MemberGubun.CUSTOMER.getCode(), previousPostSeq, LIMIT);
+      req.setAttribute("customerInfoList", customerInfoList);
+
+      List<MemberRecommendationInfo> bossInfoList = recommendationMemberDAO.selectMemberByCursorPaging(
+          MemberGubun.BOSS.getCode(), previousPostSeq, LIMIT);
+      req.setAttribute("bossInfoList", bossInfoList);
+    }
   }
 }
+
