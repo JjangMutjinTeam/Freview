@@ -17,7 +17,6 @@ public class PostDdabongCancelServlet extends HttpServlet {
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
-    System.out.println("doPost 진입");
     req.setCharacterEncoding("UTF-8");
     resp.setCharacterEncoding("UTF-8");
 

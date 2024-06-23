@@ -13,6 +13,7 @@ import lombok.ToString;
 @AllArgsConstructor
 public class MemberRecommendationInfo {
 
+  private Integer memberSeq;
   private String id;
   private String nickname;
   private String profilePhotoUrl;

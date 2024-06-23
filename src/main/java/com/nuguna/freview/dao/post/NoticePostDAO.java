@@ -46,8 +46,6 @@ public class NoticePostDAO {
     PreparedStatement pstmt = null;
     ResultSet rs = null;
 
-    System.out.println("previousPostSeq: " + previousPostSeq);
-
     List<Post> list = new ArrayList<>();
 
     try {
