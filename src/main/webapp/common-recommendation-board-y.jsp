@@ -11,9 +11,6 @@
     request.setAttribute("memberSeq", memberSeq);
     String requestedMemberGubun = (String) request.getAttribute("requestedMemberGubun");
 
-    if (requestedMemberGubun == null) {
-        requestedMemberGubun = "B";
-    }
     request.setAttribute("requestedMemberGubun", requestedMemberGubun);
 %>
 
@@ -179,6 +176,11 @@
                             <button type="submit">필터링</button>
                         </div>
                     </form>
+                    <br>
+                    <form action="/recommendation" method="get">
+                        <button type="submit">모든 필터 제거</button>
+                    </form>
+
 
                     <div class="row">
                         <c:forEach var="boss" items="${bossInfoList}">
@@ -224,8 +226,15 @@
                             <label><input type="checkbox" name="tag" value="빵빵이"> 빵빵이</label>
                         </div>
                         <div>
-                            <button type="submit">검색</button>
+                            <button type="submit">필터링</button>
                         </div>
+                    </form>
+                    <br>
+                    <form action="/recommendation" method="get">
+                        <input type="hidden" name="requestedMemberGubun" value="C">
+                        <button type="submit">모든 필터 제거</button>
+                    </form>
+
                     </form>
 
                     <div class="row">

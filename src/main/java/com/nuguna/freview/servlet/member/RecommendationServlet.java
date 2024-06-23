@@ -25,11 +25,17 @@ public class RecommendationServlet extends HttpServlet {
 
     List<MemberRecommendationInfo> bossInfoList = memberDAO.selectMemberInfo(
         MemberGubun.BOSS.getCode());
+    String requestedMemberGubun = "B"; // 기본값 설정
+    if (req.getParameter("requestedMemberGubun") != null) {
+      requestedMemberGubun = req.getParameter("requestedMemberGubun");
+    }
+    req.setAttribute("requestedMemberGubun", requestedMemberGubun);
+
     req.setAttribute("bossInfoList", bossInfoList);
     List<MemberRecommendationInfo> customerInfoList = memberDAO.selectMemberInfo(
         MemberGubun.CUSTOMER.getCode());
     req.setAttribute("customerInfoList", customerInfoList);
-    RequestDispatcher rd = req.getRequestDispatcher("/common-recommendation-y.jsp");
+    RequestDispatcher rd = req.getRequestDispatcher("/common-recommendation-board-y.jsp");
     rd.forward(req, resp);
   }
 }
