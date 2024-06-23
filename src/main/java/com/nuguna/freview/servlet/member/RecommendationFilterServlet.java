@@ -1,6 +1,5 @@
-package com.nuguna.freview.servlet;
+package com.nuguna.freview.servlet.member;
 
-import com.nuguna.freview.dao.member.MemberDAO;
 import com.nuguna.freview.dao.member.RecommendationMemberDAO;
 import com.nuguna.freview.dto.MemberRecommendationInfo;
 import com.nuguna.freview.entity.member.MemberGubun;
@@ -16,12 +15,12 @@ import javax.servlet.http.HttpServletResponse;
 public class RecommendationFilterServlet extends HttpServlet {
 
   RecommendationMemberDAO recommendationMemberDAO = new RecommendationMemberDAO();
-  MemberDAO memberDAO = new MemberDAO();
+
+  private final int LIMIT = 10;
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
-    System.out.println("doGet 들어왔다!");
     req.setCharacterEncoding("UTF-8");
     resp.setContentType("text/html;charset=UTF-8");
 
@@ -29,25 +28,35 @@ public class RecommendationFilterServlet extends HttpServlet {
     String[] foodTypes = req.getParameterValues("foodType");
     String[] tags = req.getParameterValues("tag");
 
+    int previousPostSeq = Integer.MAX_VALUE;
+    if (req.getParameter("previousPostSeq") != null) {
+      previousPostSeq = Integer.parseInt(req.getParameter("previousPostSeq"));
+    }
+
     if (memberGubun.equals(MemberGubun.BOSS.getCode())) {
       List<MemberRecommendationInfo> bossInfoList = recommendationMemberDAO.filterMembers(
-          memberGubun, foodTypes, tags);
+          memberGubun, previousPostSeq, LIMIT, foodTypes, tags);
       req.setAttribute("bossInfoList", bossInfoList);
-      List<MemberRecommendationInfo> customerInfoList = memberDAO.selectMemberInfo(
-          MemberGubun.CUSTOMER.getCode());
+
+      List<MemberRecommendationInfo> customerInfoList = recommendationMemberDAO.selectMemberByCursorPaging(
+          MemberGubun.CUSTOMER.getCode(), previousPostSeq, LIMIT);
       req.setAttribute("customerInfoList", customerInfoList);
+
     } else if (memberGubun.equals(MemberGubun.CUSTOMER.getCode())) {
-      List<MemberRecommendationInfo> bossInfoList = memberDAO.selectMemberInfo(
-          MemberGubun.BOSS.getCode());
+      List<MemberRecommendationInfo> bossInfoList = recommendationMemberDAO.selectMemberByCursorPaging(
+          MemberGubun.BOSS.getCode(), previousPostSeq, LIMIT);
       req.setAttribute("bossInfoList", bossInfoList);
+
       List<MemberRecommendationInfo> customerInfoList = recommendationMemberDAO.filterMembers(
-          memberGubun, foodTypes, tags);
+          memberGubun, previousPostSeq, LIMIT, foodTypes, tags);
       req.setAttribute("customerInfoList", customerInfoList);
+
+
     } else {
       //TODO: 에러 발생 시
     }
 
     req.setAttribute("requestedMemberGubun", memberGubun);
-    req.getRequestDispatcher("/common-recommendation-y.jsp").forward(req, resp);
+    req.getRequestDispatcher("/common-recommendation-board-y.jsp").forward(req, resp);
   }
 }

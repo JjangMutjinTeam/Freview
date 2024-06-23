@@ -1,6 +1,6 @@
 package com.nuguna.freview.servlet.member;
 
-import com.nuguna.freview.dao.member.MemberDAO;
+import com.nuguna.freview.dao.member.RecommendationMemberDAO;
 import com.nuguna.freview.dto.MemberRecommendationInfo;
 import com.nuguna.freview.entity.member.MemberGubun;
 import java.io.IOException;
@@ -15,7 +15,9 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/recommendation")
 public class RecommendationServlet extends HttpServlet {
 
-  MemberDAO memberDAO = new MemberDAO();
+  RecommendationMemberDAO recommendationMemberDAO = new RecommendationMemberDAO();
+
+  private final int LIMIT = 10;
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -23,17 +25,22 @@ public class RecommendationServlet extends HttpServlet {
     req.setCharacterEncoding("UTF-8");
     resp.setContentType("text/html;charset=UTF-8");
 
-    List<MemberRecommendationInfo> bossInfoList = memberDAO.selectMemberInfo(
-        MemberGubun.BOSS.getCode());
     String requestedMemberGubun = "B"; // 기본값 설정
     if (req.getParameter("requestedMemberGubun") != null) {
       requestedMemberGubun = req.getParameter("requestedMemberGubun");
     }
     req.setAttribute("requestedMemberGubun", requestedMemberGubun);
 
+    int previousPostSeq = Integer.MAX_VALUE;
+    if (req.getParameter("previousPostSeq") != null) {
+      previousPostSeq = Integer.parseInt(req.getParameter("previousPostSeq"));
+    }
+
+    List<MemberRecommendationInfo> bossInfoList = recommendationMemberDAO.selectMemberByCursorPaging(
+        MemberGubun.BOSS.getCode(), previousPostSeq, LIMIT);
     req.setAttribute("bossInfoList", bossInfoList);
-    List<MemberRecommendationInfo> customerInfoList = memberDAO.selectMemberInfo(
-        MemberGubun.CUSTOMER.getCode());
+    List<MemberRecommendationInfo> customerInfoList = recommendationMemberDAO.selectMemberByCursorPaging(
+        MemberGubun.CUSTOMER.getCode(), previousPostSeq, LIMIT);
     req.setAttribute("customerInfoList", customerInfoList);
     RequestDispatcher rd = req.getRequestDispatcher("/common-recommendation-board-y.jsp");
     rd.forward(req, resp);

@@ -203,6 +203,15 @@
                             </div>
                         </c:forEach>
                     </div>
+                    <div class="d-flex justify-content-between">
+                        <c:if test="${previousPostSeq != Integer.MAX_VALUE}">
+                            <a class="btn btn-primary" href="?memberGubun=B&previousPostSeq=${bossInfoList[0].memberSeq + 11}">이전</a>
+                        </c:if>
+                        <c:if test="${!empty bossInfoList && bossInfoList.size() == 10}">
+                            <a class="btn btn-primary" href="?memberGubun=B&previousPostSeq=${bossInfoList[bossInfoList.size() - 1].memberSeq}">다음</a>
+                        </c:if>
+                    </div>
+
                 </div>
                 <!-- Customer Tab -->
                 <div class="tab-pane fade show <c:if test="${requestedMemberGubun == 'C'}">active</c:if>" id="customer" role="tabpanel"
@@ -255,6 +264,14 @@
                                 </div>
                             </div>
                         </c:forEach>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <c:if test="${previousPostSeq != Integer.MAX_VALUE}">
+                            <a class="btn btn-primary" href="?memberGubun=C&previousPostSeq=${customerInfoList[0].memberSeq + 11}">이전</a>
+                        </c:if>
+                        <c:if test="${!empty customerInfoList && bossInfoList.size() == 10}">
+                            <a class="btn btn-primary" href="?memberGubun=C&previousPostSeq=${customerInfoList[customerInfoList.size() - 1].memberSeq}">다음</a>
+                        </c:if>
                     </div>
                 </div>
             </div>
