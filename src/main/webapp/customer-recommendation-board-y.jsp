@@ -4,11 +4,16 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <%
-    Member loginUser = (Member) session.getAttribute("Member");
-    Integer memberSeq = loginUser.getMemberSeq();
-    String gubun = loginUser.getGubun();
-    request.setAttribute("gubun", gubun);
-    request.setAttribute("memberSeq", memberSeq);
+    //    Member loginUser = (Member) session.getAttribute("Member");
+//    Integer memberSeq = loginUser.getMemberSeq();
+//    String gubun = loginUser.getGubun();
+    Member loginUser = new Member();
+    loginUser.setMemberSeq(1);
+    loginUser.setGubun("A");
+    Integer memberSeq = 1;
+    String gubun = "A";
+    request.setAttribute("gubun", 'A');
+    request.setAttribute("memberSeq", 1);
 %>
 
 <!DOCTYPE html>
@@ -20,7 +25,6 @@
 
     <title>추천 페이지</title>
     <meta content="" name="description">
-    <meta content="" name="keywords">
 
     <!-- Favicons -->
     <link href="assets/img/favicon.png" rel="icon">
@@ -166,9 +170,9 @@
                 <div class="d-flex justify-content-between">
                     <c:if test="${previousPostSeq != Integer.MAX_VALUE}">
                         <a class="btn btn-primary"
-                           href=?memberGubun=C&previousPostSeq=${customerInfoList[0].memberSeq + 11}">이전</a>
+                           href=?memberGubun=C&previousPostSeq=${customerInfoList[0].memberSeq + 21}">이전</a>
                     </c:if>
-                    <c:if test="${!empty customerInfoList && customerInfoList.size() == 10}">
+                    <c:if test="${!empty customerInfoList && customerInfoList.size() == 20}">
                         <a class="btn btn-primary"
                            href="?memberGubun=C&previousPostSeq=${customerInfoList[customerInfoList.size() - 1].memberSeq}">다음</a>
                     </c:if>
