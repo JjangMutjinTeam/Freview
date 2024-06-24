@@ -47,6 +47,9 @@
     <!-- Template Main CSS File -->
     <link href="assets/css/style.css" rel="stylesheet">
 
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
     <style>
       .profile-card img {
         border-radius: 0; /* 이미지를 네모로 만듭니다 */
@@ -146,35 +149,14 @@
                     <button type="submit">모든 필터 제거</button>
                 </form>
 
-                <div class="row">
-                    <c:forEach var="customer" items="${customerInfoList}">
-                        <div class="col-xl-2">
-                            <div class="card">
-                                <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-                                    <a href="/MemberBrandingServlet?gubun=C&id=${customer.id}">
-                                        <a href="/MemberBrandingServlet?gubun=C&id=${customer.id}">
-                                            <img src="${customer.profilePhotoUrl}" alt="Profile"
-                                                 class="profile-img">
-                                        </a>
-                                        <h2>
-                                            <a href="/MemberBrandingServlet?gubunC&id=${customer.id}">${customer.nickname}</a>
-                                        </h2>
-                                        <h3>${customer.foodTypes}</h3>
-                                        <h3>${customer.tags}</h3>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </c:forEach>
+                <div class="row" id="customerInfo">
+
                 </div>
-                <div class="d-flex justify-content-between">
-                    <c:if test="${previousPostSeq != Integer.MAX_VALUE}">
-                        <a class="btn btn-primary"
-                           href=?memberGubun=C&previousPostSeq=${customerInfoList[0].memberSeq + 21}">이전</a>
-                    </c:if>
+
+                <div class="d-flex justify-content-center">
                     <c:if test="${!empty customerInfoList && customerInfoList.size() == 20}">
                         <a class="btn btn-primary"
-                           href="?memberGubun=C&previousPostSeq=${customerInfoList[customerInfoList.size() - 1].memberSeq}">다음</a>
+                           href="?memberGubun=C&previousPostSeq=${customerInfoList[customerInfoList.size() - 1].memberSeq}">더보기</a>
                     </c:if>
                 </div>
             </div>
@@ -183,6 +165,38 @@
 
 </main><!-- End #main -->
 
+
+<img src="${customer.profilePhotoUrl}" alt="Profile"
+     class="profile-img">
+
+<script>
+  $(function () {
+    $.ajax({
+      method: "POST",
+      url: "/recommendation-customer",
+      dataType: "json",
+      error: function (data) {
+      },
+      success: function (data) {
+        console.log(data);
+        var htmlStr = "";
+        $.map(data, function (val) {
+          htmlStr += "<div class='col-xl-2'>";
+          htmlStr += "<div class='card'>";
+          htmlStr += "<div class='card-body profile-card pt-4 d-flex flex-column align-items-center'>";
+          htmlStr += "<a href='/MemberBrandingServlet?gubun=C&id='" + val["id"] + ">";
+          htmlStr += "<img src=" + val["profilePhotoUrl"] + " alt='Profile' class='profile-img'>";
+          htmlStr += "<h2>" + val["nickname"] + "</h2>";
+          htmlStr += "</a>";
+          htmlStr += "</div>";
+          htmlStr += "</div>"
+          htmlStr += "</div>"
+        });
+        $("#customerInfo").html(htmlStr);
+      }
+    })
+  });
+</script>
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
     <div class="copyright">
