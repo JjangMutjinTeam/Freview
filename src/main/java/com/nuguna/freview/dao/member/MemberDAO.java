@@ -22,7 +22,7 @@ public class MemberDAO {
 
     List<MemberRecommendationInfo> list = new ArrayList<>();
 
-    String query = "SELECT " +
+    String sql = "SELECT " +
         "    m.id, " +
         "    m.nickname, " +
         "    m.profile_photo_url, " +
@@ -45,7 +45,7 @@ public class MemberDAO {
 
     try {
       conn = getConnection();
-      pstmt = conn.prepareStatement(query);
+      pstmt = conn.prepareStatement(sql);
       pstmt.setString(1, gubun);
       rs = pstmt.executeQuery();
 

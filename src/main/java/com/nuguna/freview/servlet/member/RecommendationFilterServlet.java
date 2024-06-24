@@ -14,11 +14,12 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/recommendation-filter")
 public class RecommendationFilterServlet extends HttpServlet {
 
-  private RecommendationMemberDAO recommendationMemberDAO = new RecommendationMemberDAO();
+  private final RecommendationMemberDAO recommendationMemberDAO = new RecommendationMemberDAO();
   private final int LIMIT = 10;
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
     req.setCharacterEncoding("UTF-8");
     resp.setContentType("text/html;charset=UTF-8");
 
@@ -30,7 +31,11 @@ public class RecommendationFilterServlet extends HttpServlet {
     loadFilteredRecommendationLists(req, memberGubun, previousPostSeq, foodTypes, tags);
 
     req.setAttribute("requestedMemberGubun", memberGubun);
-    req.getRequestDispatcher("/common-recommendation-board-y.jsp").forward(req, resp);
+    if ("B".equals(memberGubun)) {
+      req.getRequestDispatcher("/boss-recommendation-board-y.jsp").forward(req, resp);
+    } else if ("C".equals(memberGubun)) {
+      req.getRequestDispatcher("/customer-recommendation-board-y.jsp").forward(req, resp);
+    }
   }
 
   private int getPreviousPostSeq(HttpServletRequest req) {
@@ -45,7 +50,8 @@ public class RecommendationFilterServlet extends HttpServlet {
     return previousPostSeq;
   }
 
-  private void loadFilteredRecommendationLists(HttpServletRequest req, String memberGubun, int previousPostSeq, String[] foodTypes, String[] tags) {
+  private void loadFilteredRecommendationLists(HttpServletRequest req, String memberGubun,
+      int previousPostSeq, String[] foodTypes, String[] tags) {
     if ("B".equals(memberGubun)) {
       List<MemberRecommendationInfo> bossInfoList = recommendationMemberDAO.filterMembers(
           memberGubun, previousPostSeq, LIMIT, foodTypes, tags);
