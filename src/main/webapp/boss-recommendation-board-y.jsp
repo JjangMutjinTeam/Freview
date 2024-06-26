@@ -65,6 +65,9 @@
       }
     </style>
 
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
     <!-- =======================================================
     * Template Name: NiceAdmin
     * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
@@ -149,35 +152,14 @@
                     <button type="submit">모든 필터 제거</button>
                 </form>
 
-                <div class="row">
-                    <c:forEach var="boss" items="${bossInfoList}">
-                        <div class="col-xl-2">
-                            <div class="card">
-                                <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-                                    <a href="/MemberBrandingServlet?gubun=B&id=${boss.id}">
-                                        <a href="/MemberBrandingServlet?gubun=B&id=${boss.id}">
-                                            <img src="${boss.profilePhotoUrl}" alt="Profile"
-                                                 class="profile-img">
-                                        </a>
-                                        <h2>
-                                            <a href="/MemberBrandingServlet?gubun=B&id=${boss.id}">${boss.nickname}</a>
-                                        </h2>
-                                        <h3>${boss.foodTypes}</h3>
-                                        <h3>${boss.tags}</h3>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </c:forEach>
+                <div class="row" id="bossInfo">
+
                 </div>
-                <div class="d-flex justify-content-between">
-                    <c:if test="${previousPostSeq != Integer.MAX_VALUE}">
+
+                <div class="d-flex justify-content-center">
+                    <c:if test="${!empty customerInfoList && customerInfoList.size() == 20}">
                         <a class="btn btn-primary"
-                           href="?memberGubun=B&previousPostSeq=${bossInfoList[0].memberSeq + 21}">이전</a>
-                    </c:if>
-                    <c:if test="${!empty bossInfoList && bossInfoList.size() == 20}">
-                        <a class="btn btn-primary"
-                           href="?memberGubun=B&previousPostSeq=${bossInfoList[bossInfoList.size() - 1].memberSeq}">다음</a>
+                           href="?memberGubun=b&previousPostSeq=${customerInfoList[customerInfoList.size() - 1].memberSeq}">더보기</a>
                     </c:if>
                 </div>
             </div>
@@ -186,6 +168,34 @@
 
 </main><!-- End #main -->
 
+<script>
+    $(function () {
+      $.ajax({
+        method: "POST",
+        url: "/recommendation-boss",
+        dataType: "json",
+        error: function (data) {
+        },
+        success: function (data) {
+          console.log(data);
+          var htmlStr ="";
+          $.map(data, function (val) {
+            htmlStr += "<div class='col-xl-2'>";
+            htmlStr += "<div class='card'>";
+            htmlStr += "<div class='card-body profile-card pt-4 d-flex flex-column align-items-center'>";
+            htmlStr += "<a href='/MemberBrandingServlet?gubun=B&id='" + val["id"] + ">";
+            htmlStr += "<img src=" + val["profilePhotoUrl"] + " alt='Profile' class='profile-img'>";
+            htmlStr += "<h2>" + val["nickname"] + "</h2>";
+            htmlStr += "</a>";
+            htmlStr += "</div>";
+            htmlStr += "</div>"
+            htmlStr += "</div>"
+          });
+          $("#bossInfo").html(htmlStr);
+        }
+      })
+    });
+</script>
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
     <div class="copyright">

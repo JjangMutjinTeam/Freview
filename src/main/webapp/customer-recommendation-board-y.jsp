@@ -165,10 +165,6 @@
 
 </main><!-- End #main -->
 
-
-<img src="${customer.profilePhotoUrl}" alt="Profile"
-     class="profile-img">
-
 <script>
   $(function () {
     $.ajax({
@@ -197,6 +193,7 @@
     })
   });
 </script>
+
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
     <div class="copyright">

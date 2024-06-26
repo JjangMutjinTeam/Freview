@@ -1,9 +1,11 @@
 package com.nuguna.freview.servlet.member;
 
+import com.google.gson.Gson;
 import com.nuguna.freview.dao.member.RecommendationMemberDAO;
 import com.nuguna.freview.dto.MemberRecommendationInfo;
 import com.nuguna.freview.entity.member.MemberGubun;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -31,6 +33,24 @@ public class BossRecommendationServlet extends HttpServlet {
     req.setAttribute("bossInfoList", bossInfoList);
     RequestDispatcher rd = req.getRequestDispatcher("/boss-recommendation-board-y.jsp");
     rd.forward(req, resp);
+  }
+
+  @Override
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
+    req.setCharacterEncoding("UTF-8");
+    resp.setContentType("application/json;charset=utf-8");
+
+    int previousPostSeq = getPreviousPostSeq(req);
+    String requestedMemberGubun = MemberGubun.BOSS.getCode();
+    List<MemberRecommendationInfo> bossInfoList = loadRecommendationLists(requestedMemberGubun, previousPostSeq);
+
+    Gson gson = new Gson();
+    String str = gson.toJson(bossInfoList);
+
+    PrintWriter out = resp.getWriter();
+    out.println(str);
+    out.flush();
   }
 
   private int getPreviousPostSeq(HttpServletRequest req) {
