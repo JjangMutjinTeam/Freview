@@ -1,8 +1,8 @@
 package com.nuguna.freview.servlet.member;
 
+import com.google.gson.Gson;
 import com.nuguna.freview.dao.member.RecommendationMemberDAO;
 import com.nuguna.freview.dto.MemberRecommendationInfo;
-import com.nuguna.freview.entity.member.MemberGubun;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -27,18 +27,16 @@ public class RecommendationFilterServlet extends HttpServlet {
     String[] foodTypes = req.getParameterValues("foodType");
     String[] tags = req.getParameterValues("tag");
 
-    int previousPostSeq = getPreviousPostSeq(req);
-    loadFilteredRecommendationLists(req, memberGubun, previousPostSeq, foodTypes, tags);
+    int previousMemberSeq = getPreviousMemberSeq(req);
+    List<MemberRecommendationInfo> list = loadFilteredRecommendationLists(req, memberGubun, previousMemberSeq, foodTypes, tags);
 
-    req.setAttribute("requestedMemberGubun", memberGubun);
-    if ("B".equals(memberGubun)) {
-      req.getRequestDispatcher("/boss-recommendation-board-y.jsp").forward(req, resp);
-    } else if ("C".equals(memberGubun)) {
-      req.getRequestDispatcher("/customer-recommendation-board-y.jsp").forward(req, resp);
-    }
+    Gson gson = new Gson();
+    String json = gson.toJson(list);
+
+    resp.getWriter().write(json);
   }
 
-  private int getPreviousPostSeq(HttpServletRequest req) {
+  private int getPreviousMemberSeq(HttpServletRequest req) {
     int previousPostSeq = Integer.MAX_VALUE;
     if (req.getParameter("previousPostSeq") != null) {
       try {
@@ -50,24 +48,9 @@ public class RecommendationFilterServlet extends HttpServlet {
     return previousPostSeq;
   }
 
-  private void loadFilteredRecommendationLists(HttpServletRequest req, String memberGubun,
+  private List<MemberRecommendationInfo> loadFilteredRecommendationLists(HttpServletRequest req, String memberGubun,
       int previousPostSeq, String[] foodTypes, String[] tags) {
-    if ("B".equals(memberGubun)) {
-      List<MemberRecommendationInfo> bossInfoList = recommendationMemberDAO.filterMembers(
+      return recommendationMemberDAO.filterMembers(
           memberGubun, previousPostSeq, LIMIT, foodTypes, tags);
-      req.setAttribute("bossInfoList", bossInfoList);
-
-      List<MemberRecommendationInfo> customerInfoList = recommendationMemberDAO.selectMemberByCursorPaging(
-          MemberGubun.CUSTOMER.getCode(), previousPostSeq, LIMIT);
-      req.setAttribute("customerInfoList", customerInfoList);
-    } else if ("C".equals(memberGubun)) {
-      List<MemberRecommendationInfo> customerInfoList = recommendationMemberDAO.filterMembers(
-          memberGubun, previousPostSeq, LIMIT, foodTypes, tags);
-      req.setAttribute("customerInfoList", customerInfoList);
-
-      List<MemberRecommendationInfo> bossInfoList = recommendationMemberDAO.selectMemberByCursorPaging(
-          MemberGubun.BOSS.getCode(), previousPostSeq, LIMIT);
-      req.setAttribute("bossInfoList", bossInfoList);
-    }
   }
 }
