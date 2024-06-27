@@ -154,10 +154,7 @@
                 </div>
 
                 <div class="d-flex justify-content-center">
-                    <c:if test="${!empty customerInfoList && customerInfoList.size() == 20}">
-                        <a class="btn btn-primary"
-                           href="?memberGubun=C&previousPostSeq=${customerInfoList[customerInfoList.size() - 1].memberSeq}">더보기</a>
-                    </c:if>
+                    <button class="btn btn-primary" id="loadMoreBtn" data-previous-member-seq="0">더보기</button>
                 </div>
             </div>
         </div>
@@ -191,6 +188,82 @@
         $("#customerInfo").html(htmlStr);
       }
     })
+  $(document).ready(function() {
+
+    loadInitialData();
+
+
+
+    $('#loadMoreBtn').click(function() {
+      var previousMemberSeq = $(this).data('previous-member-seq');
+      loadMoreData(previousMemberSeq);
+    });
+
+    function loadInitialData() {
+      $.ajax({
+        method: "POST",
+        url: "/recommendation-customer",
+        dataType: "json",
+        success: function (data) {
+          renderData(data);
+          if (data.length > 0) {
+            $('#loadMoreBtn').data('previous-member-seq', data[data.length - 1].memberSeq);
+          }
+        },
+        error: function() {
+          console.error("[ERROR] 데이터 초기화 중 오류 발생");
+        }
+      });
+    }
+
+
+    function loadMoreData(previousMemberSeq) {
+      $.ajax({
+        method: "POST",
+        url: "/recommendation-customer",
+        data: {
+          previousMemberSeq: previousMemberSeq
+        },
+        dataType: "json",
+        success: function (data) {
+          if (data.length > 0) {
+            renderData(data);
+            $('#loadMoreBtn').data('previous-member-seq', data[data.length - 1].memberSeq);
+          } else {
+            $('#loadMoreBtn').hide();
+          }
+        },
+        error: function() {
+          console.error("[ERROR] 추가 데이터 로딩 중 오류 발생");
+        }
+      });
+    }
+
+    function renderData(data) {
+      var htmlStr = "";
+      $.map(data, function(val) {
+        htmlStr += "<div class='col-xl-2'>";
+        htmlStr += "<div class='card'>";
+        htmlStr += "<div class='card-body profile-card pt-4 d-flex flex-column align-items-center'>";
+        htmlStr += "<a href='/brand-page?member_seq=" + val["memberSeq"] + "'>";
+        htmlStr += "<img src='" + val["profilePhotoUrl"] + "' alt='Profile' class='profile-img'>";
+        htmlStr += "<h2>" + val["nickname"] + "</h2>";
+
+        if (val["foodTypes"] != null && val["foodTypes"] !== "") {
+          htmlStr += "<h3>" + val["foodTypes"] + "</h3>";
+        }
+
+        if (val["tags"] != null && val["tags"] !== "") {
+          htmlStr += "<h3>" + val["tags"] + "</h3>";
+        }
+
+        htmlStr += "</a>";
+        htmlStr += "</div>";
+        htmlStr += "</div>";
+        htmlStr += "</div>";
+      });
+      $('#customerInfo').append(htmlStr);
+    }
   });
 </script>
 

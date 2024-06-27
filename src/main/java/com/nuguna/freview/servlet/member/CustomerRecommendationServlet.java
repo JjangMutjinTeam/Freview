@@ -5,9 +5,7 @@ import com.nuguna.freview.dao.member.RecommendationMemberDAO;
 import com.nuguna.freview.dto.MemberRecommendationInfo;
 import com.nuguna.freview.entity.member.MemberGubun;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -26,13 +24,12 @@ public class CustomerRecommendationServlet extends HttpServlet {
     req.setCharacterEncoding("UTF-8");
     resp.setContentType("text/html;charset=UTF-8");
 
-    int previousPostSeq = getPreviousPostSeq(req);
+    int previousPostSeq = getPreviousMemberSeq(req);
     String requestedMemberGubun = MemberGubun.CUSTOMER.getCode();
     List<MemberRecommendationInfo> customerInfoList = loadRecommendationLists(requestedMemberGubun, previousPostSeq);
 
     req.setAttribute("customerInfoList", customerInfoList);
-    RequestDispatcher rd = req.getRequestDispatcher("/customer-recommendation-board-y.jsp");
-    rd.forward(req, resp);
+    req.getRequestDispatcher("/customer-recommendation-board-y.jsp").forward(req, resp);
   }
 
   @Override
@@ -41,28 +38,26 @@ public class CustomerRecommendationServlet extends HttpServlet {
     req.setCharacterEncoding("UTF-8");
     resp.setContentType("application/json;charset=utf-8");
 
-    int previousPostSeq = getPreviousPostSeq(req);
+    int previousMemberSeq = getPreviousMemberSeq(req);
     String requestedMemberGubun = MemberGubun.CUSTOMER.getCode();
-    List<MemberRecommendationInfo> customerInfoList = loadRecommendationLists(requestedMemberGubun, previousPostSeq);
+    List<MemberRecommendationInfo> customerInfoList = loadRecommendationLists(requestedMemberGubun, previousMemberSeq);
 
     Gson gson = new Gson();
     String str = gson.toJson(customerInfoList);
 
-    PrintWriter out = resp.getWriter();
-    out.println(str);
-    out.flush();
+    resp.getWriter().write(str);
   }
 
-  private int getPreviousPostSeq(HttpServletRequest req) {
-    int previousPostSeq = Integer.MAX_VALUE;
-    if (req.getParameter("previousPostSeq") != null) {
+  private int getPreviousMemberSeq(HttpServletRequest req) {
+    int previousMemberSeq = Integer.MAX_VALUE;
+    if (req.getParameter("previousMemberSeq") != null) {
       try {
-        previousPostSeq = Integer.parseInt(req.getParameter("previousPostSeq"));
+        previousMemberSeq = Integer.parseInt(req.getParameter("previousMemberSeq"));
       } catch (NumberFormatException e) {
-        previousPostSeq = Integer.MAX_VALUE;
+        previousMemberSeq = Integer.MAX_VALUE;
       }
     }
-    return previousPostSeq;
+    return previousMemberSeq;
   }
 
   private List<MemberRecommendationInfo> loadRecommendationLists(String memberGubun,
