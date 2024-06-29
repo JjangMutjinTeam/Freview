@@ -81,6 +81,7 @@
 <header id="header" class="header fixed-top d-flex align-items-center header-hr">
 
     <div class="d-flex align-items-center justify-content-between header-hr-left">
+
         <a href="/main?pagecode=Requester&seq=<%=memberSeq%>"
            class="logo d-flex align-items-center">
             <img src="assets/img/logo/logo-vertical.png" alt="" style="  width: 50px;
@@ -92,11 +93,14 @@
         <a href="/my-info?member_seq=<%=memberSeq%>" style="margin-right: 20px">
             <%=memberInfo.getNickname()%>
             <img src="<%=memberInfo.getPhotoUrl()%>" alt=" " style="width: 30px;
-        margin-top: 15px;">
+<<<<<<< HEAD
+    margin-top: 15px;">
         </a>
         <a href="COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
     </div>
 </header><!-- End Header -->
+
+
 <main id="main_wrap" class="main">
     <div id="main" style="margin:auto; margin-top:80px">
         <div class="pagetitle">
