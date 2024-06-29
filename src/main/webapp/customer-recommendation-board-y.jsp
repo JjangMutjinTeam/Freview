@@ -179,10 +179,12 @@
         method: "POST",
         url: "/recommendation-customer",
         dataType: "json",
-        success: function (data) {
-          renderData(data);
-          if (data.length > 0) {
-            $('#loadMoreBtn').data('previous-member-seq', data[data.length - 1].memberSeq);
+        success: function (response) {
+          renderData(response.data);
+          if (response.hasMore) {
+            $('#loadMoreBtn').data('previous-member-seq', response.data[response.data.length - 1].memberSeq).show();
+          } else {
+            $('#loadMoreBtn').hide();
           }
         },
         error: function() {
@@ -220,10 +222,14 @@
           previousMemberSeq: previousMemberSeq
         },
         dataType: "json",
-        success: function (data) {
-          if (data.length > 0) {
-            renderData(data);
-            $('#loadMoreBtn').data('previous-member-seq', data[data.length - 1].memberSeq);
+        success: function (response) {
+          if (response.data.length > 0) {
+            renderData(response.data);
+            if (response.hasMore) {
+              $('#loadMoreBtn').data('previous-member-seq', response.data[response.data.length - 1].memberSeq).show();
+            } else {
+              $('#loadMoreBtn').hide();
+            }
           } else {
             $('#loadMoreBtn').hide();
           }

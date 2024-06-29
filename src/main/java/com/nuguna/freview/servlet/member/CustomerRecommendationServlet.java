@@ -5,7 +5,9 @@ import com.nuguna.freview.dao.member.RecommendationMemberDAO;
 import com.nuguna.freview.dto.MemberRecommendationInfo;
 import com.nuguna.freview.entity.member.MemberGubun;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -42,8 +44,13 @@ public class CustomerRecommendationServlet extends HttpServlet {
     String requestedMemberGubun = MemberGubun.CUSTOMER.getCode();
     List<MemberRecommendationInfo> customerInfoList = loadRecommendationLists(requestedMemberGubun, previousMemberSeq);
 
+    boolean hasMore = customerInfoList.size() == LIMIT;
+    Map<String, Object> responseMap = new HashMap<>();
+    responseMap.put("data", customerInfoList);
+    responseMap.put("hasMore", hasMore);
+
     Gson gson = new Gson();
-    String str = gson.toJson(customerInfoList);
+    String str = gson.toJson(responseMap);
 
     resp.getWriter().write(str);
   }
