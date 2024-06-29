@@ -3,18 +3,18 @@ package com.nuguna.freview.servlet.member;
 import com.google.gson.Gson;
 import com.nuguna.freview.dao.member.RecommendationMemberDAO;
 import com.nuguna.freview.dto.MemberRecommendationInfo;
+import com.nuguna.freview.entity.member.Member;
 import com.nuguna.freview.entity.member.MemberGubun;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @WebServlet("/recommendation-boss")
 public class BossRecommendationServlet extends HttpServlet {
@@ -31,8 +31,12 @@ public class BossRecommendationServlet extends HttpServlet {
     int previousPostSeq = getPreviousPostSeq(req);
     String requestedMemberGubun = MemberGubun.BOSS.getCode();
     List<MemberRecommendationInfo> bossInfoList = loadRecommendationLists(requestedMemberGubun, previousPostSeq);
-
     req.setAttribute("bossInfoList", bossInfoList);
+
+    HttpSession session = req.getSession();
+    Member loginUser = (Member) session.getAttribute("Member");
+    req.setAttribute("loginUser", loginUser);
+
     req.getRequestDispatcher("/boss-recommendation-board-y.jsp").forward(req, resp);
   }
 
@@ -45,7 +49,6 @@ public class BossRecommendationServlet extends HttpServlet {
     int previousPostSeq = getPreviousPostSeq(req);
     String requestedMemberGubun = MemberGubun.BOSS.getCode();
     List<MemberRecommendationInfo> bossInfoList = loadRecommendationLists(requestedMemberGubun, previousPostSeq);
-
 
     boolean hasMore = bossInfoList.size() == LIMIT;
     Map<String, Object> responseMap = new HashMap<>();

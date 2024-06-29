@@ -4,16 +4,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <%
-    //    Member loginUser = (Member) session.getAttribute("Member");
-//    Integer memberSeq = loginUser.getMemberSeq();
-//    String gubun = loginUser.getGubun();
-    Member loginUser = new Member();
-    loginUser.setMemberSeq(1);
-    loginUser.setGubun("A");
-    Integer memberSeq = 1;
-    String gubun = "A";
-    request.setAttribute("gubun", 'A');
-    request.setAttribute("memberSeq", 1);
+    Member loginUser = (Member) request.getAttribute("loginUser");
+    Integer memberSeq = loginUser.getMemberSeq();
+    String nickname = loginUser.getNickname();
 %>
 
 <!DOCTYPE html>
@@ -74,15 +67,7 @@
     * Author: BootstrapMade.com
     * License: https://bootstrapmade.com/license/
     ======================================================== -->
-    <%--    세션의 member 정보를 전부 가져오기 (memberSeq, gubun 외)--%>
-    <%--    <div class="header-hr-right">--%>
-    <%--        <a href="/brand-page?gubun=${member.gubun}&mid=${member.mid}" style="margin-right: 20px">--%>
-    <%--            <%=memberInfo.getNickname()%>--%>
-    <%--            <img src="<%=memberInfo.getPhotoUrl()%>" alt=" " style="width: 30px;--%>
-    <%--    margin-top: 15px;">--%>
-    <%--        </a>--%>
-    <%--        <a href="COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>--%>
-    <%--    </div>--%>
+
 </head>
 
 <body>
@@ -94,26 +79,29 @@
             <img src="assets/img/logo/logo-vertical.png" alt="">
             <span class="d-none d-lg-block">Freview</span>
         </a>
-    </div><!-- End Logo -->
+    </div>
 
     <nav class="header-nav ms-auto">
         <ul class="d-flex align-items-center">
-            <li class="nav-item dropdown pe-3">
-                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
+            <li class="nav-item dropdown pe-3 d-flex align-items-center">
+                <a class="nav-link nav-profile d-flex align-items-center pe-0"
+                   href="/my-info?member_seq=<%=memberSeq%>">
+                    <%-- <img src="<%=profileURL()%>" alt="Profile" class="rounded-circle"> TODO: 세션의 프로필 url을 적용할 것--%>
                     <img src="assets/img/basic/basic-profile-img.png" alt="Profile"
-                         class="rounded-circle">
+                         class="rounded-circle" style="margin-right: 8px;">
                     <span id="nickname-holder-head"
-                          class="d-none d-md-block"><%=loginUser.getNickname()%></span>
-                </a><!-- End Profile Iamge Icon -->
-            </li><!-- End Profile Nav -->
+                          class="d-none d-md-block"><%=nickname%></span>
+                </a>
+                <a href="COMM_logout.jsp" class="ms-3">로그아웃</a>
+            </li>
         </ul>
-    </nav><!-- End Icons Navigation -->
-</header><!-- End Header -->
+    </nav>
+</header>
 
 <main id="main" style="margin:auto; margin-top:50px">
     <div class="pagetitle">
         <h1>사장님 추천페이지</h1>
-    </div><!-- End Page Title -->
+    </div>
 
     <section class="section profile">
         <div class="row">
@@ -143,7 +131,7 @@
                 </form>
                 <br>
                 <button id="resetBtn">모든 필터 제거</button>
-                <div class="row" id="customerInfo"></div>
+                <div class="row" id="bossInfo"></div>
                 <div class="d-flex justify-content-center">
                     <button class="btn btn-primary" id="loadMoreBtn" data-previous-member-seq="0">더보기</button>
                 </div>
@@ -151,7 +139,7 @@
         </div>
     </section>
 
-</main><!-- End #main -->
+</main>
 
 <script>
   $(document).ready(function() {
@@ -165,7 +153,7 @@
     });
 
     $('#resetBtn').click(function() {
-      $('#customerInfo').empty();
+      $('#bossInfo').empty();
       $('input[name="foodType"]').prop('checked', false);
       $('input[name="tag"]').prop('checked', false);
       loadInitialData();
@@ -202,13 +190,13 @@
         data: formData,
         dataType: "json",
         success: function (response) {
-            $('#customerInfo').html('');
-            renderData(response.data);
-            if (response.hasMore) {
-              $('#loadMoreBtn').data('previous-member-seq', response.data[response.data.length - 1].memberSeq).show();
-            } else {
-              $('#loadMoreBtn').hide();
-            }
+          $('#bossInfo').html('');
+          renderData(response.data);
+          if (response.hasMore) {
+            $('#loadMoreBtn').data('previous-member-seq', response.data[response.data.length - 1].memberSeq).show();
+          } else {
+            $('#loadMoreBtn').hide();
+          }
         },
         error: function() {
           console.error("[ERROR] 필터링 데이터 로딩 중 오류 발생");
@@ -265,7 +253,7 @@
         htmlStr += "</div>";
         htmlStr += "</div>";
       });
-      $('#customerInfo').append(htmlStr);
+      $('#bossInfo').append(htmlStr);
     }
   });
 </script>
