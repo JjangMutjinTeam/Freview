@@ -91,7 +91,7 @@
             <img src="<%=memberInfo.getPhotoUrl()%>" alt=" " style="width: 30px;
     margin-top: 15px;">
         </a>
-        <a href="COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
+        <a href="common-logout.jsp" style="margin-top: 17px;">로그아웃</a>
     </div>
 </header><!-- End Header -->
 

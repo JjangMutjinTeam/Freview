@@ -37,7 +37,7 @@ public class MainPageServlet extends HttpServlet {
       req.setAttribute("requesters", requesters);
       req.setAttribute("gongji", gongji);
 
-      req.getRequestDispatcher("COMM_main.jsp").forward(req, resp);
+      req.getRequestDispatcher("common-main-nonmamber.jsp").forward(req, resp);
     }
     else if(pageCode.equals("Boss")){
       int seq = Integer.parseInt(req.getParameter("seq"));
@@ -49,7 +49,7 @@ public class MainPageServlet extends HttpServlet {
       req.setAttribute("requesters", requesters);
       req.setAttribute("gongji", gongji);
 
-      req.getRequestDispatcher("boss_main.jsp").forward(req, resp);
+      req.getRequestDispatcher("common-boss-main.jsp").forward(req, resp);
     }
     else if(pageCode.equals("Requester")){
       int seq = Integer.parseInt(req.getParameter("seq"));
@@ -61,7 +61,7 @@ public class MainPageServlet extends HttpServlet {
       req.setAttribute("mojips", mojipPost);
       req.setAttribute("gongji", gongji);
 
-      req.getRequestDispatcher("cust_main.jsp").forward(req, resp);
+      req.getRequestDispatcher("common-reviewer-main.jsp").forward(req, resp);
     }
   }
 

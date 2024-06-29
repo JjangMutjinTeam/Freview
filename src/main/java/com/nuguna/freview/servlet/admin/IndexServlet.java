@@ -32,7 +32,7 @@ public class IndexServlet extends HttpServlet {
     req.setAttribute("requesters", requesters);
     req.setAttribute("gongji", gongji);
 
-    req.getRequestDispatcher("COMM_main.jsp").forward(req, resp);
+    req.getRequestDispatcher("common-main-nonmamber.jsp").forward(req, resp);
 
   }
 
