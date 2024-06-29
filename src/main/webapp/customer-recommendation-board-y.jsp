@@ -4,16 +4,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <%
-    //    Member loginUser = (Member) session.getAttribute("Member");
-//    Integer memberSeq = loginUser.getMemberSeq();
-//    String gubun = loginUser.getGubun();
-    Member loginUser = new Member();
-    loginUser.setMemberSeq(1);
-    loginUser.setGubun("A");
-    Integer memberSeq = 1;
-    String gubun = "A";
-    request.setAttribute("gubun", 'A');
-    request.setAttribute("memberSeq", 1);
+    Member loginUser = (Member) request.getAttribute("loginUser");
+    Integer memberSeq = loginUser.getMemberSeq();
+    String nickname = loginUser.getNickname();
 %>
 
 <!DOCTYPE html>
@@ -65,6 +58,25 @@
         flex: 0 0 auto;
         width: 20%;
       }
+
+      .nav-item {
+        display: flex;
+        align-items: center;
+      }
+
+      .nav-profile img {
+        vertical-align: middle;
+      }
+
+      .nav-profile span {
+        vertical-align: middle;
+      }
+
+      .ms-3 {
+        margin-left: 8px;
+        vertical-align: middle;
+        color: blue; /* 로그아웃 링크의 색상을 스타일에 맞게 설정 */
+      }
     </style>
 
     <!-- =======================================================
@@ -74,15 +86,7 @@
     * Author: BootstrapMade.com
     * License: https://bootstrapmade.com/license/
     ======================================================== -->
-    <%--    세션의 member 정보를 전부 가져오기 (memberSeq, gubun 외)--%>
-    <%--    <div class="header-hr-right">--%>
-    <%--        <a href="/brand-page?gubun=${member.gubun}&mid=${member.mid}" style="margin-right: 20px">--%>
-    <%--            <%=memberInfo.getNickname()%>--%>
-    <%--            <img src="<%=memberInfo.getPhotoUrl()%>" alt=" " style="width: 30px;--%>
-    <%--    margin-top: 15px;">--%>
-    <%--        </a>--%>
-    <%--        <a href="COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>--%>
-    <%--    </div>--%>
+
 </head>
 
 <body>
@@ -94,30 +98,35 @@
             <img src="assets/img/logo/logo-vertical.png" alt="">
             <span class="d-none d-lg-block">Freview</span>
         </a>
-    </div><!-- End Logo -->
+    </div>
 
     <nav class="header-nav ms-auto">
         <ul class="d-flex align-items-center">
-            <li class="nav-item dropdown pe-3">
-                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
+            <li class="nav-item dropdown pe-3 d-flex align-items-center">
+                <a class="nav-link nav-profile d-flex align-items-center pe-0"
+                   href="/my-info?member_seq=<%=memberSeq%>">
+                    <%-- <img src="<%=profileURL()%>" alt="Profile" class="rounded-circle"> TODO: 세션의 프로필 url을 적용할 것--%>
                     <img src="assets/img/basic/basic-profile-img.png" alt="Profile"
-                         class="rounded-circle">
+                         class="rounded-circle" style="margin-right: 8px;">
                     <span id="nickname-holder-head"
-                          class="d-none d-md-block"><%=loginUser.getNickname()%></span>
-                </a><!-- End Profile Iamge Icon -->
-            </li><!-- End Profile Nav -->
+                          class="d-none d-md-block"><%=nickname%></span>
+                </a>
+                <a href="COMM_logout.jsp" class="ms-3">로그아웃</a>
+            </li>
         </ul>
-    </nav><!-- End Icons Navigation -->
-</header><!-- End Header -->
+    </nav>
+
+</header>
 
 <main id="main" style="margin:auto; margin-top:50px">
     <div class="pagetitle">
         <h1>체험단 추천페이지</h1>
-    </div><!-- End Page Title -->
+    </div>
 
     <section class="section profile">
         <div class="row">
-            <div class="tab-pane fade show active" id="customer" role="tabpanel" aria-labelledby="customer-tab">
+            <div class="tab-pane fade show active" id="customer" role="tabpanel"
+                 aria-labelledby="customer-tab">
                 <form id="filterForm">
                     <input type="hidden" id="memberGubunCustomer" name="memberGubun" value="C">
                     <div>
@@ -143,33 +152,35 @@
                 <button id="resetBtn">모든 필터 제거</button>
                 <div class="row" id="customerInfo"></div>
                 <div class="d-flex justify-content-center">
-                    <button class="btn btn-primary" id="loadMoreBtn" data-previous-member-seq="0">더보기</button>
+                    <button class="btn btn-primary" id="loadMoreBtn" data-previous-member-seq="0">
+                        더보기
+                    </button>
                 </div>
             </div>
         </div>
     </section>
 
-</main><!-- End #main -->
+</main>
 
 <script>
-  $(document).ready(function() {
+  $(document).ready(function () {
 
     loadInitialData();
 
-    $('#filterForm').submit(function(event) {
+    $('#filterForm').submit(function (event) {
       event.preventDefault();
       var formData = $(this).serialize();
       loadFilteredData(formData);
     });
 
-    $('#resetBtn').click(function() {
+    $('#resetBtn').click(function () {
       $('#customerInfo').empty();
       $('input[name="foodType"]').prop('checked', false);
       $('input[name="tag"]').prop('checked', false);
       loadInitialData();
     });
 
-    $('#loadMoreBtn').click(function() {
+    $('#loadMoreBtn').click(function () {
       var previousMemberSeq = $(this).data('previous-member-seq');
       loadMoreData(previousMemberSeq);
     });
@@ -182,12 +193,13 @@
         success: function (response) {
           renderData(response.data);
           if (response.hasMore) {
-            $('#loadMoreBtn').data('previous-member-seq', response.data[response.data.length - 1].memberSeq).show();
+            $('#loadMoreBtn').data('previous-member-seq',
+                response.data[response.data.length - 1].memberSeq).show();
           } else {
             $('#loadMoreBtn').hide();
           }
         },
-        error: function() {
+        error: function () {
           console.error("[ERROR] 데이터 초기화 중 오류 발생");
         }
       });
@@ -203,12 +215,13 @@
           $('#customerInfo').html('');
           renderData(response.data);
           if (response.hasMore) {
-            $('#loadMoreBtn').data('previous-member-seq', response.data[response.data.length - 1].memberSeq).show();
+            $('#loadMoreBtn').data('previous-member-seq',
+                response.data[response.data.length - 1].memberSeq).show();
           } else {
             $('#loadMoreBtn').hide();
           }
         },
-        error: function() {
+        error: function () {
           console.error("[ERROR] 필터링 데이터 로딩 중 오류 발생");
         }
       });
@@ -226,7 +239,8 @@
           if (response.data.length > 0) {
             renderData(response.data);
             if (response.hasMore) {
-              $('#loadMoreBtn').data('previous-member-seq', response.data[response.data.length - 1].memberSeq).show();
+              $('#loadMoreBtn').data('previous-member-seq',
+                  response.data[response.data.length - 1].memberSeq).show();
             } else {
               $('#loadMoreBtn').hide();
             }
@@ -234,7 +248,7 @@
             $('#loadMoreBtn').hide();
           }
         },
-        error: function() {
+        error: function () {
           console.error("[ERROR] 추가 데이터 로딩 중 오류 발생");
         }
       });
@@ -242,11 +256,11 @@
 
     function renderData(data) {
       var htmlStr = "";
-      $.map(data, function(val) {
+      $.map(data, function (val) {
         htmlStr += "<div class='col-xl-2'>";
         htmlStr += "<div class='card'>";
         htmlStr += "<div class='card-body profile-card pt-4 d-flex flex-column align-items-center'>";
-        htmlStr += "<a href='/brand-page?member_seq=" + val["memberSeq"] + "'>";
+        htmlStr += "<a href='/brand-page?member_seq=" + val["memberSeq"] + "'>"; //TODO: admin-mynfo 페이지 생성 후 수정
         htmlStr += "<img src='" + val["profilePhotoUrl"] + "' alt='Profile' class='profile-img'>";
         htmlStr += "<h2>" + val["nickname"] + "</h2>";
 

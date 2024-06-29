@@ -3,6 +3,7 @@ package com.nuguna.freview.servlet.member;
 import com.google.gson.Gson;
 import com.nuguna.freview.dao.member.RecommendationMemberDAO;
 import com.nuguna.freview.dto.MemberRecommendationInfo;
+import com.nuguna.freview.entity.member.Member;
 import com.nuguna.freview.entity.member.MemberGubun;
 import java.io.IOException;
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @WebServlet("/recommendation-customer")
 public class CustomerRecommendationServlet extends HttpServlet {
@@ -29,8 +31,12 @@ public class CustomerRecommendationServlet extends HttpServlet {
     int previousPostSeq = getPreviousMemberSeq(req);
     String requestedMemberGubun = MemberGubun.CUSTOMER.getCode();
     List<MemberRecommendationInfo> customerInfoList = loadRecommendationLists(requestedMemberGubun, previousPostSeq);
-
     req.setAttribute("customerInfoList", customerInfoList);
+
+    HttpSession session = req.getSession();
+    Member loginUser = (Member) session.getAttribute("Member");
+    req.setAttribute("loginUser", loginUser);
+
     req.getRequestDispatcher("/customer-recommendation-board-y.jsp").forward(req, resp);
   }
 
