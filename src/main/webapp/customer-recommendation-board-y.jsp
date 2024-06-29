@@ -199,11 +199,11 @@
         url: "/recommendation-filter",
         data: formData,
         dataType: "json",
-        success: function (data) {
+        success: function (response) {
           $('#customerInfo').html('');
-          renderData(data);
-          if (data.length > 0) {
-            $('#loadMoreBtn').data('previous-member-seq', data[data.length - 1].memberSeq).show();
+          renderData(response.data);
+          if (response.hasMore) {
+            $('#loadMoreBtn').data('previous-member-seq', response.data[response.data.length - 1].memberSeq).show();
           } else {
             $('#loadMoreBtn').hide();
           }

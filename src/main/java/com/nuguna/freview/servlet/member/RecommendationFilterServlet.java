@@ -4,7 +4,9 @@ import com.google.gson.Gson;
 import com.nuguna.freview.dao.member.RecommendationMemberDAO;
 import com.nuguna.freview.dto.MemberRecommendationInfo;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -30,10 +32,15 @@ public class RecommendationFilterServlet extends HttpServlet {
     int previousMemberSeq = getPreviousMemberSeq(req);
     List<MemberRecommendationInfo> list = loadFilteredRecommendationLists(req, memberGubun, previousMemberSeq, foodTypes, tags);
 
-    Gson gson = new Gson();
-    String json = gson.toJson(list);
+    boolean hasMore = list.size() == LIMIT;
+    Map<String, Object> responseMap = new HashMap<>();
+    responseMap.put("data", list);
+    responseMap.put("hasMore", hasMore);
 
-    resp.getWriter().write(json);
+    Gson gson = new Gson();
+    String str = gson.toJson(responseMap);
+
+    resp.getWriter().write(str);
   }
 
   private int getPreviousMemberSeq(HttpServletRequest req) {
