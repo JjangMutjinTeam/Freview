@@ -6,7 +6,9 @@ import com.nuguna.freview.dto.MemberRecommendationInfo;
 import com.nuguna.freview.entity.member.MemberGubun;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -31,8 +33,7 @@ public class BossRecommendationServlet extends HttpServlet {
     List<MemberRecommendationInfo> bossInfoList = loadRecommendationLists(requestedMemberGubun, previousPostSeq);
 
     req.setAttribute("bossInfoList", bossInfoList);
-    RequestDispatcher rd = req.getRequestDispatcher("/boss-recommendation-board-y.jsp");
-    rd.forward(req, resp);
+    req.getRequestDispatcher("/boss-recommendation-board-y.jsp").forward(req, resp);
   }
 
   @Override
@@ -45,12 +46,16 @@ public class BossRecommendationServlet extends HttpServlet {
     String requestedMemberGubun = MemberGubun.BOSS.getCode();
     List<MemberRecommendationInfo> bossInfoList = loadRecommendationLists(requestedMemberGubun, previousPostSeq);
 
-    Gson gson = new Gson();
-    String str = gson.toJson(bossInfoList);
 
-    PrintWriter out = resp.getWriter();
-    out.println(str);
-    out.flush();
+    boolean hasMore = bossInfoList.size() == LIMIT;
+    Map<String, Object> responseMap = new HashMap<>();
+    responseMap.put("data", bossInfoList);
+    responseMap.put("hasMore", hasMore);
+
+    Gson gson = new Gson();
+    String str = gson.toJson(responseMap);
+
+    resp.getWriter().write(str);
   }
 
   private int getPreviousPostSeq(HttpServletRequest req) {

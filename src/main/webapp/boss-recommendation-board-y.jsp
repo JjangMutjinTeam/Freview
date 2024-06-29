@@ -25,7 +25,6 @@
 
     <title>추천 페이지</title>
     <meta content="" name="description">
-    <meta content="" name="keywords">
 
     <!-- Favicons -->
     <link href="assets/img/favicon.png" rel="icon">
@@ -48,6 +47,9 @@
     <!-- Template Main CSS File -->
     <link href="assets/css/style.css" rel="stylesheet">
 
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
     <style>
       .profile-card img {
         border-radius: 0; /* 이미지를 네모로 만듭니다 */
@@ -64,9 +66,6 @@
         width: 20%;
       }
     </style>
-
-    <!-- JQuery -->
-    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 
     <!-- =======================================================
     * Template Name: NiceAdmin
@@ -118,21 +117,16 @@
 
     <section class="section profile">
         <div class="row">
-            <!-- Boss Tab -->
-            <div class="tab-pane fade show <c:if test="${requestedMemberGubun == 'B'}">active</c:if>"
-                 id="boss" role="tabpanel"
-                 aria-labelledby="boss-tab">
-
-                <form action="/recommendation-filter" method="GET">
-                    <input type="hidden" id="memberGubunBoss" name="memberGubun" value='B'>
+            <div class="tab-pane fade show active" id="boss" role="tabpanel" aria-labelledby="boss-tab">
+                <form id="filterForm">
+                    <input type="hidden" id="memberGubunCustomer" name="memberGubun" value="B">
                     <div>
                         <h3>음식 유형</h3>
                         <label><input type="checkbox" name="foodType" value="한식"> 한식</label>
                         <label><input type="checkbox" name="foodType" value="양식"> 양식</label>
                         <label><input type="checkbox" name="foodType" value="중식"> 중식</label>
                         <label><input type="checkbox" name="foodType" value="일식"> 일식</label>
-                        <label><input type="checkbox" name="foodType" value="빵&베이커리">
-                            빵&베이커리</label>
+                        <label><input type="checkbox" name="foodType" value="빵&베이커리"> 빵&베이커리</label>
                         <label><input type="checkbox" name="foodType" value="기타"> 기타</label>
                     </div>
                     <div>
@@ -148,19 +142,10 @@
                     </div>
                 </form>
                 <br>
-                <form action="/recommendation-boss" method="get">
-                    <button type="submit">모든 필터 제거</button>
-                </form>
-
-                <div class="row" id="bossInfo">
-
-                </div>
-
+                <button id="resetBtn">모든 필터 제거</button>
+                <div class="row" id="customerInfo"></div>
                 <div class="d-flex justify-content-center">
-                    <c:if test="${!empty customerInfoList && customerInfoList.size() == 20}">
-                        <a class="btn btn-primary"
-                           href="?memberGubun=b&previousPostSeq=${customerInfoList[customerInfoList.size() - 1].memberSeq}">더보기</a>
-                    </c:if>
+                    <button class="btn btn-primary" id="loadMoreBtn" data-previous-member-seq="0">더보기</button>
                 </div>
             </div>
         </div>
@@ -169,33 +154,122 @@
 </main><!-- End #main -->
 
 <script>
-    $(function () {
+  $(document).ready(function() {
+
+    loadInitialData();
+
+    $('#filterForm').submit(function(event) {
+      event.preventDefault();
+      var formData = $(this).serialize();
+      loadFilteredData(formData);
+    });
+
+    $('#resetBtn').click(function() {
+      $('#customerInfo').empty();
+      $('input[name="foodType"]').prop('checked', false);
+      $('input[name="tag"]').prop('checked', false);
+      loadInitialData();
+    });
+
+    $('#loadMoreBtn').click(function() {
+      var previousMemberSeq = $(this).data('previous-member-seq');
+      loadMoreData(previousMemberSeq);
+    });
+
+    function loadInitialData() {
       $.ajax({
         method: "POST",
         url: "/recommendation-boss",
         dataType: "json",
-        error: function (data) {
+        success: function (response) {
+          renderData(response.data);
+          if (response.hasMore) {
+            $('#loadMoreBtn').data('previous-member-seq', response.data[response.data.length - 1].memberSeq).show();
+          } else {
+            $('#loadMoreBtn').hide();
+          }
         },
-        success: function (data) {
-          console.log(data);
-          var htmlStr ="";
-          $.map(data, function (val) {
-            htmlStr += "<div class='col-xl-2'>";
-            htmlStr += "<div class='card'>";
-            htmlStr += "<div class='card-body profile-card pt-4 d-flex flex-column align-items-center'>";
-            htmlStr += "<a href='/MemberBrandingServlet?gubun=B&id='" + val["id"] + ">";
-            htmlStr += "<img src=" + val["profilePhotoUrl"] + " alt='Profile' class='profile-img'>";
-            htmlStr += "<h2>" + val["nickname"] + "</h2>";
-            htmlStr += "</a>";
-            htmlStr += "</div>";
-            htmlStr += "</div>"
-            htmlStr += "</div>"
-          });
-          $("#bossInfo").html(htmlStr);
+        error: function() {
+          console.error("[ERROR] 데이터 초기화 중 오류 발생");
         }
-      })
-    });
+      });
+    }
+
+    function loadFilteredData(formData) {
+      $.ajax({
+        method: "GET",
+        url: "/recommendation-filter",
+        data: formData,
+        dataType: "json",
+        success: function (response) {
+            $('#customerInfo').html('');
+            renderData(response.data);
+            if (response.hasMore) {
+              $('#loadMoreBtn').data('previous-member-seq', response.data[response.data.length - 1].memberSeq).show();
+            } else {
+              $('#loadMoreBtn').hide();
+            }
+        },
+        error: function() {
+          console.error("[ERROR] 필터링 데이터 로딩 중 오류 발생");
+        }
+      });
+    }
+
+    function loadMoreData(previousMemberSeq) {
+      $.ajax({
+        method: "POST",
+        url: "/recommendation-boss",
+        data: {
+          previousMemberSeq: previousMemberSeq
+        },
+        dataType: "json",
+        success: function (response) {
+          if (response.data.length > 0) {
+            renderData(response.data);
+            if (response.hasMore) {
+              $('#loadMoreBtn').data('previous-member-seq', response.data[response.data.length - 1].memberSeq).show();
+            } else {
+              $('#loadMoreBtn').hide();
+            }
+          } else {
+            $('#loadMoreBtn').hide();
+          }
+        },
+        error: function() {
+          console.error("[ERROR] 추가 데이터 로딩 중 오류 발생");
+        }
+      });
+    }
+
+    function renderData(data) {
+      var htmlStr = "";
+      $.map(data, function(val) {
+        htmlStr += "<div class='col-xl-2'>";
+        htmlStr += "<div class='card'>";
+        htmlStr += "<div class='card-body profile-card pt-4 d-flex flex-column align-items-center'>";
+        htmlStr += "<a href='/brand-page?member_seq=" + val["memberSeq"] + "'>";
+        htmlStr += "<img src='" + val["profilePhotoUrl"] + "' alt='Profile' class='profile-img'>";
+        htmlStr += "<h2>" + val["nickname"] + "</h2>";
+
+        if (val["foodTypes"] != null && val["foodTypes"] !== "") {
+          htmlStr += "<h3>" + val["foodTypes"] + "</h3>";
+        }
+
+        if (val["tags"] != null && val["tags"] !== "") {
+          htmlStr += "<h3>" + val["tags"] + "</h3>";
+        }
+
+        htmlStr += "</a>";
+        htmlStr += "</div>";
+        htmlStr += "</div>";
+        htmlStr += "</div>";
+      });
+      $('#customerInfo').append(htmlStr);
+    }
+  });
 </script>
+
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
     <div class="copyright">
