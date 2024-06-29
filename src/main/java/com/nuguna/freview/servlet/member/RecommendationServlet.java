@@ -23,11 +23,9 @@ public class RecommendationServlet extends HttpServlet {
     req.setCharacterEncoding("UTF-8");
     resp.setContentType("text/html;charset=UTF-8");
 
-    List<MemberRecommendationInfo> bossInfoList = memberDAO.selectMemberInfo(
-        MemberGubun.BOSS.getCode());
+    List<MemberRecommendationInfo> bossInfoList = memberDAO.selectMemberInfo(MemberGubun.B.getCode());
     req.setAttribute("bossInfoList", bossInfoList);
-    List<MemberRecommendationInfo> customerInfoList = memberDAO.selectMemberInfo(
-        MemberGubun.CUST.getCode());
+    List<MemberRecommendationInfo> customerInfoList = memberDAO.selectMemberInfo(MemberGubun.C.getCode());
     req.setAttribute("customerInfoList", customerInfoList);
     RequestDispatcher rd = req.getRequestDispatcher("/common-recommendation-y.jsp");
     rd.forward(req, resp);

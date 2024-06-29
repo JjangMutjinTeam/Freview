@@ -10,7 +10,7 @@ import lombok.ToString;
 public enum MemberGubun {
   ADMIN("A"),
   BOSS("B"),
-  CUST("C");
+  CUSTOMER("C");
 
   private final String code;
 
@@ -32,6 +32,6 @@ public enum MemberGubun {
   }
 
   public boolean isCust() {
-    return this == CUST;
+    return this == CUSTOMER;
   }
 }

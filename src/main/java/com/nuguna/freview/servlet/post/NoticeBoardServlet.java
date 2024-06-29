@@ -1,7 +1,6 @@
 package com.nuguna.freview.servlet.post;
 
 import com.nuguna.freview.dao.post.NoticePostDAO;
-import com.nuguna.freview.dao.post.PostDAO;
 import com.nuguna.freview.entity.post.Post;
 import java.io.IOException;
 import java.util.List;
@@ -12,7 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/noticeBoard")
+@WebServlet("/notice")
 public class NoticeBoardServlet extends HttpServlet {
 
   NoticePostDAO noticePostDAO = new NoticePostDAO();
