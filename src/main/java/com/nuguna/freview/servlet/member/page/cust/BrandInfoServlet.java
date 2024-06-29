@@ -5,6 +5,7 @@ import com.nuguna.freview.dao.member.common.MemberUtilDAO;
 import com.nuguna.freview.dao.member.cust.page.CustMyBrandInfoDAO;
 import com.nuguna.freview.dto.boss.brand.BossMyBrandInfoDto;
 import com.nuguna.freview.dto.cust.brand.CustMyBrandInfoDto;
+import com.nuguna.freview.entity.member.Member;
 import com.nuguna.freview.entity.member.MemberGubun;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
@@ -37,8 +38,7 @@ public class BrandInfoServlet extends HttpServlet {
 
     try {
       int memberSeq = Integer.parseInt(request.getParameter("member_seq"));
-      int fromMemberSeq = Integer.parseInt(
-          request.getParameter("from_member_seq")); // from_member_seq = 이것이 세션
+      int fromMemberSeq = ((Member) request.getSession().getAttribute("Member")).getMemberSeq();
 
       MemberGubun memberGubun = memberUtilDAO.selectMemberGubun(memberSeq);
       if (memberGubun == null) {

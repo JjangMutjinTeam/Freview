@@ -5,7 +5,7 @@ import static com.nuguna.freview.util.DbUtil.getConnection;
 
 import com.nuguna.freview.entity.member.MemberGubun;
 import com.nuguna.freview.entity.member.tag.BossTag;
-import com.nuguna.freview.entity.member.tag.CustTag;
+import com.nuguna.freview.entity.member.tag.CustomerTag;
 import com.nuguna.freview.entity.member.tag.TagItem;
 import com.nuguna.freview.exception.IllegalTagException;
 import java.sql.Connection;
@@ -26,7 +26,7 @@ public class MemberTagDAO {
     try {
       if (memberGubun.isCust()) {
         tags = tagNames.stream()
-            .map(CustTag::new)
+            .map(CustomerTag::new)
             .collect(Collectors.toList());
       } else if (memberGubun.isBoss()) {
         tags = tagNames.stream()

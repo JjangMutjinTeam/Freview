@@ -15,7 +15,7 @@ import lombok.ToString;
 public class Review {
 
   private Integer reviewSeq;
-  private Integer custSeq;
+  private Integer customerSeq;
   private Integer bossSeq;
   private String url;
   private Timestamp visitedDate;

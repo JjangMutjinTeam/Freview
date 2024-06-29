@@ -7,7 +7,7 @@ import java.util.List;
 import lombok.Getter;
 
 @Getter
-public class CustTag extends TagItem {
+public class CustomerTag extends TagItem {
 
   private static final List<String> custTagNames = new ArrayList<>(
       Arrays.asList(
@@ -16,7 +16,7 @@ public class CustTag extends TagItem {
           "빵빵이")
   );
 
-  public CustTag(String tagName) {
+  public CustomerTag(String tagName) {
     validateTagName(tagName);
     this.tagName = tagName;
     this.gubun = TagGubun.CUST;

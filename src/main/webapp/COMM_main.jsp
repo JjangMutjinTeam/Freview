@@ -1,20 +1,23 @@
 <%@ page import="com.nuguna.freview.dto.MainpageMojipDTO" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.nuguna.freview.dto.MainpageRequesterDTO" %>
-<%@ page import="com.nuguna.freview.dto.MainpageGongjiDTO" %>
-<%@ page import="com.nuguna.freview.dto.MainpageMemberInfoDTO" %>
-<%@ page import="com.nuguna.freview.entity.member.Member" %>
-
+<%@ page import="com.nuguna.freview.dto.MainpageGongjiDTO" %><%--
+  Created by IntelliJ IDEA.
+  User: rlagk
+  Date: 2024-06-09
+  Time: 오후 3:12
+  To change this template use File | Settings | File Templates.
+--%>
+// common-notice-board-y.jsp
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%
-    MainpageMemberInfoDTO memberInfo = (MainpageMemberInfoDTO) request.getAttribute("memberInfo");
+    ArrayList<MainpageMojipDTO> mojips = (ArrayList<MainpageMojipDTO>) request.getAttribute(
+            "mojips");
     ArrayList<MainpageRequesterDTO> requesters = (ArrayList<MainpageRequesterDTO>) request.getAttribute(
             "requesters");
     ArrayList<MainpageGongjiDTO> gongjis = (ArrayList<MainpageGongjiDTO>) request.getAttribute(
             "gongji");
-    Member member = (Member) session.getAttribute("Member");
-    int memberSeq = member.getMemberSeq();
 %>
 
 <!DOCTYPE html>
@@ -75,21 +78,15 @@
 <header id="header" class="header fixed-top d-flex align-items-center header-hr">
 
     <div class="d-flex align-items-center justify-content-between header-hr-left">
-
-        <a href="/main?pagecode=Boss" class="logo d-flex align-items-center">
+        <a href="#" class="logo d-flex align-items-center">
             <img src="assets/img/logo/logo-vertical.png" alt="" style="  width: 50px;
     margin-top: 20px;">
             <span class="d-none d-lg-block">Freview</span>
         </a>
     </div><!-- End Logo -->
     <div class="header-hr-right">
-        <a href="/my-info?member_seq=<%=memberSeq%>&seq=<%=memberSeq%>" style="margin-right: 20px">
-            <%=memberInfo.getNickname()%>
-            <img src="<%=memberInfo.getPhotoUrl()%>" alt=" " style="width: 30px;
-    margin-top: 15px;">
-        </a>
-
-        <a href="COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
+        <a href="/auth?pagecode=login" style="margin-right: 20px">로그인</a>
+        <a href="/auth?pagecode=register">회원가입</a>
     </div>
 </header><!-- End Header -->
 
@@ -99,13 +96,46 @@
             <h1>메인페이지</h1>
         </div><!-- End Page Title -->
         <div class="card">
+            <div class="card-header card-header-hr">
+                <h5>모집글</h5>
+                <a href="/auth?pagecode=login">모집글 게시판으로 가기</a>
+            </div>
+            <div class="card-body card-body-hr">
+                <%for (MainpageMojipDTO dto : mojips) { %>
+                <div class="post-list">
+                    <a href="/auth?pagecode=login" class="post-item">
+                        <figure>
+                            <%if (dto.getThumbnailPhotoUrl() == null) {%>
+                            <img src="https://play-lh.googleusercontent.com/38AGKCqmbjZ9OuWx4YjssAz3Y0DTWbiM5HB0ove1pNBq_o9mtWfGszjZNxZdwt_vgHo=w240-h480-rw"
+                                 alt="Profile" class="profile-img">
+                            <%} else {%>
+                            <img src="<%=dto.getThumbnailPhotoUrl()%>" alt="Profile"
+                                 class="profile-img">
+                            <%}%>
+                        </figure>
+                        <h5><%=dto.getTitle()%>
+                        </h5>
+                        <p>작성자: <%=dto.getMemberSeq()%>
+                        </p>
+                        <p>모집 기간: <%=dto.getApplyStartDate()%> ~ <%=dto.getApplyEndDate()%>
+                        </p>
+                        <p>방문 날짜: <%=dto.getExperienceDate()%>
+                        </p>
+                        <p>좋아요 수: <%=dto.getViewCount()%>
+                        </p>
+                    </a>
+                </div>
+                <%}%>
+            </div>
+        </div>
+        <div class="card">
             <div class="card-header">
                 <h5>최근 활동한 체험단</h5>
             </div>
             <div class="card-body card-body-hr">
                 <%for (MainpageRequesterDTO dto : requesters) {%>
                 <div class="post-list">
-                    <a href="#" class="post-item">
+                    <a href="/auth?pagecode=login" class="post-item">
                         <figure>
                             <%if (dto.getProfilePhotoUrl() == null) {%>
                             <img src="https://play-lh.googleusercontent.com/38AGKCqmbjZ9OuWx4YjssAz3Y0DTWbiM5HB0ove1pNBq_o9mtWfGszjZNxZdwt_vgHo=w240-h480-rw"
@@ -115,10 +145,8 @@
                                  class="profile-img">
                             <%}%>
                         </figure>
-                        <a href="/my-info?member_seq=<%=dto.getMemberSeq()%>">
-                            <h5><%=dto.getNickname()%>
-                            </h5>
-                        </a>
+                        <h5><%=dto.getNickname()%>
+                        </h5>
                     </a>
                 </div>
                 <%}%>
@@ -127,7 +155,7 @@
         <div class="card">
             <div class="card-header card-header-hr">
                 <h5>공지글</h5>
-                <a href="/noticeBoard">공지글 게시판으로 가기</a>
+                <a href="/auth?pagecode=login">공지글 게시판으로 가기</a>
             </div>
             <div class="card-body">
                 <!-- Table with stripped rows -->
@@ -145,9 +173,8 @@
                     <tr>
                         <td><%=dto.getPostSeq()%>
                         </td>
-                        <td>
-                            <a href="/noticeBoard/detail?postId=<%=dto.getPostSeq()%>"><%=dto.getTitle()%>
-                            </a></td>
+                        <td><a href="/auth?pagecode=login"><%=dto.getTitle()%>
+                        </a></td>
                         <td><%=dto.getCreatedAt()%>
                         </td>
                         <td><%=dto.getUpdatedAt()%>
@@ -159,7 +186,6 @@
                 <!-- End Table with stripped rows -->
 
             </div>
-
         </div>
     </div>
 </main><!-- End #main -->

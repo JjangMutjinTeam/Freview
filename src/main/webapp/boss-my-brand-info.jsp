@@ -1,6 +1,7 @@
 <%@ page import="com.nuguna.freview.dto.cust.brand.CustMyBrandInfoDto" %>
 <%@ page import="com.google.gson.Gson" %>
 <%@ page import="com.nuguna.freview.dto.boss.brand.BossMyBrandInfoDto" %>
+<%@ page import="com.nuguna.freview.entity.member.Member" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -8,6 +9,11 @@
 <%
     BossMyBrandInfoDto brandInfo = (BossMyBrandInfoDto) request.getAttribute("brandInfo");
     Gson gson = new Gson();
+    Member member = null;
+    if (session.getAttribute("Member") != null) {
+        member = (Member) session.getAttribute("Member");
+    }
+    int memberSeq = member.getMemberSeq();
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -94,7 +100,8 @@
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center">
     <div class="d-flex align-items-center justify-content-between">
-        <a href="index.html" class="logo d-flex align-items-center">
+        <a href="/main?seq=<%=memberSeq%>&pagecode=Requester"
+           class="logo d-flex align-items-center">
             <img src="assets/img/logo/logo-vertical.png" alt="">
             <span class="d-none d-lg-block">Freeview</span>
         </a>
@@ -117,28 +124,43 @@
 
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
+
     <ul class="sidebar-nav" id="sidebar-nav">
-        <li class="nav-item">
-            <a class="nav-link" data-bs-target="#components-nav"
-               href="#">
-                <i class="bi bi-person"></i><span>브랜딩</span>
-            </a>
-        </li><!-- End Components Nav -->
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="users-profile.html">
-                <i class="bi bi-layout-text-window-reverse"></i>
-                <span>활동</span>
+            <a class="nav-link collapsed" href="#">
+                <i class="bi bi-grid"></i>
+                <span>나의 브랜딩</span>
             </a>
-        </li><!-- End Profile Page Nav -->
+        </li><!-- End Dashboard Nav -->
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="pages-faq.html">
-                <i class="bi bi-envelope"></i>
+            <a class="nav-link collapsed"
+               href="${pageContext.request.contextPath}/boss-received-request.jsp">
+                <i class="bi bi-bell"></i>
                 <span>알림</span>
             </a>
-        </li><!-- End F.A.Q Page Nav -->
+        </li>
+        <!-- End Profile Page Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link " href="${pageContext.request.contextPath}/boss-my-request.jsp">
+                <i class="bi bi-card-checklist"></i>
+                <span>요청</span>
+            </a>
+        </li>
+        <!-- End Profile Page Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed"
+               href="#">
+                <i class="bi bi-person"></i>
+                <span>개인정보수정</span>
+            </a>
+        </li><!-- End Register Page Nav -->
+
     </ul>
+
 </aside><!-- End Sidebar-->
 
 <main id="main" class="main">

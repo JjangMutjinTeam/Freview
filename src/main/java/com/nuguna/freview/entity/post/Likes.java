@@ -12,7 +12,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class Ddabong {
+public class Likes {
 
   private Integer seq;
   private Integer memberSeq;

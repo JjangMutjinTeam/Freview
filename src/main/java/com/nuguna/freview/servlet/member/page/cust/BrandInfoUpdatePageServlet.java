@@ -43,6 +43,7 @@ public class BrandInfoUpdatePageServlet extends HttpServlet {
       if (memberGubun == null) {
         response.sendError(HttpServletResponse.SC_BAD_REQUEST,
             "유효하지 않은 유저입니다.");
+        return;
       }
 
       request.setAttribute("member_seq", memberSeq);

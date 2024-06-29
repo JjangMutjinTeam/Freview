@@ -23,7 +23,7 @@ public class LoginDAO {
 
     try {
       Class.forName(DB_DRIVER_CLASS);
-      conn = DriverManager.getConnection(DB_URL,DB_USERNAME,DB_PASSWORD);
+      conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
     } catch (ClassNotFoundException e) {
       throw new RuntimeException(e);
     } catch (SQLException e) {
@@ -32,25 +32,33 @@ public class LoginDAO {
     try {
       String sql = "SELECT * FROM member WHERE id=? AND pw=?";
       pstmt = conn.prepareStatement(sql);
-      pstmt.setString(1,id);
-      pstmt.setString(2,password);
+      pstmt.setString(1, id);
+      pstmt.setString(2, password);
       rs = pstmt.executeQuery();
-      if(rs.next()){
-       member = new Member();
+      if (rs.next()) {
+        member = new Member();
 
-       int memberSeq = rs.getInt("member_seq");
-       member.setMemberSeq(memberSeq);
+        int memberSeq = rs.getInt("member_seq");
+        member.setMemberSeq(memberSeq);
+        String nickname = rs.getString("nickname");
+        member.setNickname(nickname);
 
-       String gubun = rs.getString("gubun");
-       member.setGubun(gubun);
+        String gubun = rs.getString("gubun");
+        member.setGubun(gubun);
       }
     } catch (SQLException e) {
       throw new RuntimeException(e);
-    }finally {
+    } finally {
       try {
-        if(rs!=null)rs.close();
-        if(pstmt!=null)pstmt.close();
-        if(conn!=null)conn.close();
+        if (rs != null) {
+          rs.close();
+        }
+        if (pstmt != null) {
+          pstmt.close();
+        }
+        if (conn != null) {
+          conn.close();
+        }
       } catch (SQLException e) {
         e.printStackTrace();
       }

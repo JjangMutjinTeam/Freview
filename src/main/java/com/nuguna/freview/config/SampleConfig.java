@@ -4,6 +4,6 @@ public class SampleConfig {
 
   public static final String PROJECT_NAME = "FReview";
 
-  public static final String TEAM_NAME = "JjangMutJinTeam";
+  public static final String TEAM_NAME = "Nuguna";
 
 }

@@ -41,14 +41,14 @@ public class AdminDAO {
         Member member = new Member();
         member.setMemberSeq(rs.getInt(1));
         member.setGubun(rs.getString(2));
-        member.setMid(rs.getString(3));
-        member.setMpw(rs.getString(4));
+        member.setId(rs.getString(3));
+        member.setPw(rs.getString(4));
         member.setNickname(rs.getString(5));
         member.setEmail(rs.getString(6));
         member.setAgeGroup(rs.getString(7));
         member.setIntroduce(rs.getString(8));
         member.setBusinessNumber(rs.getString(9));
-        member.setStoreLoc(rs.getString(10));
+        member.setStoreLocation(rs.getString(10));
         member.setProfilePhotoUrl(rs.getString(11));
         member.setCreatedAt(rs.getTimestamp(12));
         member.setUpdatedAt(rs.getTimestamp(13));

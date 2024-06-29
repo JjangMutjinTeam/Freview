@@ -10,7 +10,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>공지게시판</title>
+    <title>모집 게시판</title>
     <%
         Member loginUser = (Member) session.getAttribute("Member");
         Integer memberSeq = loginUser.getMemberSeq();
@@ -47,6 +47,37 @@
         background-color: white !important;
       }
     </style>
+    <style>
+      .post-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px; /* 카드 사이의 간격을 설정합니다 */
+      }
+
+      .post-item {
+        flex: 0 0 calc(25% - 16px); /* 카드의 너비를 4등분하여 설정합니다. 카드 간격을 고려하여 너비를 계산합니다 */
+        box-sizing: border-box;
+        border: 1px solid #ddd; /* 카드 테두리 */
+        border-radius: 8px; /* 카드 모서리를 둥글게 */
+        padding: 16px; /* 카드 내부 여백 */
+        background-color: #fff; /* 카드 배경색 */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 카드 그림자 */
+        text-decoration: none; /* 링크의 기본 밑줄 제거 */
+        color: inherit; /* 링크의 기본 색상 상속 */
+      }
+
+      .post-item img.profile-img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 50%; /* 이미지 둥글게 */
+      }
+
+      .post-item h3, .post-item p {
+        margin: 8px 0; /* 제목과 내용의 여백 설정 */
+      }
+    </style>
+
+
     <!-- =======================================================
     * Template Name: NiceAdmin
     * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
@@ -68,23 +99,29 @@
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
-<%--    세션의 member 정보를 전부 가져오기 (memberSeq, gubun 외)--%>
-<%--    <div class="header-hr-right">--%>
-<%--        <a href="/brand-page?gubun=${member.gubun}&mid=${member.mid}" style="margin-right: 20px">--%>
-<%--            <%=memberInfo.getNickname()%>--%>
-<%--            <img src="<%=memberInfo.getPhotoUrl()%>" alt=" " style="width: 30px;--%>
-<%--    margin-top: 15px;">--%>
-<%--        </a>--%>
-<%--        <a href="COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>--%>
-<%--    </div>--%>
+
+    <nav class="header-nav ms-auto">
+        <ul class="d-flex align-items-center">
+            <li class="nav-item dropdown pe-3">
+                <a class="nav-link nav-profile d-flex align-items-center pe-0"
+                   href="/my-info?member_seq=<%=memberSeq%>">
+                    <img src="assets/img/basic/basic-profile-img.png" alt="Profile"
+                         class="rounded-circle">
+                    <span id="nickname-holder-head"
+                          class="d-none d-md-block"><%=loginUser.getNickname()%></span>
+                </a><!-- End Profile Iamge Icon -->
+            </li><!-- End Profile Nav -->
+        </ul>
+    </nav><!-- End Icons Navigation -->
 </header><!-- End Header -->
+
 <main id="main" class="main">
 
     <div class="pagetitle">
-        <h1>공지게시판</h1>
+        <h1>모집 게시판</h1>
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/noticeBoard">Home</a></li>
+                <li class="breadcrumb-item"><a href="/mojipBoard">Home</a></li>
                 <li class="breadcrumb-item">Pages</li>
                 <li class="breadcrumb-item active">Blank</li>
             </ol>
@@ -93,48 +130,31 @@
 
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">공지 게시판</h5>
-            <p>매우 중요한 공지가 올라옵니다 <br></p>
+            <h5 class="card-title">모집 게시판</h5>
+            <p>매우 중요한 모집글이 올라옵니다 <br></p>
 
-            <c:if test="${gubun == 'A'}">
+            <c:if test="${gubun.equals('B')}">
                 <div class="d-flex justify-content-end">
-                    <a href="/noticeBoard/createPost" class="btn btn-primary">
-                        공지 등록
+                    <a href="/mojipBoard/createPost" class="btn btn-primary">
+                        모집 등록
                     </a>
                 </div>
             </c:if>
-            <!-- Table with stripped rows -->
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>번호</th>
-                    <th>제목</th>
-                    <th>작성일자</th>
-                    <th>수정일자</th>
-                </tr>
-                </thead>
-                <tbody>
-                <c:forEach items="${postList}" var="post" varStatus="status">
-                    <tr>
-                        <td>${status.index + 1}</td>
-                        <td>
-                            <a href="${pageContext.request.contextPath}/noticeBoard/detail?postId=${post.postSeq}">${post.title}</a>
-                        </td>
-                        <td>${post.createdAt}</td>
-                        <td>${post.updatedAt}</td>
-                    </tr>
+
+            <!-- 게시글 리스트 추가 -->
+            <div class="post-list">
+                <c:forEach var="post" items="${postList}">
+                    <a href="/mojipboard/detail?postSeq=${post.postSeq}" class="post-item">
+                        <img src="${post.profilePhotoUrl}" alt="Profile" class="profile-img">
+                        <h5>${post.title}</h5>
+                        <p>모집 가게: ${post.storeName}</p>
+                        <p>모집 기간: ${post.applyStartDate} ~ ${post.applyEndDate} </p>
+                        <p>방문 날짜: ${post.experienceDate}</p>
+                        <p>좋아요 수: ${post.numberOfDdabong}</p>
+                    </a>
                 </c:forEach>
-                </tbody>
-            </table>
-            <div class="d-flex justify-content-between">
-                <c:if test="${previousPostSeq != Integer.MAX_VALUE}">
-                    <a class="btn btn-primary" href="?previousPostSeq=${postList[0].postSeq + 11}">이전</a>
-                </c:if>
-                <c:if test="${!empty postList && postList.size() == 10}">
-                    <a class="btn btn-primary"
-                       href="?previousPostSeq=${postList[postList.size() - 1].postSeq}">다음</a>
-                </c:if>
             </div>
+            <!-- 게시글 리스트 끝 -->
 
         </div>
     </div>
