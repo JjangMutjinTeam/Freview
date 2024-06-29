@@ -101,7 +101,7 @@ public class CustMyBrandInfoDAO {
         + "        FROM\n"
         + "            review r\n"
         + "        WHERE\n"
-        + "            r.cust_seq = ?) rr\n"
+        + "            r.customer_seq = ?) rr\n"
         + "    INNER JOIN\n"
         + "        member m\n"
         + "    ON\n"

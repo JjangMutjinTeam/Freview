@@ -89,10 +89,10 @@
         </a>
     </div><!-- End Logo -->
     <div class="header-hr-right">
-        <a href="/brand-page?gubun=${member.gubun}&mid=${member.mid}" style="margin-right: 20px">
+        <a href="/my-info?member_seq=<%=memberSeq%>" style="margin-right: 20px">
             <%=memberInfo.getNickname()%>
             <img src="<%=memberInfo.getPhotoUrl()%>" alt=" " style="width: 30px;
-    margin-top: 15px;">
+        margin-top: 15px;">
         </a>
         <a href="COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
     </div>
