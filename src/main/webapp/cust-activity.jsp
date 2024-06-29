@@ -1,12 +1,18 @@
 <%@ page import="com.nuguna.freview.dto.cust.brand.CustMyBrandInfoDto" %>
 <%@ page import="com.google.gson.Gson" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="com.nuguna.freview.entity.member.Member" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
+
 <%
-    CustMyBrandInfoDto brandInfo = (CustMyBrandInfoDto) request.getAttribute("brandInfo");
     Gson gson = new Gson();
+    Member member = null;
+    if (session.getAttribute("Member") != null) {
+        member = (Member) session.getAttribute("Member");
+    }
+    int memberSeq = member.getMemberSeq();
 %>
 
 
@@ -45,7 +51,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Users / Profile - NiceAdmin Bootstrap Template</title>
+    <title>FReview</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -197,9 +203,6 @@
                         </div>
 
                         <script>
-                          // 서버에서 받아온 foodType 목록을 JSON 형태로 포함
-                          var selectedFoodTypes = JSON.parse(
-                              '<%= gson.toJson(brandInfo.getFoodTypes()) %>');
 
                           // foodType 목록을 미리 선택된 상태로 설정
                           document.addEventListener('DOMContentLoaded', function () {
@@ -228,28 +231,7 @@
                                 </div>
                             </div>
                         </div>
-                        <script>
-                          $(document).ready(function () {
-                            var selectedTags = JSON.parse(
-                                '<%=gson.toJson(brandInfo.getTagInfos())%>');
 
-                            function initializeTagSelect() {
-                              var tagSelect = $('#tag-select');
-                              tagSelect.find('option').each(function () {
-                                if (selectedTags.includes($(this).val())) {
-                                  $(this).prop('selected', true);
-                                  $(this).addClass('selected-option');
-                                } else {
-                                  $(this).prop('selected', false);
-                                  $(this).removeClass('selected-option');
-                                }
-                              })
-                              ;
-                            }
-
-                            initializeTagSelect();
-                          });
-                        </script>
 </main><!-- End #main -->
 
 <!-- ======= Footer ======= -->

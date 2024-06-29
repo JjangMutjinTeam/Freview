@@ -105,7 +105,7 @@
         <a href="/main?seq=<%=memberSeq%>&pagecode=Requester"
            class="logo d-flex align-items-center">
             <img src="assets/img/logo/logo-vertical.png" alt="">
-            <span class="d-none d-lg-block">Freeview</span>
+            <span class="d-none d-lg-block">FReview</span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
@@ -135,7 +135,7 @@
         </li><!-- End Components Nav -->
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="users-profile.html">
+            <a class="nav-link collapsed" href="/my-activity">
                 <i class="bi bi-layout-text-window-reverse"></i>
                 <span>활동</span>
             </a>
@@ -357,7 +357,7 @@
                                       var newAgeGroup = $('#age-group-input').val();
                                       // Ajax 요청
                                       $.ajax({
-                                        url: '<%=request.getContextPath()%>/api/cust/my-brand/age-group',
+                                        url: '<%=request.getContextPath()%>/api/customer/my-brand/age-group',
                                         method: 'POST',
                                         data: JSON.stringify({
                                           'member_seq': ${member_seq},

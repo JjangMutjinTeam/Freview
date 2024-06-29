@@ -1,4 +1,4 @@
-package com.nuguna.freview.servlet.member.page.cust;
+package com.nuguna.freview.servlet.member;
 
 import com.nuguna.freview.dao.member.boss.page.BossMyBrandInfoDAO;
 import com.nuguna.freview.dao.member.common.MemberUtilDAO;

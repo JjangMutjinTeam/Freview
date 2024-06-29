@@ -89,7 +89,7 @@
         </a>
     </div><!-- End Logo -->
     <div class="header-hr-right">
-        <a href="/my-info?member_seq=<%=memberSeq%>" style="margin-right: 20px">
+        <a href="/my-info" style="margin-right: 20px">
             <%=memberInfo.getNickname()%>
             <img src="<%=memberInfo.getPhotoUrl()%>" alt=" " style="width: 30px;
         margin-top: 15px;">

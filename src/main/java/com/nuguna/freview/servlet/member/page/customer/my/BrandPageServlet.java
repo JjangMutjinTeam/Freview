@@ -1,10 +1,11 @@
-package com.nuguna.freview.servlet.member.page.cust;
+package com.nuguna.freview.servlet.member.page.customer.my;
 
 import com.nuguna.freview.dao.member.boss.page.BossMyBrandInfoDAO;
 import com.nuguna.freview.dao.member.common.MemberUtilDAO;
 import com.nuguna.freview.dao.member.cust.page.CustMyBrandInfoDAO;
 import com.nuguna.freview.dto.boss.brand.BossMyBrandInfoDto;
 import com.nuguna.freview.dto.cust.brand.CustMyBrandInfoDto;
+import com.nuguna.freview.entity.member.Member;
 import com.nuguna.freview.entity.member.MemberGubun;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
@@ -17,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @WebServlet("/my-info")
-public class BrandInfoUpdatePageServlet extends HttpServlet {
+public class BrandPageServlet extends HttpServlet {
 
   private MemberUtilDAO memberUtilDAO;
   private BossMyBrandInfoDAO bossMyBrandInfoDAO;
@@ -37,8 +38,8 @@ public class BrandInfoUpdatePageServlet extends HttpServlet {
       throws ServletException, IOException {
 
     try {
-      int memberSeq = Integer.parseInt(request.getParameter("member_seq"));
-
+      Member member = (Member) request.getSession().getAttribute("Member");
+      int memberSeq = member.getMemberSeq();
       MemberGubun memberGubun = memberUtilDAO.selectMemberGubun(memberSeq);
       if (memberGubun == null) {
         response.sendError(HttpServletResponse.SC_BAD_REQUEST,
