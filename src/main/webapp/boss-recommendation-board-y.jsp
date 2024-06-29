@@ -39,6 +39,7 @@
 
     <!-- Template Main CSS File -->
     <link href="assets/css/style.css" rel="stylesheet">
+    <link href="assets/css/hr.css" rel="stylesheet">
 
     <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
@@ -72,30 +73,26 @@
 
 <body>
 
-<header id="header" class="header fixed-top d-flex align-items-center">
-    <div class="d-flex align-items-center justify-content-between">
+<header id="header" class="header fixed-top d-flex align-items-center header-hr">
+
+    <div class="d-flex align-items-center justify-content-between ">
         <a href="/main?seq=<%=memberSeq%>&pagecode=Requester"
            class="logo d-flex align-items-center">
-            <img src="assets/img/logo/logo-vertical.png" alt="">
+            <img src="assets/img/logo/logo-vertical.png" alt="" style="  width: 50px; margin-top: 20px;">
             <span class="d-none d-lg-block">Freview</span>
         </a>
     </div>
+    <div class="header-hr-right">
+        <a href="/my-info?member_seq=<%=memberSeq%>" style="margin-right: 20px">
+            <%=nickname%>
+            <img src="assets/img/basic/basic-profile-img.png" alt=" " style="width: 30px;
+                margin-top: 15px;">
+            <%--            <img src="<%=profileURL()%>" alt=" " style="width: 30px;--%>
+            <%--    margin-top: 15px;"> TODO: 세션의 프로필 url을 적용할 것--%>
+        </a>
+        <a href="COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
+    </div>
 
-    <nav class="header-nav ms-auto">
-        <ul class="d-flex align-items-center">
-            <li class="nav-item dropdown pe-3 d-flex align-items-center">
-                <a class="nav-link nav-profile d-flex align-items-center pe-0"
-                   href="/my-info?member_seq=<%=memberSeq%>">
-                    <%-- <img src="<%=profileURL()%>" alt="Profile" class="rounded-circle"> TODO: 세션의 프로필 url을 적용할 것--%>
-                    <img src="assets/img/basic/basic-profile-img.png" alt="Profile"
-                         class="rounded-circle" style="margin-right: 8px;">
-                    <span id="nickname-holder-head"
-                          class="d-none d-md-block"><%=nickname%></span>
-                </a>
-                <a href="COMM_logout.jsp" class="ms-3">로그아웃</a>
-            </li>
-        </ul>
-    </nav>
 </header>
 
 <main id="main" style="margin:auto; margin-top:50px">
