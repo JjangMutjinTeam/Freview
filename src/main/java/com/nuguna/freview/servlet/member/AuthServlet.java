@@ -5,7 +5,6 @@ import com.nuguna.freview.dao.member.RegisterDAO;
 import com.nuguna.freview.entity.member.Member;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Optional;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -34,22 +33,22 @@ public class AuthServlet extends HttpServlet {
     LoginDAO ldao = new LoginDAO();
 
     if(pageCode.equals("register")){ // 회원가입 페이지 이동
-      RequestDispatcher rd = req.getRequestDispatcher("COMM_register.jsp");
+      RequestDispatcher rd = req.getRequestDispatcher("common-register.jsp");
       rd.forward(req, resp);
     }
 
     else if(pageCode.equals("login")){ // 로그인 페이지로 이동
-      RequestDispatcher rd = req.getRequestDispatcher("COMM_LGN.jsp");
+      RequestDispatcher rd = req.getRequestDispatcher("common-login.jsp");
       rd.forward(req, resp);
     }
 
     else if(pageCode.equals("findid")){ // 아이디찾기 페이지 이동
-      RequestDispatcher rd = req.getRequestDispatcher("COMM_FINDID.jsp");
+      RequestDispatcher rd = req.getRequestDispatcher("common-findid.jsp");
       rd.forward(req, resp);
     }
 
     else if(pageCode.equals("findpw")){ // 비밀번호 찾기 페이지 이동
-      RequestDispatcher rd = req.getRequestDispatcher("COMM_FINDPW.jsp");
+      RequestDispatcher rd = req.getRequestDispatcher("common-findpw.jsp");
       rd.forward(req, resp);
     }
 
@@ -77,12 +76,12 @@ public class AuthServlet extends HttpServlet {
       String nickname = req.getParameter("nickname");
       String agegroup = req.getParameter("agegroup");
 
-      int insertRow = rdao.registReviewer(id,password,email,nickname,agegroup);
+      int insertRow = rdao.insertReviewer(id,password,email,nickname,agegroup);
       if(insertRow==1){
-        RequestDispatcher rd = req.getRequestDispatcher("COMM_register_check.jsp");
+        RequestDispatcher rd = req.getRequestDispatcher("common-register-check.jsp");
         rd.forward(req,resp);
       }else{
-        RequestDispatcher rd = req.getRequestDispatcher("COMM_register_fail.jsp");
+        RequestDispatcher rd = req.getRequestDispatcher("common-register-fail.jsp");
         rd.forward(req,resp);
       }
     }
@@ -104,12 +103,12 @@ public class AuthServlet extends HttpServlet {
       String nickname =req.getParameter("nickname");
 
 
-      int insertRow = rdao.registBoss(id,password,nickname,email,buisness_number,agegroup,store_loc);
+      int insertRow = rdao.insertBoss(id,password,nickname,email,buisness_number,agegroup,store_loc);
       if(insertRow==1){
-        RequestDispatcher rd = req.getRequestDispatcher("COMM_register_check.jsp");
+        RequestDispatcher rd = req.getRequestDispatcher("common-register-check.jsp");
         rd.forward(req,resp);
       }else{
-        RequestDispatcher rd = req.getRequestDispatcher("COMM_register_fail.jsp");
+        RequestDispatcher rd = req.getRequestDispatcher("common-register-fail.jsp");
         rd.forward(req,resp);
       }
     }
@@ -123,18 +122,18 @@ public class AuthServlet extends HttpServlet {
       System.out.println(user);
 
         if(user==null){
-          RequestDispatcher rd = req.getRequestDispatcher("COMM_LGN_LoginFail.jsp");
+          RequestDispatcher rd = req.getRequestDispatcher("common-login-fail.jsp");
           rd.forward(req,resp);
         }
         else if(user.getGubun().equals("B")){
           HttpSession session = req.getSession();
           session.setAttribute("Member",user);
-          RequestDispatcher rd = req.getRequestDispatcher("COMM_BOSSmain.jsp");
+          RequestDispatcher rd = req.getRequestDispatcher("common-boss-main.jsp");
           rd.forward(req,resp);
         } else if(user.getGubun().equals("C")){
           HttpSession session = req.getSession();
           session.setAttribute("Member",user);
-          RequestDispatcher rd = req.getRequestDispatcher("COMM_REVIEWERmain.jsp");
+          RequestDispatcher rd = req.getRequestDispatcher("common-reviewer-main.jsp");
           rd.forward(req,resp);
         }
         else if(user.getGubun().equals("A")){
@@ -151,6 +150,14 @@ public class AuthServlet extends HttpServlet {
       int  result = rdao.getCheckDuplicatedInMember(buisnessInfo);
       PrintWriter out = resp.getWriter();
       out.print(result);
+    }
+
+    else if(pageCode.equals("findId")){
+      String email = req.getParameter("findidEmail");
+      String id = rdao.getFindIdByEmail(email);
+      System.out.println("servlet: "+id);
+      PrintWriter out = resp.getWriter();
+      out.print(id);
     }
 
   }
