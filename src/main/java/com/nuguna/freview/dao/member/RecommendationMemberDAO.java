@@ -20,7 +20,7 @@ public class RecommendationMemberDAO {
 
     List<MemberRecommendationInfo> list = new ArrayList<>();
 
-    String query = "SELECT " +
+    String sql = "SELECT " +
         "    m.member_seq, " +
         "    m.id, " +
         "    m.nickname, " +
@@ -47,7 +47,7 @@ public class RecommendationMemberDAO {
 
     try {
       conn = getConnection();
-      pstmt = conn.prepareStatement(query);
+      pstmt = conn.prepareStatement(sql);
       pstmt.setString(1, gubun);
       pstmt.setInt(2, previousPostSeq);
       pstmt.setInt(3, limit);
