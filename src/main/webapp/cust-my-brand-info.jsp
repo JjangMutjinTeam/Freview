@@ -135,14 +135,14 @@
         </li><!-- End Components Nav -->
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="/my-activity">
+            <a class="nav-link collapsed" href="${pageContext.request.contextPath}/my-activity">
                 <i class="bi bi-layout-text-window-reverse"></i>
                 <span>활동</span>
             </a>
         </li><!-- End Profile Page Nav -->
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="pages-faq.html">
+            <a class="nav-link collapsed" href="${pageContext.request.contextPath}/my-notification">
                 <i class="bi bi-envelope"></i>
                 <span>알림</span>
             </a>
