@@ -9,10 +9,11 @@
     CustMyBrandInfoDto brandInfo = (CustMyBrandInfoDto) request.getAttribute("brandInfo");
     Gson gson = new Gson();
     Member member = null;
+    int memberSeq = 0;
     if (session.getAttribute("Member") != null) {
         member = (Member) session.getAttribute("Member");
+        memberSeq = member.getMemberSeq();
     }
-    int memberSeq = member.getMemberSeq();
 %>
 
 
@@ -130,23 +131,31 @@
         <li class="nav-item">
             <a class="nav-link" data-bs-target="#components-nav"
                href="#">
-                <i class="bi bi-person"></i><span>브랜딩</span>
+                <i class="bi bi-person-lines-fill"></i><span>브랜딩</span>
             </a>
-        </li><!-- End Components Nav -->
+        </li>
 
         <li class="nav-item">
             <a class="nav-link collapsed" href="${pageContext.request.contextPath}/my-activity">
                 <i class="bi bi-layout-text-window-reverse"></i>
                 <span>활동</span>
             </a>
-        </li><!-- End Profile Page Nav -->
+        </li>
 
         <li class="nav-item">
             <a class="nav-link collapsed" href="${pageContext.request.contextPath}/my-notification">
                 <i class="bi bi-envelope"></i>
                 <span>알림</span>
             </a>
-        </li><!-- End F.A.Q Page Nav -->
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed"
+               href="${pageContext.request.contextPath}/my-personal-info">
+                <i class="ri-edit-box-line"></i>
+                <span>개인정보수정</span>
+            </a>
+        </li>
     </ul>
 </aside><!-- End Sidebar-->
 

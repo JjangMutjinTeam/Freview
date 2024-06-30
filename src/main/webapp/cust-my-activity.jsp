@@ -101,7 +101,7 @@
             <span class="d-none d-lg-block">FReview</span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
-    </div><!-- End Logo -->
+    </div>
 
     <!-- 우측 상단 닉네임&프로필 사진 -->
     <nav class="header-nav ms-auto">
@@ -112,34 +112,42 @@
                          class="rounded-circle">
                     <span id="nickname-holder-head"
                           class="d-none d-md-block">닉네임 자리(userNickname)</span>
-                </a><!-- End Profile Iamge Icon -->
-            </li><!-- End Profile Nav -->
+                </a>
+            </li>
         </ul>
-    </nav><!-- End Icons Navigation -->
-</header><!-- End Header -->
+    </nav>
+</header>
 
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
         <li class="nav-item">
             <a class="nav-link collapsed" href="${pageContext.request.contextPath}/my-info">
-                <i class="bi bi-person"></i><span>브랜딩</span>
+                <i class="bi bi-person-lines-fill"></i><span>브랜딩</span>
             </a>
-        </li><!-- End Components Nav -->
+        </li>
 
         <li class="nav-item">
             <a class="nav-link" data-bs-target="#components-nav" href="#">
                 <i class="bi bi-layout-text-window-reverse"></i>
                 <span>활동</span>
             </a>
-        </li><!-- End Profile Page Nav -->
+        </li>
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="pages-faq.html">
+            <a class="nav-link collapsed" href="${pageContext.request.contextPath}/my-notification">
                 <i class="bi bi-envelope"></i>
                 <span>알림</span>
             </a>
-        </li><!-- End F.A.Q Page Nav -->
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed"
+               href="${pageContext.request.contextPath}/my-personal-info">
+                <i class="ri-edit-box-line"></i>
+                <span>개인정보수정</span>
+            </a>
+        </li>
     </ul>
 </aside><!-- End Sidebar-->
 

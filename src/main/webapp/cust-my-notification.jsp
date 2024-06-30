@@ -123,7 +123,7 @@
     <ul class="sidebar-nav" id="sidebar-nav">
         <li class="nav-item">
             <a class="nav-link collapsed" href="${pageContext.request.contextPath}/my-info">
-                <i class="bi bi-person"></i><span>브랜딩</span>
+                <i class="bi bi-person-lines-fill"></i><span>브랜딩</span>
             </a>
         </li><!-- End Components Nav -->
 
@@ -141,6 +141,14 @@
                 <span>알림</span>
             </a>
         </li><!-- End F.A.Q Page Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed"
+               href="${pageContext.request.contextPath}/my-personal-info">
+                <i class="ri-edit-box-line"></i>
+                <span>개인정보수정</span>
+            </a>
+        </li>
     </ul>
 </aside><!-- End Sidebar-->
 
