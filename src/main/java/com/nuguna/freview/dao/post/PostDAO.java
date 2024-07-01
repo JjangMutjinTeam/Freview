@@ -186,4 +186,29 @@ public class PostDAO {
     return post;
   }
 
+
+  public int getTotalPostsCount(String gubun) {
+    String sql = "SELECT count(*) FROM post where gubun = ?";
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+
+    int count = 0;
+
+    try {
+      conn = getConnection();
+      pstmt = conn.prepareStatement(sql);
+      pstmt.setString(1, gubun);
+      rs = pstmt.executeQuery();
+      while (rs.next()) {
+        count = rs.getInt(1);
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    } finally {
+      closeResource(pstmt, conn, rs);
+    }
+
+    return count;
+  }
 }
