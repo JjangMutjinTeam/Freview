@@ -484,9 +484,8 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
       error: function(myval){console.log("에러"+myval)},
       success: function(myval){console.log("성공"+myval);
 
-        let id = myval;
 
-        if(id==="null"){
+        if(myval==="null"){
           alert("가입된 이메일이 아닙니다. 다시 확인부탁드립니다");
         }else{
           $("#common_findid_div_findid").css("display","");
