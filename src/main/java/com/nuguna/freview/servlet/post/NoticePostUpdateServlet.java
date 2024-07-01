@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/noticeBoard/detail/update")
+@WebServlet("/notice/detail/update")
 public class NoticePostUpdateServlet extends HttpServlet {
 
   PostDAO postDAO = new PostDAO();

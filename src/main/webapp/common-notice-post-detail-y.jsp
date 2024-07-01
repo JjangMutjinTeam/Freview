@@ -1,7 +1,11 @@
-<%@ page import="com.nuguna.freview.entity.member.Member" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+<c:set var="loginUser" value="${requestScope.loginUser}"/>
+<c:set var="memberSeq" value="${loginUser.memberSeq}"/>
+<c:set var="nickname" value="${loginUser.nickname}"/>
+<c:set var="gubun" value="${loginUser.gubun}"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -11,13 +15,6 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
     <title>공지글 상세보기</title>
-    <%
-        Member loginUser = (Member) session.getAttribute("Member");
-        Integer memberSeq = loginUser.getMemberSeq();
-        String gubun = loginUser.getGubun();
-        request.setAttribute("gubun", gubun);
-        request.setAttribute("memberSeq", memberSeq);
-    %>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -41,20 +38,30 @@
 
     <!-- Template Main CSS File -->
     <link href="/assets/css/style.css" rel="stylesheet">
+    <link href="/assets/css/hr.css" rel="stylesheet">
+
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
+    <!-- Day.js -->
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.10.7/dayjs.min.js"></script>
+
     <style>
-      /* Custom CSS to make all table rows white */
       table tbody tr {
         background-color: white !important;
       }
-    </style>
-    <style>
+
       .content-cell {
-        height: 200px; /* 높이를 약 10줄 정도로 설정 */
+        height: 200px;
         vertical-align: top;
-        white-space: pre-wrap; /* 띄어쓰기 인식 */
+        white-space: pre-wrap;
       }
-    </style>
-    <style>
+
+      .container {
+        max-width: 100%;
+        width: 100%;
+      }
+
       .fixed-width {
         width: 150px;
         word-wrap: break-word;
@@ -63,6 +70,10 @@
       .table {
         table-layout: fixed;
         width: 100%;
+      }
+
+      #contentEdit {
+        min-height: 340px;
       }
     </style>
     <!-- =======================================================
@@ -77,105 +88,87 @@
 <body>
 
 <!-- ======= Header ======= -->
-<header id="header" class="header fixed-top d-flex align-items-center">
-    <div class="d-flex align-items-center justify-content-between">
-        <a href="/main?seq=<%=memberSeq%>&pagecode=Requester"
+<header id="header" class="header fixed-top d-flex align-items-center header-hr">
+    <div class="d-flex align-items-center justify-content-between ">
+        <a href="/main?seq=${memberSeq}&pagecode=Requester"
            class="logo d-flex align-items-center">
-            <img src="assets/img/logo/logo-vertical.png" alt="">
-            <span class="d-none d-lg-block">Freeview</span>
+            <img src="/assets/img/logo/logo-vertical.png" alt=""
+                 style="  width: 50px; margin-top: 20px;">
+            <span class="d-none d-lg-block">Freview</span>
         </a>
-        <i class="bi bi-list toggle-sidebar-btn"></i>
-    </div><!-- End Logo -->
+    </div>
+    <div class="header-hr-right">
+        <a href="/my-info?member_seq=${memberSeq}" style="margin-right: 20px">
+            ${nickname}
+            <img src="/assets/img/basic/basic-profile-img.png" alt=" " style="width: 30px;
+                margin-top: 15px;">
+            <%--            <img src="<%=profileURL()%>" alt=" " style="width: 30px;--%>
+            <%--    margin-top: 15px;"> TODO: 세션의 프로필 url을 적용할 것--%>
+        </a>
+        <a href="COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
+    </div>
+</header>
 
-    <nav class="header-nav ms-auto">
-        <ul class="d-flex align-items-center">
-            <li class="nav-item dropdown pe-3">
-                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
-                    <img src="assets/img/basic/basic-profile-img.png" alt="Profile"
-                         class="rounded-circle">
-                    <span id="nickname-holder-head"
-                          class="d-none d-md-block">${brandInfo.nickname}</span>
-                </a><!-- End Profile Iamge Icon -->
-            </li><!-- End Profile Nav -->
-        </ul>
-    </nav><!-- End Icons Navigation -->
-</header><!-- End Header -->
-
-<main id="main" class="main">
-
+<main id="main" style="margin:auto; margin-top:50px">
     <div class="pagetitle">
-        <h1>공지게시판</h1>
-        <nav>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                <li class="breadcrumb-item">Pages</li>
-                <li class="breadcrumb-item active">Blank</li>
-            </ol>
-        </nav>
-    </div><!-- End Page Title -->
+        <h1>공지 상세보기</h1>
+    </div>
 
-    <div class="container">
-        <div class="card mt-4">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="card-title mb-0">공지</h5>
-                    <c:if test="${memberSeq == POST.memberSeq}">
-                        <div>
-                            <button type="button" class="btn btn-danger" onclick="confirmDelete()">
-                                삭제
-                            </button>
-                            <button type="button" class="btn btn-primary" onclick="editPost()">수정
-                            </button>
-                        </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="card-title mb-0">공지</h5>
+                <div>
+                    <c:if test="${memberSeq == currentPost.memberSeq}">
+                        <button type="button" class="btn btn-danger" onclick="confirmDelete()">
+                            삭제
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="editPost()">
+                            수정
+                        </button>
                     </c:if>
-                    <div>
-                        <button type="button" class="btn btn-primary"
-                                onclick="location.href='/noticeBoard'">목록으로
-                        </button>
-                    </div>
+                    <button type="button" class="btn btn-primary"
+                            onclick="location.href='/notice'">목록으로
+                    </button>
                 </div>
-                <form id="postForm" action="/noticeBoard/detail/update" method="post">
-                    <input type="hidden" name="postSeq" value="${POST.postSeq}">
-                    <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
-                        <tbody>
-                        <tr>
-                            <th class="fixed-width">제목</th>
-                            <td>
-                                <span id="titleView">${POST.title}</span>
-                                <input type="text" class="form-control d-none" id="titleEdit"
-                                       name="title" value="${POST.title}">
-                            </td>
-                        </tr>
-                        <tr>
-                            <th class="fixed-width">작성자</th>
-                            <td>${POST.memberSeq}</td>
-                        </tr>
-                        <tr>
-                            <th class="fixed-width">작성일자</th>
-                            <td>${POST.createdAt}</td>
-                        </tr>
-                        <tr>
-                            <th class="fixed-width">수정일자</th>
-                            <td>${POST.updatedAt}</td>
-                        </tr>
-                        <tr>
-                            <th class="fixed-width">내용</th>
-                            <td>
-                                <span id="contentView"
-                                      style="white-space: pre-line;">${POST.content}</span>
-                                <textarea class="form-control d-none" id="contentEdit"
-                                          name="content" rows="10">${POST.content}</textarea>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <div id="editButtons" class="d-none">
-                        <button type="submit" class="btn btn-primary">완료</button>
-                        <button type="button" class="btn btn-secondary" onclick="cancelEdit()">취소
-                        </button>
-                    </div>
-                </form>
             </div>
+            <form id="postForm" action="/notice/detail/update" method="post">
+                <input type="hidden" name="postSeq" value="${currentPost.postSeq}">
+                <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
+                    <tbody>
+                    <tr>
+                        <th class="fixed-width">제목</th>
+                        <td>
+                            <span id="titleView">${currentPost.title}</span>
+                            <input type="text" class="form-control d-none" id="titleEdit"
+                                   name="title" value="${currentPost.title}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="fixed-width">작성일자</th>
+                        <td id="displayCreatedAt">${currentPost.createdAt}</td>
+                    </tr>
+                    <tr>
+                        <th class="fixed-width">수정일자</th>
+                        <td id="displayUpdatedAt">${currentPost.updatedAt}</td>
+                    </tr>
+                    <tr>
+                        <th class="fixed-width">내용</th>
+                        <td>
+                                <span id="contentView"
+                                      style="white-space: pre-line;">${currentPost.content}</span>
+                            <textarea class="form-control d-none" id="contentEdit"
+                                      name="content" rows="20">${currentPost.content}</textarea>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div id="editButtons" class="d-none">
+                    <button type="submit" class="btn btn-primary">완료</button>
+                    <button type="button" class="btn btn-secondary" onclick="cancelEdit()">취소
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -202,6 +195,18 @@
     </div>
 
     <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function formatDate(dataString) {
+          return dayjs(dataString).format('YYYY-MM-DD HH:mm');
+        }
+
+        var createdAt = "${currentPost.createdAt}";
+        var updatedAt = "${currentPost.updatedAt}";
+
+        document.getElementById('displayCreatedAt').textContent = formatDate(createdAt);
+        document.getElementById('displayUpdatedAt').textContent = formatDate(updatedAt);
+      });
+
       function editPost() {
         document.getElementById('titleView').classList.add('d-none');
         document.getElementById('contentView').classList.add('d-none');
@@ -223,7 +228,7 @@
 
         var formData = new URLSearchParams(new FormData(this));
 
-        fetch('/noticeBoard/detail/update', {
+        fetch('/notice/detail/update', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -235,7 +240,7 @@
             return response.text().then(data => {
               console.log(data);
               alert('게시글이 성공적으로 수정되었습니다.');
-              location.replace("/noticeBoard")
+              location.replace("/notice")
             })
           } else {
             response.text().then(data => {
@@ -255,7 +260,7 @@
       function deletePost() {
         var postSeq = document.querySelector('input[name="postSeq"]').value;
 
-        fetch('/noticeBoard/detail/delete', {
+        fetch('/notice/detail/delete', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -267,7 +272,7 @@
             return response.text().then(data => {
               console.log(data);
               alert('게시글이 성공적으로 삭제되었습니다.');
-              location.replace("/noticeBoard");
+              location.replace("/notice");
             });
           } else {
             response.text().then(data => {

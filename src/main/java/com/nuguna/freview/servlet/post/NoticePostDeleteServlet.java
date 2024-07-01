@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/noticeBoard/detail/delete")
+@WebServlet("/notice/detail/delete")
 public class NoticePostDeleteServlet extends HttpServlet {
 
   PostDAO postDAO = new PostDAO();
