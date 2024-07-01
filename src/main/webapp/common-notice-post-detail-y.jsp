@@ -75,6 +75,17 @@
       #contentEdit {
         min-height: 340px;
       }
+
+      .button-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 20vh;
+      }
+
+      .button-container div {
+        margin: 0 10px;
+      }
     </style>
     <!-- =======================================================
     * Template Name: NiceAdmin
@@ -105,7 +116,7 @@
             <%--            <img src="<%=profileURL()%>" alt=" " style="width: 30px;--%>
             <%--    margin-top: 15px;"> TODO: 세션의 프로필 url을 적용할 것--%>
         </a>
-        <a href="COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
+        <a href="/COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
     </div>
 </header>
 
@@ -163,6 +174,24 @@
                     </tr>
                     </tbody>
                 </table>
+                <div class="button-container">
+                    <c:if test="${gubun == 'C' || gubun == 'B'}">
+                        <c:choose>
+                            <c:when test="${isLiked}">
+                                <button type="button" class="btn btn-primary"><i
+                                        onclick="cancelLike(${currentPost.postSeq}, ${memberSeq})"><i
+                                        class="bi bi-heart-fill me-1"></i> 좋아요
+                                </button>
+                            </c:when>
+                            <c:otherwise>
+                                <button type="button" class="btn btn-primary"
+                                        onclick="addLike(${currentPost.postSeq}, ${memberSeq})"><i
+                                        class="bi bi-heart me-1"></i> 좋아요
+                                </button>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:if>
+                </div>
                 <div id="editButtons" class="d-none">
                     <button type="submit" class="btn btn-primary">완료</button>
                     <button type="button" class="btn btn-secondary" onclick="cancelEdit()">취소
@@ -186,8 +215,7 @@
                     정말 삭제하겠습니까?
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소
-                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
                     <button type="button" class="btn btn-danger" onclick="deletePost()">확인</button>
                 </div>
             </div>
@@ -282,6 +310,55 @@
           }
         })
         .catch(error => console.error('Error:', error));
+      }
+
+      function addLike(postSeq, memberSeq) {
+        fetch('/likes-add', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: new URLSearchParams({
+            postSeq: postSeq,
+            //TODO: 접속자의 세션 seq로 변경 필요
+            memberSeq: memberSeq
+          }).toString()
+        })
+        .then(response => {
+          if (response.ok) {
+            location.reload();
+          } else {
+            alert('좋아요를 추가하는 데 실패했습니다. 다시 시도해 주세요.');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('좋아요를 추가하는 도중 오류가 발생했습니다.');
+        });
+      }
+
+      function cancelLike(postSeq, memberSeq) {
+        fetch('/likes-cancel', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: new URLSearchParams({
+            postSeq: postSeq,
+            memberSeq: memberSeq
+          }).toString()
+        })
+        .then(response => {
+          if (response.ok) {
+            location.reload();
+          } else {
+            alert('좋아요를 취소하는 데 실패했습니다. 다시 시도해 주세요.');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('좋아요를 취소하는 도중 오류가 발생했습니다.');
+        });
       }
     </script>
 

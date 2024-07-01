@@ -116,7 +116,7 @@
             <%--            <img src="<%=profileURL()%>" alt=" " style="width: 30px;--%>
             <%--    margin-top: 15px;"> TODO: 세션의 프로필 url을 적용할 것--%>
         </a>
-        <a href="COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
+        <a href="/COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
     </div>
 </header>
 
