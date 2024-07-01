@@ -183,13 +183,32 @@
 
       function renderPagination(totalPages, currentPage) {
         var htmlStr = "";
-        for (var i = 1; i <= totalPages; i++) {
+        var startPage = Math.floor((currentPage - 1) / 10) * 10 + 1;
+        var endPage = startPage + 9;
+        if (endPage > totalPages) {
+          endPage = totalPages;
+        }
+
+        if (startPage > 1) {
+          htmlStr += "<a href='#' class='page-link' data-page='" + (startPage - 1) + "' style='color: black;'>이전</a>";
+        } else {
+          htmlStr += "<span style='color: grey;'>이전</span>";
+        }
+
+        for (var i = startPage; i <= endPage; i++) {
           if (i === currentPage) {
             htmlStr += "<span class='current-page'>" + i + "</span>";
           } else {
             htmlStr += "<a href='#' class='page-link' data-page='" + i + "'>" + i + "</a>";
           }
         }
+
+        if (endPage < totalPages) {
+          htmlStr += "<a href='#' class='page-link' data-page='" + (endPage + 1) + "' style='color: black;'>다음</a>";
+        } else {
+          htmlStr += "<span style='color: grey;'>다음</span>";
+        }
+
         $('#pagination').html(htmlStr);
       }
 
