@@ -6,7 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class BossReceivedLikesDto {
-  Integer seq;
+  Integer memberSeq;
   String nickname;
   Integer postSeq;
   String title;

@@ -1,4 +1,4 @@
-package com.nuguna.freview.servlet.member.page;
+package com.nuguna.freview.servlet.member.api.boss;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
@@ -6,6 +6,7 @@ import com.nuguna.freview.dao.member.BossSendInformDAO;
 import com.nuguna.freview.dto.api.boss.BossSendLikesDto;
 import com.nuguna.freview.dto.api.boss.BossSendZzimInfoDto;
 import com.nuguna.freview.dto.common.ResponseMessage;
+import com.nuguna.freview.entity.member.Member;
 import com.nuguna.freview.util.EncodingUtil;
 import com.nuguna.freview.util.JsonResponseUtil;
 import java.io.PrintWriter;
@@ -19,7 +20,7 @@ import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@WebServlet("/api/boss/my-notification/send-inform")
+@WebServlet("/api/boss/send-inform")
 public class SendInformServlet extends HttpServlet {
 
   private Gson gson;
@@ -33,32 +34,30 @@ public class SendInformServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     EncodingUtil.setEncodingToUTF8AndJson(request, response);
+
+    HttpSession session = request.getSession();
+    Member loginUser = (Member) session.getAttribute("Member");
+    System.out.println("받은알림 진입");
+
     try {
-      int bossSeq = 118;
-//      JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
-//      int bossSeq = jsonObject.get("member_seq").getAsInt();
+      int memberSeq = loginUser.getMemberSeq();
+      System.out.println("memberSeq = " + memberSeq);
 
-      List<BossSendZzimInfoDto> zzimSendInfos = BossSendInformDAO.sendZzimDAO(bossSeq);
-      List<BossSendLikesDto> ddabongSendInfos = BossSendInformDAO.sendDdabongDAO(bossSeq);
-
-//      JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
-//          new ResponseMessage<>("내가 찜한 게시글의 정보를 성공적으로 가져왔습니다.", zzimSendInfos), response, gson);
-//      JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
-//          new ResponseMessage<>("내가 따봉한 게시글의 정보를 성공적으로 가져왔습니다.", ddabongSendInfos), response, gson);
+      System.out.println("send 진입");
+      List<BossSendZzimInfoDto> zzimSendInfos = BossSendInformDAO.sendZzimDAO(memberSeq);
+      List<BossSendLikesDto> likesSendInfos = BossSendInformDAO.sendDdabongDAO(memberSeq);
 
       System.out.println("zzimSendInfos:" + zzimSendInfos);
-      System.out.println("ddabongSendInfos:" + ddabongSendInfos);
-      // JSON으로 응답을 생성
-      PrintWriter out = response.getWriter();
+      System.out.println("ddabongSendInfos:" + likesSendInfos);
 
+      PrintWriter out = response.getWriter();
       Map<String, Object> responseData = new HashMap<>();
       responseData.put("zzimInfos", zzimSendInfos);
-      responseData.put("ddabongInfos", ddabongSendInfos);
+      responseData.put("likesInfos", likesSendInfos);
 
       out.println(gson.toJson(responseData));
       out.flush();
       System.out.println("얘도 오케이");
-
 
     } catch (IOException e) {
       throw new RuntimeException(e);

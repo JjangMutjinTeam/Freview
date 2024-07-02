@@ -7,8 +7,9 @@ import lombok.Getter;
 @Getter
 public class BossReceivedZzimInfoDto {
 
-  Integer seq;
+  Integer memberSeq;
   String nickname;
+  Integer toMemberSeq;
   String type;
 
 }

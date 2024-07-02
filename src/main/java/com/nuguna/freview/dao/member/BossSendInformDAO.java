@@ -15,7 +15,7 @@ import java.util.List;
 public class BossSendInformDAO {
 
   // 사장님 -> 채험단 & 사장님 zzim
-  public List<BossSendZzimInfoDto> sendZzimDAO(int bossSeq) {
+  public List<BossSendZzimInfoDto> sendZzimDAO(int Seq) {
     Connection conn = null;
     PreparedStatement pstmt = null;
 
@@ -31,7 +31,7 @@ public class BossSendInformDAO {
     try {
       conn = getConnection();
       pstmt = conn.prepareStatement(sql);
-      pstmt.setInt(1, bossSeq);
+      pstmt.setInt(1, Seq);
       ResultSet rs = pstmt.executeQuery();
       while(rs.next()){
         int memberSeq = rs.getInt("member_seq");
@@ -48,7 +48,7 @@ public class BossSendInformDAO {
 
 
 //   사장님 -> 사장님 & 관리자 게시글 ddabong
-  public List<BossSendLikesDto> sendDdabongDAO(int bossSeq) {
+  public List<BossSendLikesDto> sendDdabongDAO(int seq) {
     Connection conn = null;
     PreparedStatement pstmt = null;
     ResultSet rs;
@@ -65,20 +65,15 @@ public class BossSendInformDAO {
     List<BossSendLikesDto> ddabongInfos = new ArrayList<>();
 
     try {
-      System.out.println("dao안 rs밖: "+bossSeq);
+      System.out.println("dao안 rs밖: "+seq);
       conn = getConnection();
       pstmt = conn.prepareStatement(sql);
-      pstmt.setInt(1, bossSeq);
+      pstmt.setInt(1, seq);
       rs = pstmt.executeQuery();
-      System.out.println("dao안 오호: "+bossSeq);
       while(rs.next()){
-        System.out.println("rs내부");
         int memberSeq = rs.getInt("member_seq");
-        System.out.println(memberSeq);
         int postSeq = rs.getInt("post_seq");
-        System.out.println(postSeq);
         String title = rs.getString("title");
-        System.out.println(title);
         String nickname = rs.getString("nickname");
         ddabongInfos.add(new BossSendLikesDto(memberSeq, postSeq, title, nickname, "DDABONG"));
       }

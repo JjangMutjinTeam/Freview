@@ -1,4 +1,4 @@
-package com.nuguna.freview.servlet.member.page;
+package com.nuguna.freview.servlet.member.api.boss;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
@@ -6,6 +6,7 @@ import com.nuguna.freview.dao.member.BossReceivedInformDAO;
 import com.nuguna.freview.dto.api.boss.BossReceivedLikesDto;
 import com.nuguna.freview.dto.api.boss.BossReceivedZzimInfoDto;
 import com.nuguna.freview.dto.common.ResponseMessage;
+import com.nuguna.freview.entity.member.Member;
 import com.nuguna.freview.util.EncodingUtil;
 import com.nuguna.freview.util.JsonResponseUtil;
 import java.io.PrintWriter;
@@ -19,7 +20,7 @@ import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@WebServlet("/api/boss/my-notification/received-inform")
+@WebServlet("/api/boss/received-inform")
 public class ReceivedInformServlet extends HttpServlet  {
 
   private Gson gson;
@@ -31,27 +32,23 @@ public class ReceivedInformServlet extends HttpServlet  {
   }
 
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    HttpSession session = request.getSession();
+    Member loginUser = (Member) session.getAttribute("Member");
 
     EncodingUtil.setEncodingToUTF8AndJson(request, response);
+
     try {
-//      JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
-//      int bossSeq = jsonObject.get("member_seq").getAsInt();
-//      System.out.println("bossSeq: " + bossSeq);
-//      System.out.println("bossSeq: "+request.getParameter("member_seq"));
+      int memberSeq = loginUser.getMemberSeq();  // session에서 memberSeq 추출
+      System.out.println("ReceivedInform 진입 = " + memberSeq);
 
-//      int bossSeq = Integer.parseInt(request.getParameter("member_Seq"));
-      int bossSeq = 118;
-
-      List<BossReceivedZzimInfoDto> zzimInfos = BossReceivedInformDAO.receivedZzimDAO(bossSeq);
-      List<BossReceivedLikesDto> ddabongInfos = BossReceivedInformDAO.receivedDdabongDAO(bossSeq);
-
-      // JSON으로 응답을 생성
-      PrintWriter out = response.getWriter();
+      List<BossReceivedZzimInfoDto> zzimInfos = BossReceivedInformDAO.receivedZzimDAO(memberSeq);
+      List<BossReceivedLikesDto> likesInfos = BossReceivedInformDAO.receivedLikeDAO(memberSeq);
 
       Map<String, Object> responseData = new HashMap<>();
       responseData.put("zzimInfos", zzimInfos);
-      responseData.put("ddabongInfos", ddabongInfos);
+      responseData.put("likesInfos", likesInfos);
 
+      PrintWriter out = response.getWriter();
       out.println(gson.toJson(responseData));
       out.flush();
 

@@ -2,9 +2,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="com.nuguna.freview.servlet.member.page.RequestServlet" %>
-<%@ page import="com.nuguna.freview.servlet.member.page.ReceivedInformServlet" %>
-<%@ page import="com.nuguna.freview.servlet.member.page.SendInformServlet" %>
+<%@ page import="com.nuguna.freview.servlet.member.api.boss.RequestServlet" %>
+<%@ page import="com.nuguna.freview.servlet.member.api.boss.ReceivedInformServlet" %>
+<%@ page import="com.nuguna.freview.servlet.member.api.boss.SendInformServlet" %>
 <%@ page import="com.nuguna.freview.entity.member.Member" %>
 
 <!DOCTYPE html>
@@ -12,10 +12,10 @@
 
 <%
     Member loginUser = null;
-    int memberSeq = -1;
+    int userSeq = -1;
     if(session.getAttribute("Member") != null) {
         loginUser = (Member) session.getAttribute("Member");
-        memberSeq = loginUser.getMemberSeq();
+        userSeq = loginUser.getMemberSeq();
     }
 %>
 
@@ -67,7 +67,7 @@
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center">
     <div class="d-flex align-items-center justify-content-between">
-        <a href="/main?seq=<%=memberSeq%>&pagecode=Requester"
+        <a href="/main?seq=${userSeq}&pagecode=Requester"
            class="logo d-flex align-items-center">
             <img src="assets/img/logo/logo-vertical.png" alt="">
             <span class="d-none d-lg-block">Freeview</span>
@@ -82,7 +82,7 @@
                     <img src="assets/img/basic/basic-profile-img.png" alt="Profile"
                          class="rounded-circle">
                     <span id="nickname-holder-head"
-                          class="d-none d-md-block"><%=loginUser.getNickname()%></span>
+                          class="d-none d-md-block">${loginUser.getNickname}</span>
                 </a><!-- End Profile Iamge Icon -->
             </li><!-- End Profile Nav -->
         </ul>
@@ -138,16 +138,16 @@
         <div class="col-xl-12">
           <div class="card">
             <div class="card-body pt-3">
-              <!-- Bordered Tabs -->
-              <ul class="nav nav-tabs nav-tabs-bordered">
+                <!-- Bordered Tabs -->
+                <ul class="nav nav-tabs nav-tabs-bordered">
                 <li class="nav-item">
-                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#receivedBtn">받은 알림</button>
+                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#receivedBtn" id="">받은 알림</button>
                 </li>
                 <li class="nav-item">
                   <button class="nav-link" data-bs-toggle="tab" data-bs-target="#requestBtn" id="SendInform">보낸 알림</button>
                 </li>
               </ul>
-              <div class="tab-content pt-1">
+                <div class="tab-content pt-1">
                 <div class="tab-pane show fade active profile-edit pt-6" id="receivedBtn">
                   <!-- received -->
                   <form >
@@ -158,7 +158,7 @@
                   </form>
                 </div>
               </div>
-              <div class="tab-content pt-2">
+                <div class="tab-content pt-2">
                 <div class="tab-pane fade active pt-6" id="requestBtn" >
                   <!-- Settings Form -->
                   <form>
@@ -166,19 +166,14 @@
                     <div id="bossSendInform">
 
                     </div>
-                    <%--                    <div class="card" id="bossRequestList">--%>
-                    <%--                      <div class="card-body" >--%>
-                    <%--                        <h5 class="card-title">To.OOO </h5>--%>
-                    <%--                        <p> ____ 님을 찜 하였습니다.</p>--%>
-                    <%--                      </div>--%>
-                    <%--                    </div>--%>
-                            </div>
-                        </div>
-                        <!-- End Bordered Tabs -->
-                    </div>
+                  </form>
                 </div>
             </div>
+                <!-- End Bordered Tabs -->
+            </div>
+          </div>
         </div>
+      </div>
     </section>
 
 </main><!-- End #main -->
@@ -215,32 +210,33 @@
 
   <script>
   $(function(){
+
     $.ajax({ // receivedBtn
       method: "GET",
-      url: "<%=request.getContextPath()%>/api/boss/my-notification/received-inform",
+      url: "${pageContext.request.contextPath}/api/boss/received-inform",
       dataType: "json",
       error: function (data) { console.log("여기 에러다 : ", data); },
       success: function (data) {
+        console.log(data);
         // console.log("데이터 수신 완료:", data);
         // 받은 데이터를 처리 == zzimInfos 배열의 각 요소에서 필요한 데이터 추출
         var zzimInfosReceived = data.zzimInfos;
-        var bossReceivedDdabong = data.ddabongInfos;
+        var bossReceivedLikes = data.likesInfos;
         var htmlStr = "<div>"
         $.map(zzimInfosReceived, function (val, idx) {
-          // console.log(idx);
           htmlStr += "<div class='card'>";
           htmlStr += "<div class='card-body'>"
           htmlStr += "<h5 class='card-title'><br> From. " + val["nickname"] + "</h5>";
-          htmlStr += "<p><a href='<%=request.getContextPath()%>/brand-page?member_seq=" + val["seq"]
+          htmlStr += "<p><a href='${pageContext.request.contextPath}/brand-page?member_seq=" + val["from_member_seq"]
                   + "'>" + val["nickname"] + "</a>님이 나를 찜하였습니다.</p>";
           htmlStr += "</div>";
           htmlStr += "</div>";
         });
-        $.map(bossReceivedDdabong, function (val, idx) {
+        $.map(bossReceivedLikes, function (val, idx) {
           htmlStr += "<div class='card'>";
           htmlStr += "<div class='card-body'>";
           htmlStr += "<h5 class='card-title'>From. " + val["nickname"] + "</h5>";
-          htmlStr += "<p>"+ val["nickname"] +"님이 내 글 <a href='<%=request.getContextPath()%>/mojipboard/detail?post_seq=" + val["postSeq"]
+          htmlStr += "<p><a href='${pageContext.request.contextPath}/brand-page?member_seq="+ val["memberSeq"]+ " '> " + val["nickname"] +"</a>"+"님이 내 글 <a href='${pageContext.request.contextPath}/mojipboard/detail?post_seq=" + val["postSeq"]
                   + "'>";
           htmlStr += val["title"] +"</a> 을 좋아요♥했습니다.</p>";
           htmlStr += "</div>";
@@ -251,45 +247,43 @@
       }
     });
 
-    $("#SendInform").click(function() { // bossReceivedDdabong
+    $("#SendInform").click(function() { // bossReceivedLike
       $.ajax({
         method: "GET",
-        url: "<%=request.getContextPath()%>/api/boss/my-notification/send-inform",
+        url: "${pageContext.request.contextPath}/api/boss/send-inform",
         dataType: "json",
         error: function (data) { console.log("여기 에러다 : ", data); },
         success: function (data) {
-          // console.log("얘는 sendServlet:", data.zzimInfos);
-          // console.log("데이터 ddabong : ", data.ddabongInfos);
-          // 받은 데이터를 처리 ==  ?? 배열의 각 요소에서 필요한 데이터 추출
+          console.log(data);
           // 받은 데이터를 처리
           // zzimInfos 배열의 각 요소에서 필요한 데이터 추출
           var bossSendZzim = data.zzimInfos;
-          var bossSendDdabong = data.ddabongInfos;
+          var bossSendLike = data.likesInfos;
+
           var htmlStr = "<div>"
           // 수정할 부분
           $.map(bossSendZzim, function (val, idx) {
              htmlStr += "<div class='card'>";
              htmlStr += "<div class='card-body'>";
              htmlStr += "<h5 class='card-title'>TO. " + val["nickname"] + "</h5>";
-             htmlStr += "<p><a href='<%=request.getContextPath()%>/brand-page?member_seq=" + val["seq"]
+             htmlStr += "<p><a href='${pageContext.request.contextPath}/brand-page?member_seq=" + val["seq"]
                      + "'>" + val["nickname"] + "</a>님을 찜하였습니다.</p>";
              htmlStr += "</div>";
              htmlStr += "</div>";
            });
-           $.map(bossSendDdabong, function (val, idx) {
-             //console.log(postSeq);
+           $.map(bossSendLike, function (val, idx) {
                 htmlStr += "<div class='card'>";
                 htmlStr += "<div class='card-body'>";
                 htmlStr += "<h5 class='card-title'>TO. " + val["nickname"] + "</h5>";
-                htmlStr += "<p>"+ val["nickname"] ;
-                htmlStr += " 님의 글 <a href='<%=request.getContextPath()%>/mojipboard/detail?post_seq=" + val["postSeq"] + "'>";
+                htmlStr += "<p><a href='${pageContext.request.contextPath}/brand-page?member_seq="+ val["memberSeq"]+ " '> "+ val["nickname"] ;
+                htmlStr += "</a> 님의 글 <a href='${pageContext.request.contextPath}/mojipboard/detail?post_seq=" + val["postSeq"] + "'>";
                 htmlStr += val["title"] +"</a>을 좋아요♥ 했습니다.</p>";
                 htmlStr += "</div>";
                 htmlStr += "</div>";
               });
              htmlStr += "</div>";
              $("#bossSendInform").html(htmlStr);
-             //console.log(bossSendDdabong);
+             //console.log(bossSendLike);
         }
       });
     });
