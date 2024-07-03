@@ -129,13 +129,19 @@
         <div class="card-body">
             <h5 class="card-title">공지 게시판</h5>
             <p>매우 중요한 공지가 올라옵니다<br></p>
-            <c:if test="${gubun == 'A'}">
-                <div class="d-flex justify-content-end">
-                    <a href="/notice/createPost" class="btn btn-primary">
-                        공지 등록
-                    </a>
+            <div class="d-flex justify-content-between">
+                <div>
+                    <input type="text" name="search_str" id="search_str" placeholder="제목/내용으로 검색하세요!">
+                    <input type="button" id="searchBtn" value="검색">
                 </div>
-            </c:if>
+                <c:if test="${gubun == 'A'}">
+                    <div>
+                        <a href="/notice/createPost" class="btn btn-primary">
+                            공지 등록
+                        </a>
+                    </div>
+                </c:if>
+            </div>
             <table class="table">
                 <thead>
                 <tr>
@@ -156,15 +162,24 @@
   $(document).ready(function () {
     loadPage(1);
 
-    function loadPage(page) {
+    $('#searchBtn').click(function() {
+      var searchStr = $('#search_str').val();
+      loadPage(1, searchStr);
+    });
+
+    function loadPage(page, searchStr = '') {
+      var apiUrl = searchStr ? "/notice-search" : "/notice";
       $.ajax({
         method: "POST",
-        url: "/notice",
-        data: {page: page},
+        url: apiUrl,
+        data: {
+          page: page,
+          search_str: searchStr
+        },
         dataType: "json",
         success: function (response) {
           renderData(response.data);
-          renderPagination(response.totalPages, page);
+          renderPagination(response.totalPages, page, searchStr);
         },
         error: function () {
           console.error("[ERROR] 공지리스트 초기화 중 오류 발생");
@@ -188,7 +203,7 @@
       $('#noticeList').empty().append(htmlStr);
     }
 
-    function renderPagination(totalPages, currentPage) {
+    function renderPagination(totalPages, currentPage, searchStr) {
       var htmlStr = "";
       var startPage = Math.floor((currentPage - 1) / 10) * 10 + 1;
       var endPage = startPage + 9;
@@ -197,8 +212,7 @@
       }
 
       if (startPage > 1) {
-        htmlStr += "<a href='#' class='page-link' data-page='" + (startPage - 1)
-            + "' style='color: black;'>이전</a>";
+        htmlStr += "<a href='#' class='page-link' data-page='" + (startPage - 1) + "' data-search='" + searchStr + "' style='color: black;'>이전</a>";
       } else {
         htmlStr += "<span style='color: grey;'>이전</span>";
       }
@@ -207,13 +221,12 @@
         if (i === currentPage) {
           htmlStr += "<span class='current-page'>" + i + "</span>";
         } else {
-          htmlStr += "<a href='#' class='page-link' data-page='" + i + "'>" + i + "</a>";
+          htmlStr += "<a href='#' class='page-link' data-page='" + i + "' data-search='" + searchStr + "'>" + i + "</a>";
         }
       }
 
       if (endPage < totalPages) {
-        htmlStr += "<a href='#' class='page-link' data-page='" + (endPage + 1)
-            + "' style='color: black;'>다음</a>";
+        htmlStr += "<a href='#' class='page-link' data-page='" + (endPage + 1) + "' data-search='" + searchStr + "' style='color: black;'>다음</a>";
       } else {
         htmlStr += "<span style='color: grey;'>다음</span>";
       }
@@ -224,8 +237,8 @@
     $('#pagination').on('click', 'a.page-link', function (e) {
       e.preventDefault();
       var page = $(this).data('page');
-      console.log("Loading page: " + page);
-      loadPage(page);
+      var searchStr = $(this).data('search');
+      loadPage(page, searchStr);
     });
   });
 </script>
