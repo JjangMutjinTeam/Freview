@@ -255,7 +255,7 @@
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
     <div class="copyright">
-        &copy; Copyright <strong><span>JjangMutjinTeam</span></strong>. All
+        &copy; Copyright <strong><span>nugunaTeam</span></strong>. All
         Rights Reserved
     </div>
     <div class="credits">

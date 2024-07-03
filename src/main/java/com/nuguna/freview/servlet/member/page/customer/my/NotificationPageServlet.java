@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@WebServlet("/my-activity") // 최초 페이지 로딩 시, 좋아요한 글을 보여줌.
-public class ActivityPageServlet extends HttpServlet {
+@WebServlet("/my-notification")
+public class NotificationPageServlet extends HttpServlet {
 
   private MemberUtilDAO memberUtilDAO;
 
@@ -39,15 +39,11 @@ public class ActivityPageServlet extends HttpServlet {
 
       log.info("mylikesInfo = ");
       request.setAttribute("member_seq", memberSeq);
-      RequestDispatcher dispatcher = request.getRequestDispatcher("/customer-my-activity-info.jsp");
+      RequestDispatcher dispatcher = request.getRequestDispatcher("/customer-my-notification.jsp");
       dispatcher.forward(request, response);
     } catch (Exception e) {
       response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
           e.getMessage());
     }
-  }
-
-  @Override
-  public void destroy() {
   }
 }

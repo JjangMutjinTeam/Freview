@@ -58,7 +58,7 @@ public class BrandPageServlet extends HttpServlet {
         CustMyBrandInfoDto brandInfo = custMyBrandInfoDAO.getCustBrandInfo(memberSeq);
         log.info("brandInfo = " + brandInfo);
         request.setAttribute("brandInfo", brandInfo);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/cust-my-brand-info.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/customer-my-brand-info.jsp");
         dispatcher.forward(request, response);
       }
 

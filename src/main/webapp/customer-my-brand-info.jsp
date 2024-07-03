@@ -162,7 +162,7 @@
 <main id="main" class="main">
 
     <div class="pagetitle">
-        <h1>Profile</h1>
+        <h1>나의 브랜딩</h1>
     </div><!-- End Page Title -->
 
     <section class="section profile">
@@ -668,13 +668,12 @@
                                 });
                               });
                             </script>
-
 </main><!-- End #main -->
 
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
     <div class="copyright">
-        &copy; Copyright <strong><span>JjangMutjinTeam</span></strong>. All Rights Reserved
+        &copy; Copyright <strong><span>nugunaTeam</span></strong>. All Rights Reserved
     </div>
     <div class="credits">
         Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
