@@ -34,6 +34,9 @@ public class NoticePostDetailServlet extends HttpServlet {
     int postSeq = Integer.parseInt(req.getParameter("postId"));
     Post currentPost = postDAO.selectPostByPostSeq(postSeq);
     req.setAttribute("currentPost", currentPost);
+
+    boolean isLiked = postDAO.isLikedPost(loginUser.getMemberSeq(), postSeq);
+    req.setAttribute("isLiked", isLiked);
     req.getRequestDispatcher("/common-notice-post-detail-y.jsp").forward(req, resp);
   }
 }
