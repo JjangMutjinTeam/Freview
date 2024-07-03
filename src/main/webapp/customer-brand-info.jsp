@@ -93,11 +93,11 @@
 <body>
 
 <!-- ======= Header ======= -->
-<header id="header" class="header fixed-top d-flex align-items-center">
+<header id="header" class="header fixed-top xd-flex align-items-center">
     <div class="d-flex align-items-center justify-content-between">
         <a href="index.html" class="logo d-flex align-items-center">
             <img src="assets/img/logo/logo-vertical.png" alt="">
-            <span class="d-none d-lg-block">Freeview</span>
+            <span class="d-none d-lg-block">FReview</span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
@@ -161,7 +161,7 @@
                                 <div class="col-lg-3 col-md-4 label">닉네임</div>
                                 <div class="col-lg-8 col-md-6">
                                     <input type="text"
-                                           value="<%= brandInfo.getNickname() %>"
+                                           value="<%=brandInfo.getNickname()%>"
                                            class="form-control" readonly>
                                 </div>
                             </div>
@@ -173,7 +173,7 @@
                                 <div class="col-lg-3 col-md-4 label">연령대</div>
                                 <div class="col-lg-8 col-md-6">
                                     <input type="text"
-                                           value="<%= brandInfo.getAgeGroup() %>"
+                                           value="<%=brandInfo.getAgeGroup()%>"
                                            class="form-control" readonly>
                                 </div>
                             </div>
@@ -248,14 +248,14 @@
                             }
 
                             initializeTagSelect();
-                          }
+                          });
                         </script>
 </main><!-- End #main -->
 
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
     <div class="copyright">
-        &copy; Copyright <strong><span>JjangMutjinTeam</span></strong>. All
+        &copy; Copyright <strong><span>nugunaTeam</span></strong>. All
         Rights Reserved
     </div>
     <div class="credits">
