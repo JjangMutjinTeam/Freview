@@ -104,24 +104,52 @@ public class PostDAO {
   }
 
   public boolean deletePost(int postSeq) {
-    String sql = "DELETE FROM post WHERE post_seq = ?";
+    String deletePostSql = "DELETE FROM post WHERE post_seq = ?";
+    String countLikesSql = "SELECT count(*) from likes where post_seq = ?";
+    String deletePostAllLikesSql = "DELETE FROM likes WHERE post_seq = ?";
 
+    ResultSet rs = null;
     Connection conn = null;
-    PreparedStatement pstmt = null;
+    PreparedStatement deletePostPstmt = null;
+    PreparedStatement countLikesPstmt = null;
+    PreparedStatement deletePostAllLikesPstmt = null;
 
     try {
       conn = getConnection();
-      pstmt = conn.prepareStatement(sql);
 
-      pstmt.setInt(1, postSeq);
+      // 트랜잭션 시작
+      conn.setAutoCommit(false);
 
-      int result = pstmt.executeUpdate();
+      // 1. post 좋아요 존재 여부 확인
+      countLikesPstmt = conn.prepareStatement(countLikesSql);
+      countLikesPstmt.setInt(1, postSeq);
+      rs = countLikesPstmt.executeQuery();
+      int likeCount = 0;
+      if (rs.next()) {
+        likeCount = rs.getInt(1);
+      }
+      // 2. post 에 좋아요가 존재한다면, 모두 삭제
+      if (likeCount > 0) {
+        deletePostAllLikesPstmt = conn.prepareStatement(deletePostAllLikesSql);
+        deletePostAllLikesPstmt.setInt(1, postSeq);
+        deletePostAllLikesPstmt.executeUpdate();
+      }
+
+      // 3. post 삭제
+      deletePostPstmt = conn.prepareStatement(deletePostSql);
+      deletePostPstmt.setInt(1, postSeq);
+      int result = deletePostPstmt.executeUpdate();
+
+      // 트랜잭션 커밋
+      conn.setAutoCommit(true);
+
       return result > 0;
-
     } catch (SQLException e) {
       throw new RuntimeException(e);
     } finally {
-      closeResource(pstmt, conn);
+      closeResource(countLikesPstmt, conn, rs);
+      closeResource(deletePostAllLikesPstmt);
+      closeResource(deletePostPstmt);
     }
   }
 
@@ -183,7 +211,6 @@ public class PostDAO {
 
     return post;
   }
-
 
   public int getTotalPostsCount(String gubun) {
     String sql = "SELECT count(*) FROM post where gubun = ?";
