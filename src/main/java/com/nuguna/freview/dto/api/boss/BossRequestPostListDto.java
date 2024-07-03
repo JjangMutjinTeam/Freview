@@ -5,9 +5,9 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class BossRequestMozzipListDto {
-//  Integer seq;
-  Integer bossSeq;
+public class BossRequestPostListDto {
+  String gubun;
+  Integer userSeq;
   String title;
   String applyStartDate;
   String applyEndDate;

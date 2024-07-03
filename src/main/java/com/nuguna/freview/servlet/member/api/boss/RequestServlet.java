@@ -1,28 +1,27 @@
-package com.nuguna.freview.servlet.member.page;
+package com.nuguna.freview.servlet.member.api.boss;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.nuguna.freview.dao.member.BossRequestDAO;
-import com.nuguna.freview.dto.api.boss.BossRequestMozzipListDto;
+
+import com.nuguna.freview.dto.api.boss.BossRequestPostListDto;
 import com.nuguna.freview.dto.api.boss.BossRequestReceivedDto;
 import com.nuguna.freview.dto.api.boss.BossRequestToRequestDto;
 import com.nuguna.freview.dto.common.ResponseMessage;
+import com.nuguna.freview.entity.member.Member;
 import com.nuguna.freview.util.EncodingUtil;
-import com.nuguna.freview.util.JsonRequestUtil;
 import com.nuguna.freview.util.JsonResponseUtil;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.common.util.report.qual.ReportOverride;
 
 @Slf4j
 @WebServlet("/api/boss/my-request")
@@ -37,16 +36,19 @@ public class RequestServlet extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+      HttpSession session = request.getSession();
+      Member loginUser = (Member) session.getAttribute("Member");
+
+      EncodingUtil.setEncodingToUTF8AndJson(request, response);
+
       try {
         EncodingUtil.setEncodingToUTF8AndJson(request, response);
 
-       JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
-       int bossSeq = jsonObject.get("member_seq").getAsInt();
-//        int bossSeq = 118;
+        int memberSeq = loginUser.getMemberSeq();
 
-        List<BossRequestMozzipListDto> mozzipList = BossRequestDAO.bossMozzipList(bossSeq);
-        List<BossRequestReceivedDto> ReceivedRequest = BossRequestDAO.bossReceivedRequest(bossSeq);
-        List<BossRequestToRequestDto> ToRequestList = BossRequestDAO.bossToRequest(bossSeq);
+        List<BossRequestPostListDto> postList = BossRequestDAO.bossPostList(memberSeq);
+        List<BossRequestReceivedDto> ReceivedRequest = BossRequestDAO.bossReceivedRequest(memberSeq);
+        List<BossRequestToRequestDto> ToRequestList = BossRequestDAO.bossToRequest(memberSeq);
 
 //        List<BossRequestMozzipListDto> mozzipList = BossRequestDAO.bossMozzipList(bossSeq);
 //        JsonResponseUtil.sendBackJsonWithStatus(HttpServletResponse.SC_OK,
@@ -64,7 +66,7 @@ public class RequestServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         Map<String, Object> responseData = new HashMap<>();
-        responseData.put("bossMozzipList", mozzipList);
+        responseData.put("bossMozzipList", postList);
         responseData.put("receivedRequest", ReceivedRequest);
         responseData.put("ToRequestList", ToRequestList);
 

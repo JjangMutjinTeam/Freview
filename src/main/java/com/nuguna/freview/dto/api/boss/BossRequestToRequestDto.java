@@ -6,7 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class BossRequestToRequestDto {
-  int seq;
+  int requestSeq;
   int fromMemberSeq;
   int from_post;
   String comeDate;
