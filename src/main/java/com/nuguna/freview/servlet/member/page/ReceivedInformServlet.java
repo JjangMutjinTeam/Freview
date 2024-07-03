@@ -40,7 +40,7 @@ public class ReceivedInformServlet extends HttpServlet  {
 //      System.out.println("bossSeq: "+request.getParameter("member_seq"));
 
 //      int bossSeq = Integer.parseInt(request.getParameter("member_Seq"));
-      int bossSeq = 118;
+//      int bossSeq = 118;
 
       List<BossReceivedZzimInfoDto> zzimInfos = BossReceivedInformDAO.receivedZzimDAO(bossSeq);
       List<BossReceivedLikesDto> ddabongInfos = BossReceivedInformDAO.receivedDdabongDAO(bossSeq);

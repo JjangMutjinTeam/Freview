@@ -4,7 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.nuguna.freview.dao.member.BossRequestDAO;
-import com.nuguna.freview.dto.api.boss.BossRequestMozzipListDto;
+
+import com.nuguna.freview.dto.api.boss.BossRequestPostListDto;
 import com.nuguna.freview.dto.api.boss.BossRequestReceivedDto;
 import com.nuguna.freview.dto.api.boss.BossRequestToRequestDto;
 import com.nuguna.freview.dto.common.ResponseMessage;
@@ -37,14 +38,16 @@ public class RequestServlet extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+
+
       try {
         EncodingUtil.setEncodingToUTF8AndJson(request, response);
 
-       JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
-       int bossSeq = jsonObject.get("member_seq").getAsInt();
+//       JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
+//       int bossSeq = jsonObject.get("member_seq").getAsInt();
 //        int bossSeq = 118;
 
-        List<BossRequestMozzipListDto> mozzipList = BossRequestDAO.bossMozzipList(bossSeq);
+        List<BossRequestPostListDto> postList = BossRequestDAO.bossPostList(bossSeq);
         List<BossRequestReceivedDto> ReceivedRequest = BossRequestDAO.bossReceivedRequest(bossSeq);
         List<BossRequestToRequestDto> ToRequestList = BossRequestDAO.bossToRequest(bossSeq);
 
@@ -64,7 +67,7 @@ public class RequestServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         Map<String, Object> responseData = new HashMap<>();
-        responseData.put("bossMozzipList", mozzipList);
+        responseData.put("bossMozzipList", postList);
         responseData.put("receivedRequest", ReceivedRequest);
         responseData.put("ToRequestList", ToRequestList);
 

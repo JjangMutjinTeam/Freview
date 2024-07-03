@@ -6,6 +6,7 @@ import com.nuguna.freview.dao.member.BossSendInformDAO;
 import com.nuguna.freview.dto.api.boss.BossSendLikesDto;
 import com.nuguna.freview.dto.api.boss.BossSendZzimInfoDto;
 import com.nuguna.freview.dto.common.ResponseMessage;
+import com.nuguna.freview.entity.member.Member;
 import com.nuguna.freview.util.EncodingUtil;
 import com.nuguna.freview.util.JsonResponseUtil;
 import java.io.PrintWriter;
@@ -32,9 +33,12 @@ public class SendInformServlet extends HttpServlet {
 
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+    HttpSession session = request.getSession();
+    loginUser = (Member) session.getAttribute("Member");
+    memberSeq = loginUser.getMemberSeq();
     EncodingUtil.setEncodingToUTF8AndJson(request, response);
     try {
-      int bossSeq = 118;
+//      int bossSeq = 118;
 //      JsonObject jsonObject = JsonRequestUtil.parseJson(request.getReader(), gson);
 //      int bossSeq = jsonObject.get("member_seq").getAsInt();
 
