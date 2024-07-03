@@ -75,4 +75,42 @@ public class NoticePostDAO {
 
     return posts;
   }
+
+  public List<Post> getNoticeByPage(String gubun, int pageNumber, int numberOfPostsPerPage,
+      String searchWord) {
+    String sql = "SELECT post_seq, title, view_count, created_at, updated_at FROM post WHERE gubun = ? AND (title LIKE CONCAT('%', ?, '%') OR content LIKE CONCAT('%', ?, '%')) ORDER BY created_at DESC LIMIT ? OFFSET ?";
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+
+    List<Post> posts = new ArrayList<>();
+
+    try {
+      conn = getConnection();
+      pstmt = conn.prepareStatement(sql);
+      pstmt.setString(1, gubun);
+      pstmt.setString(2, searchWord);
+      pstmt.setString(3, searchWord);
+      pstmt.setLong(4, numberOfPostsPerPage);
+      pstmt.setLong(5, (pageNumber - 1) * numberOfPostsPerPage);
+
+      rs = pstmt.executeQuery();
+      while (rs.next()) {
+        Post post = new Post();
+        post.setPostSeq(rs.getInt("post_seq"));
+        post.setTitle(rs.getString("title"));
+        post.setViewCount(rs.getInt("view_count"));
+        post.setCreatedAt(rs.getTimestamp("created_at"));
+        post.setUpdatedAt(rs.getTimestamp("updated_at"));
+
+        posts.add(post);
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    } finally {
+      closeResource(pstmt, conn, rs);
+    }
+
+    return posts;
+  }
 }
