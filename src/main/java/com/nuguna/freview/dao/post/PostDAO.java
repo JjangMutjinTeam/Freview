@@ -209,4 +209,31 @@ public class PostDAO {
 
     return count;
   }
+
+  public int getTotalPostsCount(String gubun, String searchWord) {
+    String sql = "SELECT count(*) FROM post where gubun = ? AND (title LIKE CONCAT('%', ?, '%') OR content LIKE CONCAT('%', ?, '%'))";
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+
+    int count = 0;
+
+    try {
+      conn = getConnection();
+      pstmt = conn.prepareStatement(sql);
+      pstmt.setString(1, gubun);
+      pstmt.setString(2, searchWord);
+      pstmt.setString(3, searchWord);
+      rs = pstmt.executeQuery();
+      while (rs.next()) {
+        count = rs.getInt(1);
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    } finally {
+      closeResource(pstmt, conn, rs);
+    }
+
+    return count;
+  }
 }
