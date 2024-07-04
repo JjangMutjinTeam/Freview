@@ -12,4 +12,15 @@ public class EncodingUtil {
     response.setContentType("application/json;charset=UTF-8");
   }
 
+  public static void setEncodingToUTF8AndText(HttpServletRequest request,
+      HttpServletResponse response) throws IOException {
+    request.setCharacterEncoding("UTF-8");
+    response.setContentType("text/html;charset=UTF-8");
+  }
+
+  public static void setEncodingToUTF8AndUTF8(HttpServletRequest request,
+      HttpServletResponse response) throws IOException {
+    request.setCharacterEncoding("UTF-8");
+    response.setCharacterEncoding("UTF-8");
+  }
 }

@@ -1,10 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="com.nuguna.freview.servlet.member.page.RequestServlet" %>
-<%@ page import="com.nuguna.freview.servlet.member.page.ReceivedInformServlet" %>
-<%@ page import="com.nuguna.freview.servlet.member.page.SendInformServlet" %>
 <%@ page import="com.nuguna.freview.entity.member.Member" %>
 
 <!DOCTYPE html>
@@ -13,7 +9,7 @@
 <%
     Member loginUser = null;
     int memberSeq = -1;
-    if(session.getAttribute("Member") != null) {
+    if (session.getAttribute("Member") != null) {
         loginUser = (Member) session.getAttribute("Member");
         memberSeq = loginUser.getMemberSeq();
     }
@@ -49,17 +45,10 @@
     <!-- Template Main CSS File -->
     <link href="assets/css/style.css" rel="stylesheet">
 
-  <!-- =======================================================
-  * Template Name: NiceAdmin
-  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
-  * Updated: Apr 20 2024 with Bootstrap v5.3.3
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
-  <!-- add css-->
-  <link rel="stylesheet" href="assets/css/style-h.css" />
-  <!-- JQuery -->
-  <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <!-- add css-->
+    <link rel="stylesheet" href="assets/css/style-h.css"/>
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 </head>
 
 <body>
@@ -70,7 +59,7 @@
         <a href="/main?seq=<%=memberSeq%>&pagecode=Requester"
            class="logo d-flex align-items-center">
             <img src="assets/img/logo/logo-vertical.png" alt="">
-            <span class="d-none d-lg-block">Freeview</span>
+            <span class="d-none d-lg-block">FReview</span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
@@ -120,12 +109,12 @@
         </li>
         <!-- End Profile Page Nav -->
 
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#">
-          <i class="bi bi-person"></i>
-          <span>개인정보수정</span>
-        </a>
-      </li><!-- End Register Page Nav -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#">
+                <i class="bi bi-person"></i>
+                <span>개인정보수정</span>
+            </a>
+        </li><!-- End Register Page Nav -->
 
     </ul>
 
@@ -134,44 +123,49 @@
 <main id="main" class="main">
 
     <section class="section profile">
-      <div class="row">
-        <div class="col-xl-12">
-          <div class="card">
-            <div class="card-body pt-3">
-              <!-- Bordered Tabs -->
-              <ul class="nav nav-tabs nav-tabs-bordered">
-                <li class="nav-item">
-                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#receivedBtn">받은 알림</button>
-                </li>
-                <li class="nav-item">
-                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#requestBtn" id="SendInform">보낸 알림</button>
-                </li>
-              </ul>
-              <div class="tab-content pt-1">
-                <div class="tab-pane show fade active profile-edit pt-6" id="receivedBtn">
-                  <!-- received -->
-                  <form >
-                    <!-- 나를 찜 & 좋아요 -->
-                    <div  id="bossReceivedZzim">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body pt-3">
+                        <!-- Bordered Tabs -->
+                        <ul class="nav nav-tabs nav-tabs-bordered">
+                            <li class="nav-item">
+                                <button class="nav-link active" data-bs-toggle="tab"
+                                        data-bs-target="#receivedBtn">받은 알림
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" data-bs-toggle="tab"
+                                        data-bs-target="#requestBtn" id="SendInform">보낸 알림
+                                </button>
+                            </li>
+                        </ul>
+                        <div class="tab-content pt-1">
+                            <div class="tab-pane show fade active profile-edit pt-6"
+                                 id="receivedBtn">
+                                <!-- received -->
+                                <form>
+                                    <!-- 나를 찜 & 좋아요 -->
+                                    <div id="bossReceivedZzim">
 
-                    </div>
-                  </form>
-                </div>
-              </div>
-              <div class="tab-content pt-2">
-                <div class="tab-pane fade active pt-6" id="requestBtn" >
-                  <!-- Settings Form -->
-                  <form>
-                    <!-- 내가 찜 &  -->
-                    <div id="bossSendInform">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="tab-content pt-2">
+                            <div class="tab-pane fade active pt-6" id="requestBtn">
+                                <!-- Settings Form -->
+                                <form>
+                                    <!-- 내가 찜 &  -->
+                                    <div id="bossSendInform">
 
-                    </div>
-                    <%--                    <div class="card" id="bossRequestList">--%>
-                    <%--                      <div class="card-body" >--%>
-                    <%--                        <h5 class="card-title">To.OOO </h5>--%>
-                    <%--                        <p> ____ 님을 찜 하였습니다.</p>--%>
-                    <%--                      </div>--%>
-                    <%--                    </div>--%>
+                                    </div>
+                                    <%--                    <div class="card" id="bossRequestList">--%>
+                                    <%--                      <div class="card-body" >--%>
+                                    <%--                        <h5 class="card-title">To.OOO </h5>--%>
+                                    <%--                        <p> ____ 님을 찜 하였습니다.</p>--%>
+                                    <%--                      </div>--%>
+                                    <%--                    </div>--%>
                             </div>
                         </div>
                         <!-- End Bordered Tabs -->
@@ -210,16 +204,18 @@
 <script src="assets/vendor/tinymce/tinymce.min.js"></script>
 <script src="assets/vendor/php-email-form/validate.js"></script>
 
-  <!-- Template Main JS File -->
-  <script src="assets/js/main.js"></script>
+<!-- Template Main JS File -->
+<script src="assets/js/main.js"></script>
 
-  <script>
-  $(function(){
+<script>
+  $(function () {
     $.ajax({ // receivedBtn
       method: "GET",
       url: "<%=request.getContextPath()%>/api/boss/my-notification/received-inform",
       dataType: "json",
-      error: function (data) { console.log("여기 에러다 : ", data); },
+      error: function (data) {
+        console.log("여기 에러다 : ", data);
+      },
       success: function (data) {
         // console.log("데이터 수신 완료:", data);
         // 받은 데이터를 처리 == zzimInfos 배열의 각 요소에서 필요한 데이터 추출
@@ -232,7 +228,7 @@
           htmlStr += "<div class='card-body'>"
           htmlStr += "<h5 class='card-title'><br> From. " + val["nickname"] + "</h5>";
           htmlStr += "<p><a href='<%=request.getContextPath()%>/brand-page?member_seq=" + val["seq"]
-                  + "'>" + val["nickname"] + "</a>님이 나를 찜하였습니다.</p>";
+              + "'>" + val["nickname"] + "</a>님이 나를 찜하였습니다.</p>";
           htmlStr += "</div>";
           htmlStr += "</div>";
         });
@@ -240,9 +236,11 @@
           htmlStr += "<div class='card'>";
           htmlStr += "<div class='card-body'>";
           htmlStr += "<h5 class='card-title'>From. " + val["nickname"] + "</h5>";
-          htmlStr += "<p>"+ val["nickname"] +"님이 내 글 <a href='<%=request.getContextPath()%>/mojipboard/detail?post_seq=" + val["postSeq"]
-                  + "'>";
-          htmlStr += val["title"] +"</a> 을 좋아요♥했습니다.</p>";
+          htmlStr += "<p>" + val["nickname"]
+              + "님이 내 글 <a href='<%=request.getContextPath()%>/mojipboard/detail?post_seq="
+              + val["postSeq"]
+              + "'>";
+          htmlStr += val["title"] + "</a> 을 좋아요♥했습니다.</p>";
           htmlStr += "</div>";
           htmlStr += "</div>";
         });
@@ -251,12 +249,14 @@
       }
     });
 
-    $("#SendInform").click(function() { // bossReceivedDdabong
+    $("#SendInform").click(function () { // bossReceivedDdabong
       $.ajax({
         method: "GET",
         url: "<%=request.getContextPath()%>/api/boss/my-notification/send-inform",
         dataType: "json",
-        error: function (data) { console.log("여기 에러다 : ", data); },
+        error: function (data) {
+          console.log("여기 에러다 : ", data);
+        },
         success: function (data) {
           // console.log("얘는 sendServlet:", data.zzimInfos);
           // console.log("데이터 ddabong : ", data.ddabongInfos);
@@ -268,28 +268,30 @@
           var htmlStr = "<div>"
           // 수정할 부분
           $.map(bossSendZzim, function (val, idx) {
-             htmlStr += "<div class='card'>";
-             htmlStr += "<div class='card-body'>";
-             htmlStr += "<h5 class='card-title'>TO. " + val["nickname"] + "</h5>";
-             htmlStr += "<p><a href='<%=request.getContextPath()%>/brand-page?member_seq=" + val["seq"]
-                     + "'>" + val["nickname"] + "</a>님을 찜하였습니다.</p>";
-             htmlStr += "</div>";
-             htmlStr += "</div>";
-           });
-           $.map(bossSendDdabong, function (val, idx) {
-             //console.log(postSeq);
-                htmlStr += "<div class='card'>";
-                htmlStr += "<div class='card-body'>";
-                htmlStr += "<h5 class='card-title'>TO. " + val["nickname"] + "</h5>";
-                htmlStr += "<p>"+ val["nickname"] ;
-                htmlStr += " 님의 글 <a href='<%=request.getContextPath()%>/mojipboard/detail?post_seq=" + val["postSeq"] + "'>";
-                htmlStr += val["title"] +"</a>을 좋아요♥ 했습니다.</p>";
-                htmlStr += "</div>";
-                htmlStr += "</div>";
-              });
-             htmlStr += "</div>";
-             $("#bossSendInform").html(htmlStr);
-             //console.log(bossSendDdabong);
+            htmlStr += "<div class='card'>";
+            htmlStr += "<div class='card-body'>";
+            htmlStr += "<h5 class='card-title'>TO. " + val["nickname"] + "</h5>";
+            htmlStr += "<p><a href='<%=request.getContextPath()%>/brand-page?member_seq="
+                + val["seq"]
+                + "'>" + val["nickname"] + "</a>님을 찜하였습니다.</p>";
+            htmlStr += "</div>";
+            htmlStr += "</div>";
+          });
+          $.map(bossSendDdabong, function (val, idx) {
+            //console.log(postSeq);
+            htmlStr += "<div class='card'>";
+            htmlStr += "<div class='card-body'>";
+            htmlStr += "<h5 class='card-title'>TO. " + val["nickname"] + "</h5>";
+            htmlStr += "<p>" + val["nickname"];
+            htmlStr += " 님의 글 <a href='<%=request.getContextPath()%>/mojipboard/detail?post_seq="
+                + val["postSeq"] + "'>";
+            htmlStr += val["title"] + "</a>을 좋아요♥ 했습니다.</p>";
+            htmlStr += "</div>";
+            htmlStr += "</div>";
+          });
+          htmlStr += "</div>";
+          $("#bossSendInform").html(htmlStr);
+          //console.log(bossSendDdabong);
         }
       });
     });

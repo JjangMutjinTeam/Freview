@@ -9,10 +9,11 @@
     CustMyBrandInfoDto brandInfo = (CustMyBrandInfoDto) request.getAttribute("brandInfo");
     Gson gson = new Gson();
     Member member = null;
+    int memberSeq = 0;
     if (session.getAttribute("Member") != null) {
         member = (Member) session.getAttribute("Member");
+        memberSeq = member.getMemberSeq();
     }
-    int memberSeq = member.getMemberSeq();
 %>
 
 
@@ -105,7 +106,7 @@
         <a href="/main?seq=<%=memberSeq%>&pagecode=Requester"
            class="logo d-flex align-items-center">
             <img src="assets/img/logo/logo-vertical.png" alt="">
-            <span class="d-none d-lg-block">Freeview</span>
+            <span class="d-none d-lg-block">FReview</span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
@@ -130,30 +131,38 @@
         <li class="nav-item">
             <a class="nav-link" data-bs-target="#components-nav"
                href="#">
-                <i class="bi bi-person"></i><span>브랜딩</span>
+                <i class="bi bi-person-lines-fill"></i><span>브랜딩</span>
             </a>
-        </li><!-- End Components Nav -->
+        </li>
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="users-profile.html">
+            <a class="nav-link collapsed" href="${pageContext.request.contextPath}/my-activity">
                 <i class="bi bi-layout-text-window-reverse"></i>
                 <span>활동</span>
             </a>
-        </li><!-- End Profile Page Nav -->
+        </li>
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="pages-faq.html">
+            <a class="nav-link collapsed" href="${pageContext.request.contextPath}/my-notification">
                 <i class="bi bi-envelope"></i>
                 <span>알림</span>
             </a>
-        </li><!-- End F.A.Q Page Nav -->
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed"
+               href="${pageContext.request.contextPath}/my-personal-info">
+                <i class="ri-edit-box-line"></i>
+                <span>개인정보수정</span>
+            </a>
+        </li>
     </ul>
 </aside><!-- End Sidebar-->
 
 <main id="main" class="main">
 
     <div class="pagetitle">
-        <h1>Profile</h1>
+        <h1>나의 브랜딩</h1>
     </div><!-- End Page Title -->
 
     <section class="section profile">
@@ -357,7 +366,7 @@
                                       var newAgeGroup = $('#age-group-input').val();
                                       // Ajax 요청
                                       $.ajax({
-                                        url: '<%=request.getContextPath()%>/api/cust/my-brand/age-group',
+                                        url: '<%=request.getContextPath()%>/api/customer/my-brand/age-group',
                                         method: 'POST',
                                         data: JSON.stringify({
                                           'member_seq': ${member_seq},
@@ -659,13 +668,12 @@
                                 });
                               });
                             </script>
-
 </main><!-- End #main -->
 
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
     <div class="copyright">
-        &copy; Copyright <strong><span>JjangMutjinTeam</span></strong>. All Rights Reserved
+        &copy; Copyright <strong><span>nugunaTeam</span></strong>. All Rights Reserved
     </div>
     <div class="credits">
         Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>

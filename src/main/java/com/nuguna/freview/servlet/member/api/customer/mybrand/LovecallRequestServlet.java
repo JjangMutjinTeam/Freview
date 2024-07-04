@@ -1,4 +1,4 @@
-package com.nuguna.freview.servlet.member.api.cust.mybrand;
+package com.nuguna.freview.servlet.member.api.customer.mybrand;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@WebServlet("/api/cust/my-brand/lovecall-request")
+@WebServlet("/api/customer/my-brand/lovecall-request")
 public class LovecallRequestServlet extends HttpServlet {
 
   private Gson gson;
@@ -27,7 +27,6 @@ public class LovecallRequestServlet extends HttpServlet {
 
   @Override
   public void init() throws ServletException {
-    log.info("Cust - LovecallRequestServlet 초기화");
     gson = new Gson();
     memberUtilDAO = new MemberUtilDAO();
     custLovecallDAO = new CustLovecallDAO();
