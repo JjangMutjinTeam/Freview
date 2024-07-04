@@ -147,9 +147,10 @@ public class PostDAO {
     } catch (SQLException e) {
       throw new RuntimeException(e);
     } finally {
-      closeResource(countLikesPstmt, conn, rs);
+      closeResource(rs);
+      closeResource(countLikesPstmt);
       closeResource(deletePostAllLikesPstmt);
-      closeResource(deletePostPstmt);
+      closeResource(deletePostPstmt, conn);
     }
   }
 
