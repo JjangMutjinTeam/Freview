@@ -3,11 +3,10 @@
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<%
-    Member loginUser = (Member) request.getAttribute("loginUser");
-    Integer memberSeq = loginUser.getMemberSeq();
-    String nickname = loginUser.getNickname();
-%>
+<c:set var="loginUser" value="${requestScope.loginUser}" />
+<c:set var="memberSeq" value="${loginUser.memberSeq}" />
+<c:set var="nickname" value="${loginUser.nickname}" />
+<c:set var="gubun" value="${loginUser.gubun}" />
 
 <!DOCTYPE html>
 <html lang="en">
@@ -77,15 +76,15 @@
 <header id="header" class="header fixed-top d-flex align-items-center header-hr">
 
     <div class="d-flex align-items-center justify-content-between ">
-        <a href="/main?seq=<%=memberSeq%>&pagecode=Requester"
-           class="logo d-flex align-items-center">
+        <a href="/main?seq=${memberSeq}&pagecode=Requester"
+       class="logo d-flex align-items-center">
             <img src="assets/img/logo/logo-vertical.png" alt="" style="  width: 50px; margin-top: 20px;">
             <span class="d-none d-lg-block">Freview</span>
         </a>
     </div>
     <div class="header-hr-right">
-        <a href="/my-info?member_seq=<%=memberSeq%>" style="margin-right: 20px">
-            <%=nickname%>
+        <a href="/my-info?member_seq=${memberSeq}" style="margin-right: 20px">
+            ${nickname}
             <img src="assets/img/basic/basic-profile-img.png" alt=" " style="width: 30px;
                 margin-top: 15px;">
 <%--            <img src="<%=profileURL()%>" alt=" " style="width: 30px;--%>

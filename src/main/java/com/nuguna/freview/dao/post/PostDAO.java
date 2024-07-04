@@ -14,19 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PostDAO {
 
-  private final String SELECT_NOTICE_BY_SEQ = " SELECT post_seq, member_seq, title, content, view_count, created_at, updated_at from post WHERE post_seq = ?";
-
-  private final String UPDATE_POST_BY_SEQ = "UPDATE post SET title = ?, content = ?, updated_at = ? WHERE post_seq = ?";
-
-  private final String DELETE_POST_BY_SEQ = "DELETE FROM post WHERE post_seq = ?";
-
-  private final String SELECT_POST_LIKED = "SELECT count(*) from ddabong where member_seq = ? and post_seq = ?";
-
-  private final String INSERT_POST_DDABONG = "INSERT into ddabong(member_seq, post_seq, created_at) values(?, ?, ?)";
-
-  private final String DELETE_POST_DDABONG = "DELETE FROM ddabong WHERE member_seq = ? and post_seq = ?"; //TODO: ddabongSeq을 조건으로 사용할 수 있는지 고려
-
-  public boolean deleteDdabong(Likes ddabong) {
+  public boolean deleteLikes(Likes likes) {
+    String sql = "DELETE FROM likes WHERE member_seq = ? and post_seq = ?"; //TODO: likesSeq을 조건으로 사용할지, postSeq를 조건으로 사용할지 고민
     Connection conn = null;
     PreparedStatement pstmt = null;
     ResultSet rs = null;
@@ -35,9 +24,9 @@ public class PostDAO {
 
     try {
       conn = getConnection();
-      pstmt = conn.prepareStatement(DELETE_POST_DDABONG);
-      pstmt.setInt(1, ddabong.getMemberSeq());
-      pstmt.setInt(2, ddabong.getPostSeq());
+      pstmt = conn.prepareStatement(sql);
+      pstmt.setInt(1, likes.getMemberSeq());
+      pstmt.setInt(2, likes.getPostSeq());
 
       int rows = pstmt.executeUpdate();
 
@@ -53,7 +42,8 @@ public class PostDAO {
     return isDeleted;
   }
 
-  public boolean insertDdabong(Likes ddabong) {
+  public boolean insertLikes(Likes likes) {
+    String sql = "INSERT into likes(member_seq, post_seq, created_at) values(?, ?, ?)";
     Connection conn = null;
     PreparedStatement pstmt = null;
     ResultSet rs = null;
@@ -61,10 +51,10 @@ public class PostDAO {
     boolean isInserted = false;
     try {
       conn = getConnection();
-      pstmt = conn.prepareStatement(INSERT_POST_DDABONG);
-      pstmt.setInt(1, ddabong.getMemberSeq());
-      pstmt.setInt(2, ddabong.getPostSeq());
-      pstmt.setTimestamp(3, ddabong.getCreatedAt());
+      pstmt = conn.prepareStatement(sql);
+      pstmt.setInt(1, likes.getMemberSeq());
+      pstmt.setInt(2, likes.getPostSeq());
+      pstmt.setTimestamp(3, likes.getCreatedAt());
       int rows = pstmt.executeUpdate();
 
       if (rows> 0) {
@@ -81,6 +71,8 @@ public class PostDAO {
   }
 
   public boolean isLikedPost(int memberSeq, int postSeq) {
+    String sql = "SELECT count(*) from likes where member_seq = ? and post_seq = ?";
+
     Connection conn = null;
     PreparedStatement pstmt = null;
     ResultSet rs = null;
@@ -89,7 +81,7 @@ public class PostDAO {
 
     try {
       conn = getConnection();
-      pstmt = conn.prepareStatement(SELECT_POST_LIKED);
+      pstmt = conn.prepareStatement(sql);
       pstmt.setInt(1, memberSeq);
       pstmt.setInt(2, postSeq);
 
@@ -112,32 +104,65 @@ public class PostDAO {
   }
 
   public boolean deletePost(int postSeq) {
+    String deletePostSql = "DELETE FROM post WHERE post_seq = ?";
+    String countLikesSql = "SELECT count(*) from likes where post_seq = ?";
+    String deletePostAllLikesSql = "DELETE FROM likes WHERE post_seq = ?";
+
+    ResultSet rs = null;
     Connection conn = null;
-    PreparedStatement pstmt = null;
+    PreparedStatement deletePostPstmt = null;
+    PreparedStatement countLikesPstmt = null;
+    PreparedStatement deletePostAllLikesPstmt = null;
 
     try {
       conn = getConnection();
-      pstmt = conn.prepareStatement(DELETE_POST_BY_SEQ);
 
-      pstmt.setInt(1, postSeq);
+      // 트랜잭션 시작
+      conn.setAutoCommit(false);
 
-      int result = pstmt.executeUpdate();
+      // 1. post 좋아요 존재 여부 확인
+      countLikesPstmt = conn.prepareStatement(countLikesSql);
+      countLikesPstmt.setInt(1, postSeq);
+      rs = countLikesPstmt.executeQuery();
+      int likeCount = 0;
+      if (rs.next()) {
+        likeCount = rs.getInt(1);
+      }
+      // 2. post 에 좋아요가 존재한다면, 모두 삭제
+      if (likeCount > 0) {
+        deletePostAllLikesPstmt = conn.prepareStatement(deletePostAllLikesSql);
+        deletePostAllLikesPstmt.setInt(1, postSeq);
+        deletePostAllLikesPstmt.executeUpdate();
+      }
+
+      // 3. post 삭제
+      deletePostPstmt = conn.prepareStatement(deletePostSql);
+      deletePostPstmt.setInt(1, postSeq);
+      int result = deletePostPstmt.executeUpdate();
+
+      // 트랜잭션 커밋
+      conn.setAutoCommit(true);
+
       return result > 0;
-
     } catch (SQLException e) {
       throw new RuntimeException(e);
     } finally {
-      closeResource(pstmt, conn);
+      closeResource(rs);
+      closeResource(countLikesPstmt);
+      closeResource(deletePostAllLikesPstmt);
+      closeResource(deletePostPstmt, conn);
     }
   }
 
   public boolean updatePost(Post post) {
+    String sql = "UPDATE post SET title = ?, content = ?, updated_at = ? WHERE post_seq = ?";
+
     Connection conn = null;
     PreparedStatement pstmt = null;
 
     try {
       conn = getConnection();
-      pstmt = conn.prepareStatement(UPDATE_POST_BY_SEQ);
+      pstmt = conn.prepareStatement(sql);
 
       pstmt.setString(1, post.getTitle());
       pstmt.setString(2, post.getContent());
@@ -155,6 +180,8 @@ public class PostDAO {
   }
 
   public Post selectPostByPostSeq(int postSeq) {
+    String sql = " SELECT post_seq, member_seq, title, content, view_count, created_at, updated_at from post WHERE post_seq = ?";
+
     Connection conn = null;
     PreparedStatement pstmt = null;
     ResultSet rs = null;
@@ -163,7 +190,7 @@ public class PostDAO {
 
     try {
       conn = getConnection();
-      pstmt = conn.prepareStatement(SELECT_NOTICE_BY_SEQ);
+      pstmt = conn.prepareStatement(sql);
       pstmt.setInt(1, postSeq);
       rs = pstmt.executeQuery();
 
@@ -186,4 +213,55 @@ public class PostDAO {
     return post;
   }
 
+  public int getTotalPostsCount(String gubun) {
+    String sql = "SELECT count(*) FROM post where gubun = ?";
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+
+    int count = 0;
+
+    try {
+      conn = getConnection();
+      pstmt = conn.prepareStatement(sql);
+      pstmt.setString(1, gubun);
+      rs = pstmt.executeQuery();
+      while (rs.next()) {
+        count = rs.getInt(1);
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    } finally {
+      closeResource(pstmt, conn, rs);
+    }
+
+    return count;
+  }
+
+  public int getTotalPostsCount(String gubun, String searchWord) {
+    String sql = "SELECT count(*) FROM post where gubun = ? AND (title LIKE CONCAT('%', ?, '%') OR content LIKE CONCAT('%', ?, '%'))";
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+
+    int count = 0;
+
+    try {
+      conn = getConnection();
+      pstmt = conn.prepareStatement(sql);
+      pstmt.setString(1, gubun);
+      pstmt.setString(2, searchWord);
+      pstmt.setString(3, searchWord);
+      rs = pstmt.executeQuery();
+      while (rs.next()) {
+        count = rs.getInt(1);
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    } finally {
+      closeResource(pstmt, conn, rs);
+    }
+
+    return count;
+  }
 }

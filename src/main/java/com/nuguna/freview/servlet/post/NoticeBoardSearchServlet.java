@@ -1,12 +1,11 @@
 package com.nuguna.freview.servlet.post;
 
-import static com.nuguna.freview.util.EncodingUtil.setEncodingToUTF8AndText;
+import static com.nuguna.freview.util.EncodingUtil.setEncodingToUTF8AndJson;
 import static com.nuguna.freview.util.JsonResponseUtil.sendJsonResponse;
 
 import com.google.gson.Gson;
 import com.nuguna.freview.dao.post.NoticePostDAO;
 import com.nuguna.freview.dao.post.PostDAO;
-import com.nuguna.freview.entity.member.Member;
 import com.nuguna.freview.entity.post.Post;
 import com.nuguna.freview.entity.post.PostGubun;
 import java.io.IOException;
@@ -18,10 +17,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-@WebServlet("/notice")
-public class NoticeBoardServlet extends HttpServlet {
+@WebServlet("/notice-search")
+public class NoticeBoardSearchServlet extends HttpServlet {
 
   private NoticePostDAO noticePostDAO = new NoticePostDAO();
   private PostDAO postDAO = new PostDAO();
@@ -30,34 +28,15 @@ public class NoticeBoardServlet extends HttpServlet {
   private final int LIMIT = 10;
 
   @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+  protected void doPost(HttpServletRequest reqeust, HttpServletResponse response)
       throws ServletException, IOException {
-    setEncodingToUTF8AndText(request, response);
+    setEncodingToUTF8AndJson(reqeust, response);
 
-    HttpSession session = request.getSession();
-    Member loginUser = (Member) session.getAttribute("Member");
-
-    //TODO: 비로그인 시 로그인페이지로 이동하는 메서드 유틸로 작성하기
-    if (loginUser == null) {
-      response.sendRedirect("common-login.jsp");
-      return;
-    }
-
-    request.setAttribute("loginUser", loginUser);
-
-    request.getRequestDispatcher("/common-notice-board-y.jsp").forward(request, response);
-  }
-
-  @Override
-  protected void doPost(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
-    request.setCharacterEncoding("UTF-8");
-    response.setContentType("application/json;charset=UTF-8");
-
-    int pageNumber = getPageNumber(request);
+    String searchStr = reqeust.getParameter("search_str");
+    int pageNumber = getPageNumber(reqeust);
     String postGubun = PostGubun.GJ.getCode();
-    List<Post> postList = noticePostDAO.getNoticeByPage(postGubun, pageNumber, LIMIT);
-    int totalPosts = postDAO.getTotalPostsCount(postGubun);
+    List<Post> postList = noticePostDAO.getNoticeByPage(postGubun, pageNumber, LIMIT, searchStr);
+    int totalPosts = postDAO.getTotalPostsCount(postGubun, searchStr);
     int totalPages = (int) Math.ceil((double) totalPosts / LIMIT);
 
     Map<String, Object> responseMap = new HashMap<>();
