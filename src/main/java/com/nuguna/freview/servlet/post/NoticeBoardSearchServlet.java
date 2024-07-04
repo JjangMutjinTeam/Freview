@@ -1,5 +1,8 @@
 package com.nuguna.freview.servlet.post;
 
+import static com.nuguna.freview.util.EncodingUtil.setEncodingToUTF8AndJson;
+import static com.nuguna.freview.util.JsonResponseUtil.sendJsonResponse;
+
 import com.google.gson.Gson;
 import com.nuguna.freview.dao.post.NoticePostDAO;
 import com.nuguna.freview.dao.post.PostDAO;
@@ -18,19 +21,19 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/notice-search")
 public class NoticeBoardSearchServlet extends HttpServlet {
 
-  NoticePostDAO noticePostDAO = new NoticePostDAO();
-  PostDAO postDAO = new PostDAO();
+  private NoticePostDAO noticePostDAO = new NoticePostDAO();
+  private PostDAO postDAO = new PostDAO();
+  private Gson gson = new Gson();
 
   private final int LIMIT = 10;
 
   @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+  protected void doPost(HttpServletRequest reqeust, HttpServletResponse response)
       throws ServletException, IOException {
-    req.setCharacterEncoding("UTF-8");
-    resp.setContentType("application/json;charset=UTF-8");
+    setEncodingToUTF8AndJson(reqeust, response);
 
-    String searchStr = req.getParameter("search_str");
-    int pageNumber = getPageNumber(req);
+    String searchStr = reqeust.getParameter("search_str");
+    int pageNumber = getPageNumber(reqeust);
     String postGubun = PostGubun.GJ.getCode();
     List<Post> postList = noticePostDAO.getNoticeByPage(postGubun, pageNumber, LIMIT, searchStr);
     int totalPosts = postDAO.getTotalPostsCount(postGubun, searchStr);
@@ -40,9 +43,7 @@ public class NoticeBoardSearchServlet extends HttpServlet {
     responseMap.put("data", postList);
     responseMap.put("totalPages", totalPages);
 
-    Gson gson = new Gson();
-    String jsonResponse = gson.toJson(responseMap);
-    resp.getWriter().write(jsonResponse);
+    sendJsonResponse(responseMap, response, gson);
   }
 
   private int getPageNumber(HttpServletRequest req) {

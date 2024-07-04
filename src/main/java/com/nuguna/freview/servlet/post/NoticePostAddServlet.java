@@ -1,6 +1,7 @@
 package com.nuguna.freview.servlet.post;
 
 import static com.nuguna.freview.entity.post.PostGubun.GJ;
+import static com.nuguna.freview.util.EncodingUtil.setEncodingToUTF8AndText;
 
 import com.nuguna.freview.dao.post.NoticePostDAO;
 import com.nuguna.freview.entity.member.Member;
@@ -15,28 +16,27 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebServlet("/notice/createPost")
+@WebServlet("/notice-createPost")
 public class NoticePostAddServlet extends HttpServlet {
 
-  NoticePostDAO noticePostdao = new NoticePostDAO();
+  private NoticePostDAO noticePostdao = new NoticePostDAO();
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    req.setCharacterEncoding("UTF-8");
-    resp.setContentType("text/html;charset=UTF-8");
+    setEncodingToUTF8AndText(request, response);
 
-    HttpSession session = req.getSession();
+    HttpSession session = request.getSession();
     Member loginUser = (Member) session.getAttribute("Member");
 
     //TODO: 비로그인 시 로그인페이지로 이동하는 메서드 유틸로 작성하기
     if (loginUser == null) {
-      resp.sendRedirect("/common-login.jsp");
+      response.sendRedirect("/common-login.jsp");
       return;
     }
 
-    req.setAttribute("loginUser", loginUser);
-    resp.sendRedirect(req.getContextPath() + "/admin-create-notice-y.jsp");
+    request.setAttribute("loginUser", loginUser);
+    response.sendRedirect(request.getContextPath() + "/admin-create-notice-y.jsp");
   }
 
   @Override

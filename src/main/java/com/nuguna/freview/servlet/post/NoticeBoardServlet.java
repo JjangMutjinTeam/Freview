@@ -1,5 +1,8 @@
 package com.nuguna.freview.servlet.post;
 
+import static com.nuguna.freview.util.EncodingUtil.setEncodingToUTF8AndText;
+import static com.nuguna.freview.util.JsonResponseUtil.sendJsonResponse;
+
 import com.google.gson.Gson;
 import com.nuguna.freview.dao.post.NoticePostDAO;
 import com.nuguna.freview.dao.post.PostDAO;
@@ -20,38 +23,38 @@ import javax.servlet.http.HttpSession;
 @WebServlet("/notice")
 public class NoticeBoardServlet extends HttpServlet {
 
-  NoticePostDAO noticePostDAO = new NoticePostDAO();
-  PostDAO postDAO = new PostDAO();
+  private NoticePostDAO noticePostDAO = new NoticePostDAO();
+  private PostDAO postDAO = new PostDAO();
+  private Gson gson = new Gson();
 
   private final int LIMIT = 10;
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    req.setCharacterEncoding("UTF-8");
-    resp.setContentType("text/html;charset=UTF-8");
+    setEncodingToUTF8AndText(request, response);
 
-    HttpSession session = req.getSession();
+    HttpSession session = request.getSession();
     Member loginUser = (Member) session.getAttribute("Member");
 
     //TODO: 비로그인 시 로그인페이지로 이동하는 메서드 유틸로 작성하기
     if (loginUser == null) {
-      resp.sendRedirect("common-login.jsp");
+      response.sendRedirect("common-login.jsp");
       return;
     }
 
-    req.setAttribute("loginUser", loginUser);
+    request.setAttribute("loginUser", loginUser);
 
-    req.getRequestDispatcher("/common-notice-board-y.jsp").forward(req, resp);
+    request.getRequestDispatcher("/common-notice-board-y.jsp").forward(request, response);
   }
 
   @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    req.setCharacterEncoding("UTF-8");
-    resp.setContentType("application/json;charset=UTF-8");
+    request.setCharacterEncoding("UTF-8");
+    response.setContentType("application/json;charset=UTF-8");
 
-    int pageNumber = getPageNumber(req);
+    int pageNumber = getPageNumber(request);
     String postGubun = PostGubun.GJ.getCode();
     List<Post> postList = noticePostDAO.getNoticeByPage(postGubun, pageNumber, LIMIT);
     int totalPosts = postDAO.getTotalPostsCount(postGubun);
@@ -61,9 +64,7 @@ public class NoticeBoardServlet extends HttpServlet {
     responseMap.put("data", postList);
     responseMap.put("totalPages", totalPages);
 
-    Gson gson = new Gson();
-    String jsonResponse = gson.toJson(responseMap);
-    resp.getWriter().write(jsonResponse);
+    sendJsonResponse(responseMap, response, gson);
   }
 
   private int getPageNumber(HttpServletRequest req) {

@@ -8,25 +8,25 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/notice/detail/delete")
+@WebServlet("/notice-detail-delete")
 public class NoticePostDeleteServlet extends HttpServlet {
 
-  PostDAO postDAO = new PostDAO();
+  private PostDAO postDAO = new PostDAO();
 
   @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    req.setCharacterEncoding("UTF-8");
-    resp.setCharacterEncoding("UTF-8");
+    request.setCharacterEncoding("UTF-8");
+    response.setCharacterEncoding("UTF-8");
 
-    int postSeq = Integer.parseInt(req.getParameter("postSeq"));
+    int postSeq = Integer.parseInt(request.getParameter("postSeq"));
 
     boolean deletePost = postDAO.deletePost(postSeq);
 
     if (deletePost) {
-      resp.setStatus(HttpServletResponse.SC_OK);
+      response.setStatus(HttpServletResponse.SC_OK);
     } else {
-      resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
   }
 }

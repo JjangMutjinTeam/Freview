@@ -1,5 +1,7 @@
 package com.nuguna.freview.servlet.post;
 
+import static com.nuguna.freview.util.EncodingUtil.setEncodingToUTF8AndUTF8;
+
 import com.nuguna.freview.dao.post.PostDAO;
 import com.nuguna.freview.entity.post.Likes;
 import java.io.IOException;
@@ -12,24 +14,23 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/likes-cancel")
 public class PostLikesCancelServlet extends HttpServlet {
 
-  PostDAO postDAO = new PostDAO();
+  private PostDAO postDAO = new PostDAO();
 
   @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    req.setCharacterEncoding("UTF-8");
-    resp.setCharacterEncoding("UTF-8");
+    setEncodingToUTF8AndUTF8(request, response);
 
     Likes likes = new Likes();
-    likes.setMemberSeq(Integer.valueOf(req.getParameter("memberSeq")));
-    likes.setPostSeq(Integer.valueOf(req.getParameter("postSeq")));
+    likes.setMemberSeq(Integer.valueOf(request.getParameter("memberSeq")));
+    likes.setPostSeq(Integer.valueOf(request.getParameter("postSeq")));
 
     boolean isDeleted = postDAO.deleteLikes(likes);
 
     if (isDeleted) {
-      resp.setStatus(HttpServletResponse.SC_OK);
+      response.setStatus(HttpServletResponse.SC_OK);
     } else {
-      resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
   }
 }
