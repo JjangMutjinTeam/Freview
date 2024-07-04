@@ -1,5 +1,7 @@
 package com.nuguna.freview.servlet.post;
 
+import static com.nuguna.freview.util.EncodingUtil.setEncodingToUTF8AndText;
+
 import com.nuguna.freview.dao.post.MojipPostDAO;
 import com.nuguna.freview.dto.MojipPostDTO;
 import java.io.IOException;
@@ -11,22 +13,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/mojipBoard")
+@WebServlet("/mojip")
 public class MojipBoardServlet extends HttpServlet {
 
-  MojipPostDAO mojipPostDAO = new MojipPostDAO();
+  private MojipPostDAO mojipPostDAO = new MojipPostDAO();
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    req.setCharacterEncoding("UTF-8");
-    resp.setContentType("text/html;charset=UTF-8");
+    setEncodingToUTF8AndText(request, response);
 
     List<MojipPostDTO> postList = mojipPostDAO.getMojipPostList();
 
-    req.setAttribute("postList", postList);
+    request.setAttribute("postList", postList);
 
-    RequestDispatcher rd = req.getRequestDispatcher("/common-mojip-board-y.jsp");
-    rd.forward(req, resp);
+    RequestDispatcher rd = request.getRequestDispatcher("/common-mojip-board-y.jsp");
+    rd.forward(request, response);
   }
 }

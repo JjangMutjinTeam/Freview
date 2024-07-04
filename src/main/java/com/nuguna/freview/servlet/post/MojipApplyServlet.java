@@ -11,10 +11,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/mojipBoard/detail/apply")
+@WebServlet("/mojip-detail-apply")
 public class MojipApplyServlet extends HttpServlet {
 
-  RequestDAO requestDAO = new RequestDAO();
+  private RequestDAO requestDAO = new RequestDAO();
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)

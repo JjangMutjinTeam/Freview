@@ -31,7 +31,7 @@ public class MojipPostDAO {
       "    p.apply_end_date, " +
       "    p.experience_date, " +
       "    p.content, " +
-      "    (SELECT COUNT(*) FROM ddabong d WHERE d.post_seq = p.post_seq) AS number_of_ddabong " +
+      "    (SELECT COUNT(*) FROM Likes l WHERE l.post_seq = p.post_seq) AS number_of_likes" +
       "FROM " +
       "    post p " +
       "LEFT JOIN " +
@@ -67,7 +67,7 @@ public class MojipPostDAO {
       "    p.apply_end_date, " +
       "    p.experience_date, " +
       "    p.content, " +
-      "    (SELECT COUNT(*) FROM ddabong d WHERE d.post_seq = p.post_seq) AS number_of_ddabong " +
+      "    (SELECT COUNT(*) FROM Likes l WHERE l.post_seq = p.post_seq) AS number_of_likes " +
       "FROM " +
       "    post p " +
       "LEFT JOIN " +
@@ -115,7 +115,7 @@ public class MojipPostDAO {
         mojipPost.setApplyEndDate(rs.getDate("apply_end_date"));
         mojipPost.setExperienceDate(rs.getDate("experience_date"));
         mojipPost.setContent(rs.getString("content"));
-        mojipPost.setNumberOfDdabong(rs.getInt("number_of_ddabong"));
+        mojipPost.setNumberOfLikes(rs.getInt("number_of_likes"));
       }
     } catch (SQLException e) {
       throw new RuntimeException(e);
@@ -153,7 +153,7 @@ public class MojipPostDAO {
         dto.setApplyEndDate(rs.getDate("apply_end_date"));
         dto.setExperienceDate(rs.getDate("experience_date"));
         dto.setContent(rs.getString("content"));
-        dto.setNumberOfDdabong(rs.getInt("number_of_ddabong"));
+        dto.setNumberOfLikes(rs.getInt("number_of_likes"));
 
         mojipPostList.add(dto);
       }

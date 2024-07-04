@@ -11,23 +11,23 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/mojipboard/detail")
+@WebServlet("/mojip-detail")
 public class MojipPostDetailServlet extends HttpServlet {
 
-  MojipPostDAO mojipPostDAO = new MojipPostDAO();
-  PostDAO postDAO = new PostDAO();
+  private MojipPostDAO mojipPostDAO = new MojipPostDAO();
+  private PostDAO postDAO = new PostDAO();
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    int postSeq = Integer.parseInt(req.getParameter("postSeq"));
-    int memberSeq = ((Member) req.getSession().getAttribute("Member")).getMemberSeq();
+    int postSeq = Integer.parseInt(request.getParameter("postSeq"));
+    int memberSeq = ((Member) request.getSession().getAttribute("Member")).getMemberSeq();
 
     MojipPostDTO mojipPost = mojipPostDAO.getMojipPost(postSeq);
     boolean isLiked = postDAO.isLikedPost(memberSeq, postSeq);
 
-    req.setAttribute("mojipPost", mojipPost);
-    req.setAttribute("isLiked", isLiked);
-    req.getRequestDispatcher("/common-mojip-post-detail-y.jsp").forward(req, resp);
+    request.setAttribute("mojipPost", mojipPost);
+    request.setAttribute("isLiked", isLiked);
+    request.getRequestDispatcher("/common-mojip-post-detail-y.jsp").forward(request, response);
   }
 }

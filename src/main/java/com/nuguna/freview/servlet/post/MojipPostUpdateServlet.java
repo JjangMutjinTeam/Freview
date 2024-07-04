@@ -1,5 +1,7 @@
 package com.nuguna.freview.servlet.post;
 
+import static com.nuguna.freview.util.EncodingUtil.setEncodingToUTF8AndUTF8;
+
 import com.nuguna.freview.dao.post.PostDAO;
 import com.nuguna.freview.entity.post.Post;
 import java.io.IOException;
@@ -11,20 +13,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/mojipBoard/detail/update")
+@WebServlet("/mojip-detail-update")
 public class MojipPostUpdateServlet extends HttpServlet {
 
-  PostDAO postDAO = new PostDAO();
+  private PostDAO postDAO = new PostDAO();
 
   @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    req.setCharacterEncoding("UTF-8");
-    resp.setCharacterEncoding("UTF-8");
+    setEncodingToUTF8AndUTF8(request, response);
 
-    int postSeq = Integer.parseInt(req.getParameter("postSeq"));
-    String title = req.getParameter("title");
-    String content = req.getParameter("content");
+    int postSeq = Integer.parseInt(request.getParameter("postSeq"));
+    String title = request.getParameter("title");
+    String content = request.getParameter("content");
     Timestamp now = Timestamp.valueOf(LocalDateTime.now());
 
     Post post = new Post();
@@ -36,9 +37,9 @@ public class MojipPostUpdateServlet extends HttpServlet {
     boolean updatePost = postDAO.updatePost(post);
 
     if (updatePost) {
-      resp.setStatus(HttpServletResponse.SC_OK);
+      response.setStatus(HttpServletResponse.SC_OK);
     } else {
-      resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
   }
 }

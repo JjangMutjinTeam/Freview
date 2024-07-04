@@ -26,6 +26,6 @@ public class MojipPostDTO {
   private Date applyEndDate;
   private Date experienceDate;
   private String content;
-  private Integer numberOfDdabong;
+  private Integer numberOfLikes;
 
 }

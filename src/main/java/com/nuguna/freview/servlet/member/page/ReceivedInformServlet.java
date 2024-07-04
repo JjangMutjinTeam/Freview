@@ -43,14 +43,14 @@ public class ReceivedInformServlet extends HttpServlet  {
       int bossSeq = 118;
 
       List<BossReceivedZzimInfoDto> zzimInfos = BossReceivedInformDAO.receivedZzimDAO(bossSeq);
-      List<BossReceivedLikesDto> ddabongInfos = BossReceivedInformDAO.receivedDdabongDAO(bossSeq);
+      List<BossReceivedLikesDto> likesInfos = BossReceivedInformDAO.receivedDdabongDAO(bossSeq);
 
       // JSON으로 응답을 생성
       PrintWriter out = response.getWriter();
 
       Map<String, Object> responseData = new HashMap<>();
       responseData.put("zzimInfos", zzimInfos);
-      responseData.put("ddabongInfos", ddabongInfos);
+      responseData.put("likesInfos", likesInfos);
 
       out.println(gson.toJson(responseData));
       out.flush();

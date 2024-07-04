@@ -1,6 +1,7 @@
 package com.nuguna.freview.servlet.post;
 
 import static com.nuguna.freview.entity.post.PostGubun.MJ;
+import static com.nuguna.freview.util.EncodingUtil.setEncodingToUTF8AndUTF8;
 
 import com.nuguna.freview.dao.post.MojipPostDAO;
 import com.nuguna.freview.entity.post.Post;
@@ -14,10 +15,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/mojipBoard/createPost")
+@WebServlet("/mojip-create")
 public class MojipPostAddServlet extends HttpServlet {
 
-  MojipPostDAO mojipPostDAO = new MojipPostDAO();
+  private MojipPostDAO mojipPostDAO = new MojipPostDAO();
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -26,31 +27,30 @@ public class MojipPostAddServlet extends HttpServlet {
   }
 
   @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    req.setCharacterEncoding("UTF-8");
-    resp.setCharacterEncoding("UTF-8");
+    setEncodingToUTF8AndUTF8(request, response);
 
     Timestamp now = Timestamp.valueOf(LocalDateTime.now());
 
     Post post = new Post();
-    post.setTitle(req.getParameter("title"));
-    post.setMemberSeq(Integer.valueOf(req.getParameter("memberSeq")));
-    post.setApplyStartDate(Date.valueOf(req.getParameter("applyStartDate")));
-    post.setApplyEndDate(Date.valueOf(req.getParameter("applyEndDate")));
-    post.setExperienceDate(Date.valueOf(req.getParameter("experienceDate")));
-    post.setContent(req.getParameter("content"));
+    post.setTitle(request.getParameter("title"));
+    post.setMemberSeq(Integer.valueOf(request.getParameter("memberSeq")));
+    post.setApplyStartDate(Date.valueOf(request.getParameter("applyStartDate")));
+    post.setApplyEndDate(Date.valueOf(request.getParameter("applyEndDate")));
+    post.setExperienceDate(Date.valueOf(request.getParameter("experienceDate")));
+    post.setContent(request.getParameter("content"));
     post.setGubun(MJ.getCode());
-    post.setThumbnailPhotoUrl(req.getParameter("thumbnailPhotoUrl"));
+    post.setThumbnailPhotoUrl(request.getParameter("thumbnailPhotoUrl"));
     post.setCreatedAt(now);
     post.setUpdatedAt(now);
 
     boolean insertPost = mojipPostDAO.insertMojipPost(post);
 
     if (insertPost) {
-      resp.setStatus(HttpServletResponse.SC_OK);
+      response.setStatus(HttpServletResponse.SC_OK);
     } else {
-      resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
   }
 }
