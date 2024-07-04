@@ -484,7 +484,6 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
       error: function(myval){console.log("에러"+myval)},
       success: function(myval){console.log("성공"+myval);
 
-
         if(myval==="null"){
           alert("가입된 이메일이 아닙니다. 다시 확인부탁드립니다");
         }else{
@@ -504,6 +503,33 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
 
   $("#common_findid_loginbtn").click(function(){ // common-findid 아이디 찾기 모달창 취소 버튼 클릭시 이벤트
     location.replace("/common-login.jsp");
+  })
+
+  $("#common_findpw_btn").click(function(){ // common-findpw 비밀번호 찾기 버튼 클릭시 이벤트
+
+    let userEmail = $("#findpwEmail").val();
+    let userId = $("#findpw_ID").val();
+
+    $.ajax({
+      method: "post",
+      url : "/findpw",
+      data : {"findpwEmail" : userEmail,
+              "findpwId": userId},
+      error: function(myval){console.log("에러"+myval)},
+      success: function(myval){console.log("성공"+myval);
+
+
+        if(myval==1){
+          $("#common_findid_div_findid").css("display","");
+          $("#common_findid_div_Idcheck").html("<span>비밀번호 재생성되었습니다. 이메일에서 비밀번호 확인하시고 다시 로그인해주세요</span>")
+        }else{
+          alert("존재하지 않는 정보입니다. 이메일과 아이디를 다시 확인해주세요");
+        }
+
+
+      }
+    })
+
   })
 
 })

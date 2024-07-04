@@ -311,4 +311,74 @@ public class RegisterDAO {
 
     return id;
   }
+
+  public int getCheckMemberByEmailAndID(String email, String id) {
+
+    int num = 0;
+
+    try {
+      Class.forName(DB_DRIVER_CLASS);
+      conn = DriverManager.getConnection(DB_URL,DB_USERNAME,DB_PASSWORD);
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+    try {
+      String sql = "SELECT *\n"
+          + "FROM member\n"
+          + "WHERE email = ? AND"
+          +" id=?";
+      pstmt = conn.prepareStatement(sql);
+      pstmt.setString(1,email);
+      pstmt.setString(2,id);
+      rs = pstmt.executeQuery();
+      if(rs.next()){
+        num = 1 ;
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }finally {
+      try {
+        if(rs!=null)rs.close();
+        if(pstmt!=null)pstmt.close();
+        if(conn!=null)conn.close();
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    }
+
+    return num;
+  }
+
+  public void updateUserPW(String shaPw, String userID) {
+
+    try {
+      Class.forName(DB_DRIVER_CLASS);
+      conn = DriverManager.getConnection(DB_URL,DB_USERNAME,DB_PASSWORD);
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+    try {
+      String sql = "UPDATE member SET pw = ? WHERE id = ?";
+      pstmt = conn.prepareStatement(sql);
+      pstmt.setString(1,shaPw);
+      pstmt.setString(2,userID);
+      pstmt.executeUpdate();
+      System.out.println("비밀번호 업데이트 성공");
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }finally {
+      try {
+        if(rs!=null)rs.close();
+        if(pstmt!=null)pstmt.close();
+        if(conn!=null)conn.close();
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    }
+
+  }
 }
