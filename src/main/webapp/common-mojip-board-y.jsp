@@ -1,7 +1,11 @@
-<%@ page import="com.nuguna.freview.entity.member.Member" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+<c:set var="loginUser" value="${requestScope.loginUser}"/>
+<c:set var="memberSeq" value="${loginUser.memberSeq}"/>
+<c:set var="nickname" value="${loginUser.nickname}"/>
+<c:set var="gubun" value="${loginUser.gubun}"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -11,13 +15,6 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
     <title>모집 게시판</title>
-    <%
-        Member loginUser = (Member) session.getAttribute("Member");
-        Integer memberSeq = loginUser.getMemberSeq();
-        String gubun = loginUser.getGubun();
-        request.setAttribute("gubun", gubun);
-        request.setAttribute("memberSeq", memberSeq);
-    %>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -41,13 +38,19 @@
 
     <!-- Template Main CSS File -->
     <link href="assets/css/style.css" rel="stylesheet">
+<%--    <link href="/assets/css/hr.css" rel="stylesheet">--%>
+
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
+    <!-- Day.js -->
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.10.7/dayjs.min.js"></script>
+
     <style>
       /* Custom CSS to make all table rows white */
       table tbody tr {
         background-color: white !important;
       }
-    </style>
-    <style>
       .post-list {
         display: flex;
         flex-wrap: wrap;
@@ -90,32 +93,28 @@
 <body>
 
 <!-- ======= Header ======= -->
-<header id="header" class="header fixed-top d-flex align-items-center">
-    <div class="d-flex align-items-center justify-content-between">
-        <a href="/main?seq=<%=memberSeq%>&pagecode=Requester"
+<header id="header" class="header fixed-top d-flex align-items-center header-hr">
+    <div class="d-flex align-items-center justify-content-between ">
+        <a href="/main?seq=${memberSeq}&pagecode=Requester"
            class="logo d-flex align-items-center">
-            <img src="assets/img/logo/logo-vertical.png" alt="">
-            <span class="d-none d-lg-block">Freeview</span>
+            <img src="assets/img/logo/logo-vertical.png" alt=""
+                 style="  width: 50px; margin-top: 20px;">
+            <span class="d-none d-lg-block">Freview</span>
         </a>
-        <i class="bi bi-list toggle-sidebar-btn"></i>
-    </div><!-- End Logo -->
+    </div>
+    <div class="header-hr-right">
+        <a href="/my-info?member_seq=${memberSeq}" style="margin-right: 20px">
+            ${nickname}
+            <img src="assets/img/basic/basic-profile-img.png" alt=" " style="width: 30px;
+                margin-top: 15px;">
+            <%--            <img src="<%=profileURL()%>" alt=" " style="width: 30px;--%>
+            <%--    margin-top: 15px;"> TODO: 세션의 프로필 url을 적용할 것--%>
+        </a>
+        <a href="/COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
+    </div>
+</header>
 
-    <nav class="header-nav ms-auto">
-        <ul class="d-flex align-items-center">
-            <li class="nav-item dropdown pe-3">
-                <a class="nav-link nav-profile d-flex align-items-center pe-0"
-                   href="/my-info?member_seq=<%=memberSeq%>">
-                    <img src="assets/img/basic/basic-profile-img.png" alt="Profile"
-                         class="rounded-circle">
-                    <span id="nickname-holder-head"
-                          class="d-none d-md-block"><%=loginUser.getNickname()%></span>
-                </a><!-- End Profile Iamge Icon -->
-            </li><!-- End Profile Nav -->
-        </ul>
-    </nav><!-- End Icons Navigation -->
-</header><!-- End Header -->
-
-<main id="main" class="main">
+<main id="main" style="margin:auto; margin-top:50px">
 
     <div class="pagetitle">
         <h1>모집 게시판</h1>
@@ -133,34 +132,62 @@
             <h5 class="card-title">모집 게시판</h5>
             <p>매우 중요한 모집글이 올라옵니다 <br></p>
 
-            <c:if test="${gubun.equals('B')}">
-                <div class="d-flex justify-content-end">
+            <c:if test="${gubun == 'B'}">
+                <div>
                     <a href="/mojipBoard/createPost" class="btn btn-primary">
                         모집 등록
                     </a>
                 </div>
             </c:if>
 
-            <!-- 게시글 리스트 추가 -->
-            <div class="post-list">
-                <c:forEach var="post" items="${postList}">
-                    <a href="/mojipboard/detail?postSeq=${post.postSeq}" class="post-item">
-                        <img src="${post.profilePhotoUrl}" alt="Profile" class="profile-img">
-                        <h5>${post.title}</h5>
-                        <p>모집 가게: ${post.storeName}</p>
-                        <p>모집 기간: ${post.applyStartDate} ~ ${post.applyEndDate} </p>
-                        <p>방문 날짜: ${post.experienceDate}</p>
-                        <p>좋아요 수: ${post.numberOfLikes}</p>
-                    </a>
-                </c:forEach>
+            <div id="postList" class="post-list">
             </div>
-            <!-- 게시글 리스트 끝 -->
-
         </div>
     </div>
 
-</main><!-- End #main -->
+</main>
 
+<script>
+    $(document).ready(function() {
+
+      loadInitialData();
+
+      function loadInitialData() {
+        $.ajax({
+          method: "POST",
+          url: "/mojip",
+          dataType: "json",
+          success: function (response) {
+            renderData(response.data);
+            if (response.hasMore) {
+              $('#loadMoreBtn').data('previous-member-seq', response.data[response.data.length - 1].memberSeq).show();
+            } else {
+              $('#loadMoreBtn').hide();
+            }
+          },
+          error: function() {
+            console.error("[ERROR] 데이터 초기화 중 오류 발생");
+          }
+        });
+      }
+
+      function renderData(data) {
+        var htmlStr = "";
+        $.map(data, function (post) {
+          htmlStr += "<a href='/mojipboard/detail?postSeq=" + post["postSeq"] + "' class='post-item'>";
+          htmlStr += "<img src='" + post["profilePhotoUrl"] + "' alt='Profile' class='profile-img'>";
+          htmlStr += "<h5>" + post["title"] + "</h5>";
+          htmlStr += "<p>모집 가게: " + post["storeName"] + "</p>";
+          htmlStr += "<p>모집 기간: " + post["applyStartDate"] + " ~ " + post["applyEndDate"] + "</p>";
+          htmlStr += "<p>방문 날짜: " + post["experienceDate"] + "</p>";
+          htmlStr += "<p>좋아요 수: " + post["numberOfLikes"] + "</p>";
+          htmlStr += "</a>";
+        });
+        $('#postList').empty().append(htmlStr);
+    };
+
+    });
+</script>
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
     <div class="copyright">

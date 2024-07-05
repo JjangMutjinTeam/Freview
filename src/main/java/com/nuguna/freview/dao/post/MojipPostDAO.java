@@ -22,8 +22,7 @@ public class MojipPostDAO {
       "    m.gubun, " +
       "    m.business_number, " +
       "    m.profile_photo_url, " +
-      "    GROUP_CONCAT(DISTINCT ft.name ORDER BY ft.name ASC SEPARATOR ', ') AS food_type_names, "
-      +
+      "    GROUP_CONCAT(DISTINCT ft.name ORDER BY ft.name ASC SEPARATOR ', ') AS food_type_names, " +
       "    GROUP_CONCAT(DISTINCT t.name ORDER BY t.name ASC SEPARATOR ', ') AS tag_names, " +
       "    s.store_name, " +
       "    p.title, " +
@@ -31,25 +30,17 @@ public class MojipPostDAO {
       "    p.apply_end_date, " +
       "    p.experience_date, " +
       "    p.content, " +
-      "    (SELECT COUNT(*) FROM Likes l WHERE l.post_seq = p.post_seq) AS number_of_likes" +
+      "    (SELECT COUNT(*) FROM likes l WHERE l.post_seq = p.post_seq) AS number_of_likes " +
       "FROM " +
       "    post p " +
-      "LEFT JOIN " +
-      "    member m ON p.member_seq = m.member_seq " +
-      "LEFT JOIN " +
-      "    member_food_type mft ON m.member_seq = mft.member_seq " +
-      "LEFT JOIN " +
-      "    food_type ft ON mft.food_type_seq = ft.food_type_seq " +
-      "LEFT JOIN " +
-      "    member_tag mt ON m.member_seq = mt.member_seq " +
-      "LEFT JOIN " +
-      "    tag t ON mt.tag_seq = t.tag_seq " +
-      "LEFT JOIN " +
-      "    store_business_info s ON m.business_number = s.business_number " +
-      "WHERE" +
-      "     p.gubun = ? " +
-      "GROUP BY " +
-      "    p.post_seq, m.member_seq, m.gubun, m.business_number, m.profile_photo_url, s.store_name, p.title, p.apply_start_date, p.apply_end_date, p.experience_date, p.content";
+      "LEFT JOIN member m ON p.member_seq = m.member_seq " +
+      "LEFT JOIN member_food_type mft ON m.member_seq = mft.member_seq " +
+      "LEFT JOIN food_type ft ON mft.food_type_seq = ft.food_type_seq " +
+      "LEFT JOIN member_tag mt ON m.member_seq = mt.member_seq " +
+      "LEFT JOIN tag t ON mt.tag_seq = t.tag_seq " +
+      "LEFT JOIN store_business_info s ON m.business_number = s.business_number " +
+      "WHERE p.gubun = ? " +
+      "GROUP BY p.post_seq, m.member_seq, m.gubun, m.business_number, m.profile_photo_url, s.store_name, p.title, p.apply_start_date, p.apply_end_date, p.experience_date, p.content";
 
   private final String INSERT_MOJIP = "INSERT INTO post(title, member_seq, apply_start_date, apply_end_date, experience_date, content, gubun) VALUES(?, ?, ?, ?, ?, ?, ?) ";
 
@@ -67,7 +58,7 @@ public class MojipPostDAO {
       "    p.apply_end_date, " +
       "    p.experience_date, " +
       "    p.content, " +
-      "    (SELECT COUNT(*) FROM Likes l WHERE l.post_seq = p.post_seq) AS number_of_likes " +
+      "    (SELECT COUNT(*) FROM likes l WHERE l.post_seq = p.post_seq) AS number_of_likes " +
       "FROM " +
       "    post p " +
       "LEFT JOIN " +
