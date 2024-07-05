@@ -47,7 +47,7 @@ public class BrandPageServlet extends HttpServlet {
         return;
       }
 
-      request.setAttribute("member_seq", memberSeq);
+//      request.setAttribute("member_seq", memberSeq);
       if (memberGubun.isBoss()) {
         BossMyBrandInfoDto brandInfo = bossMyBrandInfoDAO.getBossBrandInfo(memberSeq);
         log.info("bossBrandInfo = " + brandInfo);
