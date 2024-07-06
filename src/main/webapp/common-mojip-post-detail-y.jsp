@@ -3,6 +3,11 @@
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
+<c:set var="loginUser" value="${requestScope.loginUser}"/>
+<c:set var="memberSeq" value="${loginUser.memberSeq}"/>
+<c:set var="nickname" value="${loginUser.nickname}"/>
+<c:set var="gubun" value="${loginUser.gubun}"/>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,14 +16,6 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
     <title>모집글 상세보기</title>
-    <%
-        Member loginUser = (Member) session.getAttribute("Member");
-        Integer memberSeq = loginUser.getMemberSeq();
-        String gubun = loginUser.getGubun();
-        request.setAttribute("gubun", gubun);
-        request.setAttribute("memberSeq", memberSeq);
-    %>
-
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -42,6 +39,7 @@
 
     <!-- Template Main CSS File -->
     <link href="/assets/css/style.css" rel="stylesheet">
+
     <style>
       /* Custom CSS to make all table rows white */
       table tbody tr {
@@ -90,195 +88,163 @@
 <body>
 
 <!-- ======= Header ======= -->
-<header id="header" class="header fixed-top d-flex align-items-center">
-    <div class="d-flex align-items-center justify-content-between">
-        <a href="/main?seq=<%=memberSeq%>&pagecode=Requester"
+<header id="header" class="header fixed-top d-flex align-items-center header-hr">
+    <div class="d-flex align-items-center justify-content-between ">
+        <a href="/main?seq=${memberSeq}&pagecode=Requester"
            class="logo d-flex align-items-center">
-            <img src="assets/img/logo/logo-vertical.png" alt="">
-            <span class="d-none d-lg-block">Freeview</span>
+            <img src="assets/img/logo/logo-vertical.png" alt=""
+                 style="  width: 50px; margin-top: 20px;">
+            <span class="d-none d-lg-block">Freview</span>
         </a>
-        <i class="bi bi-list toggle-sidebar-btn"></i>
-    </div><!-- End Logo -->
+    </div>
+    <div class="header-hr-right">
+        <a href="/my-info?member_seq=${memberSeq}" style="margin-right: 20px">
+            ${nickname}
+            <img src="assets/img/basic/basic-profile-img.png" alt=" " style="width: 30px;
+                margin-top: 15px;">
+            <%--            <img src="<%=profileURL()%>" alt=" " style="width: 30px;--%>
+            <%--    margin-top: 15px;"> TODO: 세션의 프로필 url을 적용할 것--%>
+        </a>
+        <a href="/COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
+    </div>
+</header>
 
-    <nav class="header-nav ms-auto">
-        <ul class="d-flex align-items-center">
-            <li class="nav-item dropdown pe-3">
-                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
-                    <img src="assets/img/basic/basic-profile-img.png" alt="Profile"
-                         class="rounded-circle">
-                    <span id="nickname-holder-head"
-                          class="d-none d-md-block"><%=loginUser.getNickname()%></span>
-                </a><!-- End Profile Iamge Icon -->
-            </li><!-- End Profile Nav -->
-        </ul>
-    </nav><!-- End Icons Navigation -->
-</header><!-- End Header -->
-
-<main id="main" class="main">
+<main id="main" style="margin:auto; margin-top:50px">
 
     <div class="pagetitle">
         <h1>모집게시판</h1>
-        <nav>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/mojipBoard">Home</a></li>
-                <li class="breadcrumb-item">Pages</li>
-                <li class="breadcrumb-item active">Blank</li>
-            </ol>
-        </nav>
-    </div><!-- End Page Title -->
+    </div>
 
-    <div class="container">
-        <div class="card mt-4">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="card-title mb-0">모집글 상세보기</h5>
-                    <div>
-                        <c:if test="${memberSeq == mojipPost.memberSeq || gubun == 'A'}">
-                            <button type="button" class="btn btn-danger" onclick="confirmDelete()">
-                                삭제
-                            </button>
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title mb-0">모집글 상세보기</h5>
+                        <div>
+                            <c:if test="${memberSeq == mojipPost.memberSeq || gubun == 'A'}">
+                                <button type="button" class="btn btn-danger" onclick="confirmDelete()">
+                                    삭제
+                                </button>
+                            </c:if>
+                            <c:if test="${memberSeq == mojipPost.memberSeq}">
+                                <button type="button" class="btn btn-primary" onclick="editPost()">수정</button>
+                            </c:if>
+                            <button type="button" class="btn btn-secondary" onclick="location.href='/mojip'">목록으로</button>
+                        </div>
+                    </div>
+                    <div class="d-flex mb-4">
+                        <img src="${mojipPost.profilePhotoUrl}" alt="Profile" class="profile-img">
+                        <div class="ml-4">
+                            <h3>${mojipPost.storeName}</h3>
+                            <p>분야: ${mojipPost.codeName}</p>
+                            <p>태그: ${mojipPost.name}</p>
+                        </div>
+                    </div>
+                    <form id="postForm" action="/mojipBoard-detail-update" method="post">
+                        <input type="hidden" name="postSeq" value="${mojipPost.postSeq}">
+                        <input type="hidden" name="writerSeq" value="${mojipPost.memberSeq}">
+                        <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
+                            <tbody>
+                            <tr>
+                                <th class="fixed-width">제목</th>
+                                <td>
+                                    <span id="titleView">${mojipPost.title}</span>
+                                    <input type="text" class="form-control d-none" id="titleEdit" name="title" value="${mojipPost.title}">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="fixed-width">모집 시작 일자</th>
+                                <td>
+                                    <span id="mojipView">${mojipPost.applyStartDate}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="fixed-width">모집 종료 일자</th>
+                                <td>${mojipPost.applyEndDate}</td>
+                            </tr>
+                            <tr>
+                                <th class="fixed-width">체험 날짜</th>
+                                <td>${mojipPost.experienceDate}</td>
+                            </tr>
+                            <tr>
+                                <th class="fixed-width">체험 장소</th>
+                                <td>${mojipPost.storeLocation}</td>
+                            </tr>
+                            <tr>
+                                <th class="fixed-width">내용</th>
+                                <td>
+                                    <span id="contentView" style="white-space: pre-line;">${mojipPost.content}</span>
+                                    <textarea class="form-control d-none" id="contentEdit" name="content" rows="10">${mojipPost.content}</textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="fixed-width">좋아요 수</th>
+                                <td>${mojipPost.numberOfLikes}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div id="editButtons" class="d-none">
+                            <button type="submit" class="btn btn-primary">완료</button>
+                            <button type="button" class="btn btn-secondary" onclick="cancelEdit()">취소</button>
+                        </div>
+                    </form>
+                    <div class="button-container">
+                        <c:if test="${gubun == 'B' || gubun == 'C'}">
+                            <c:choose>
+                                <c:when test="${isLiked}">
+                                    <button type="button" class="btn btn-primary" onclick="cancelLike(${mojipPost.postSeq}, ${applicantSeq})">
+                                        <i class="bi bi-heart-fill me-1"></i> 좋아요
+                                    </button>
+                                </c:when>
+                                <c:otherwise>
+                                    <button type="button" class="btn btn-primary" onclick="addLike(${mojipPost.postSeq}, ${applicantSeq})">
+                                        <i class="bi bi-heart me-1"></i> 좋아요
+                                    </button>
+                                </c:otherwise>
+                            </c:choose>
                         </c:if>
-                        <c:if test="${memberSeq == mojipPost.memberSeq}">
-                            <button type="button" class="btn btn-primary" onclick="editPost()">수정
-                            </button>
+                        <c:if test="${gubun == 'C'}">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#applyModal">지원하기</button>
                         </c:if>
-                        <button type="button" class="btn btn-secondary"
-                                onclick="location.href='/mojipBoard'">목록으로
-                        </button>
                     </div>
-                </div>
-                <div class="d-flex mb-4">
-                    <img src="${mojipPost.profilePhotoUrl}" alt="Profile" class="profile-img">
-                    <div class="ml-4">
-                        <h3>${mojipPost.storeName}</h3>
-                        <p>분야: ${mojipPost.codeName}</p>
-                        <p>태그: ${mojipPost.name}</p>
-                    </div>
-                </div>
-                <form id="postForm" action="/mojipBoard/detail/update" method="post">
-                    <input type="hidden" name="postSeq" value="${mojipPost.postSeq}">
-                    <input type="hidden" name="writerSeq" value="${mojipPost.memberSeq}">
-
-                    <%--                    TODO: applicant의 seq는 현재 로그인한 사람의 seq여야 함--%>
-                    <input type="hidden" name="applicantSeq" value="11">
-
-                    <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
-                        <tbody>
-                        <tr>
-                            <th class="fixed-width">제목</th>
-                            <td>
-                                <span id="titleView">${mojipPost.title}</span>
-                                <input type="text" class="form-control d-none" id="titleEdit"
-                                       name="title" value="${mojipPost.title}">
-                            </td>
-                        </tr>
-                        <tr>
-                            <th class="fixed-width">모집 시작 일자</th>
-                            <td>
-                                <span id="mojipView">${mojipPost.applyStartDate}</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th class="fixed-width">모집 종료 일자</th>
-                            <td>${mojipPost.applyEndDate}</td>
-                        </tr>
-                        <tr>
-                            <th class="fixed-width">체험 날짜</th>
-                            <td>${mojipPost.experienceDate}</td>
-                        </tr>
-                        <tr>
-                            <th class="fixed-width">내용</th>
-                            <td>
-                                <span id="contentView"
-                                      style="white-space: pre-line;">${mojipPost.content}</span>
-                                <textarea class="form-control d-none" id="contentEdit"
-                                          name="content" rows="10">${mojipPost.content}</textarea>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th class="fixed-width">좋아요 수</th>
-                            <td>${mojipPost.numberOfDdabong}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <div id="editButtons" class="d-none">
-                        <button type="submit" class="btn btn-primary">완료</button>
-                        <button type="button" class="btn btn-secondary" onclick="cancelEdit()">취소
-                        </button>
-                    </div>
-                </form>
-                <div class="button-container">
-                    <c:choose>
-                        <c:when test="${isLiked}">
-                            <button type="button" class="btn btn-primary"><i
-                                    onclick="cancelLike(${mojipPost.postSeq}, ${applicantSeq})"><i
-                                    class="bi bi-heart-fill me-1"></i> 좋아요
-                            </button>
-                        </c:when>
-                        <c:otherwise>
-                            <button type="button" class="btn btn-primary"
-                                    onclick="addLike(${mojipPost.postSeq}, ${applicantSeq})"><i
-                                    class="bi bi-heart me-1"></i> 좋아요
-                            </button>
-                        </c:otherwise>
-                    </c:choose>
-                    <c:if test="${gubun == 'C'}">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#applyModal">지원하기
-                        </button>
-                    </c:if>
                 </div>
             </div>
-            <body>
-            </body>
-        </div>
-    </div>
 
-    <!-- Apply Confirmation Modal -->
-    <div class="modal fade" id="applyModal" tabindex="-1" aria-labelledby="applyModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="applyModalLabel">지원 확인</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    정말 지원하겠습니까?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소
-                    </button>
-                    <button type="button" class="btn btn-danger" onclick="applyPost()">확인</button>
+        <div class="modal fade" id="applyModal" tabindex="-1" aria-labelledby="applyModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="applyModalLabel">지원 확인</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        정말 지원하겠습니까?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                        <button type="button" class="btn btn-danger" onclick="applyPost()">확인</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-
-    <!-- Delete Confirmation Modal -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">삭제 확인</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    정말 삭제하겠습니까?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소
-                    </button>
-                    <button type="button" class="btn btn-danger" onclick="deletePost()">확인</button>
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel">삭제 확인</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        정말 삭제하겠습니까?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                        <button type="button" class="btn btn-danger" onclick="deletePost()">확인</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-
+    </main>
 
     <script>
       function editPost() {
@@ -353,8 +319,8 @@
             return response.text().then(data => {
               console.log(data);
               alert('게시글이 성공적으로 수정되었습니다.');
-              location.replace("/mojipBoard")
-            })
+              location.replace("/mojipBoard");
+            });
           } else {
             response.text().then(data => {
               console.error(data);
@@ -373,7 +339,7 @@
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
           },
-          body: new URLSearchParams({postSeq: postSeq}).toString()
+          body: new URLSearchParams({ postSeq: postSeq }).toString()
         })
         .then(response => {
           if (response.ok) {
@@ -393,15 +359,14 @@
       }
 
       function addLike(postSeq, applicantSeq) {
-        fetch('/ddabongAdd', {
+        fetch('/likes-add', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
           },
           body: new URLSearchParams({
             postSeq: postSeq,
-            //TODO: 접속자의 세션 seq로 변경 필요
-            applicantSeq: 11
+            applicantSeq: ${memberSeq}
           }).toString()
         })
         .then(response => {
@@ -418,15 +383,14 @@
       }
 
       function cancelLike(postSeq, applicantSeq) {
-        fetch('/ddabongCancel', {
+        fetch('/likes-cancel', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
           },
           body: new URLSearchParams({
             postSeq: postSeq,
-            //TODO: 접속자의 세션 seq로 변경 필요
-            applicantSeq: 11
+            applicantSeq: ${memberSeq}
           }).toString()
         })
         .then(response => {
@@ -442,6 +406,7 @@
         });
       }
     </script>
+
 
 </main><!-- End #main -->
 
