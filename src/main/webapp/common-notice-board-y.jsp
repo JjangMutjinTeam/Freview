@@ -1,7 +1,11 @@
-<%@ page import="com.nuguna.freview.entity.member.Member" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+<c:set var="loginUser" value="${requestScope.loginUser}"/>
+<c:set var="memberSeq" value="${loginUser.memberSeq}"/>
+<c:set var="nickname" value="${loginUser.nickname}"/>
+<c:set var="gubun" value="${loginUser.gubun}"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -11,13 +15,6 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
     <title>공지게시판</title>
-    <%
-        Member loginUser = (Member) session.getAttribute("Member");
-        Integer memberSeq = loginUser.getMemberSeq();
-        String gubun = loginUser.getGubun();
-        request.setAttribute("gubun", gubun);
-        request.setAttribute("memberSeq", memberSeq);
-    %>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -40,12 +37,56 @@
     <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
 
     <!-- Template Main CSS File -->
-    <link href="assets/css/style.css" rel="stylesheet">
+    <link href="/assets/css/style.css" rel="stylesheet">
+    <link href="/assets/css/hr.css" rel="stylesheet">
+
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
+    <!-- Day.js -->
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.10.7/dayjs.min.js"></script>
+
     <style>
-      /* Custom CSS to make all table rows white */
-      table tbody tr {
-        background-color: white !important;
+      .pagination a, .pagination span {
+        display: inline-block;
+        padding: 8px 16px;
+        margin: 5px;
+        border-radius: 5px;
+        border: 1px solid transparent;
+        background-color: #FFFFFF;
+        color: black;
+        text-decoration: none;
+        transition: background-color 0.3s;
+        box-sizing: border-box;
+        vertical-align: middle;
       }
+
+      .pagination a:hover {
+        background-color: #3399ff;
+        border-color: #3399ff;
+      }
+
+      .pagination .current-page {
+        background-color: #007bff;
+        color: white;
+        cursor: default;
+      }
+
+      .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px 0;
+      }
+
+      .container {
+        max-width: 100%;
+        width: 100%;
+      }
+
+    </style>
+
+
     </style>
     <!-- =======================================================
     * Template Name: NiceAdmin
@@ -58,88 +99,149 @@
 
 <body>
 
-<!-- ======= Header ======= -->
-<header id="header" class="header fixed-top d-flex align-items-center">
-    <div class="d-flex align-items-center justify-content-between">
-        <a href="/main?seq=<%=memberSeq%>&pagecode=Requester"
+<header id="header" class="header fixed-top d-flex align-items-center header-hr">
+    <div class="d-flex align-items-center justify-content-between ">
+        <a href="/main?seq=${memberSeq}&pagecode=Requester"
            class="logo d-flex align-items-center">
-            <img src="assets/img/logo/logo-vertical.png" alt="">
-            <span class="d-none d-lg-block">Freeview</span>
+            <img src="assets/img/logo/logo-vertical.png" alt=""
+                 style="  width: 50px; margin-top: 20px;">
+            <span class="d-none d-lg-block">Freview</span>
         </a>
-        <i class="bi bi-list toggle-sidebar-btn"></i>
-    </div><!-- End Logo -->
-<%--    세션의 member 정보를 전부 가져오기 (memberSeq, gubun 외)--%>
-<%--    <div class="header-hr-right">--%>
-<%--        <a href="/brand-page?gubun=${member.gubun}&mid=${member.mid}" style="margin-right: 20px">--%>
-<%--            <%=memberInfo.getNickname()%>--%>
-<%--            <img src="<%=memberInfo.getPhotoUrl()%>" alt=" " style="width: 30px;--%>
-<%--    margin-top: 15px;">--%>
-<%--        </a>--%>
-<%--        <a href="COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>--%>
-<%--    </div>--%>
-</header><!-- End Header -->
-<main id="main" class="main">
+    </div>
+    <div class="header-hr-right">
+        <a href="/my-info?member_seq=${memberSeq}" style="margin-right: 20px">
+            ${nickname}
+            <img src="assets/img/basic/basic-profile-img.png" alt=" " style="width: 30px;
+                margin-top: 15px;">
+            <%--            <img src="<%=profileURL()%>" alt=" " style="width: 30px;--%>
+            <%--    margin-top: 15px;"> TODO: 세션의 프로필 url을 적용할 것--%>
+        </a>
+        <a href="/COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
+    </div>
+</header>
 
+<main id="main" style="margin:auto; margin-top:50px">
     <div class="pagetitle">
-        <h1>공지게시판</h1>
-        <nav>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/noticeBoard">Home</a></li>
-                <li class="breadcrumb-item">Pages</li>
-                <li class="breadcrumb-item active">Blank</li>
-            </ol>
-        </nav>
-    </div><!-- End Page Title -->
+        <h1>공지</h1>
+    </div>
 
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">공지 게시판</h5>
-            <p>매우 중요한 공지가 올라옵니다 <br></p>
-
-            <c:if test="${gubun == 'A'}">
-                <div class="d-flex justify-content-end">
-                    <a href="/noticeBoard/createPost" class="btn btn-primary">
-                        공지 등록
-                    </a>
+            <p>매우 중요한 공지가 올라옵니다<br></p>
+            <div class="d-flex justify-content-between">
+                <div>
+                    <input type="text" name="search_str" id="search_str" placeholder="제목/내용으로 검색하세요!">
+                    <input type="button" id="searchBtn" value="검색">
                 </div>
-            </c:if>
-            <!-- Table with stripped rows -->
+                <c:if test="${gubun == 'A'}">
+                    <div>
+                        <a href="/notice/createPost" class="btn btn-primary">
+                            공지 등록
+                        </a>
+                    </div>
+                </c:if>
+            </div>
             <table class="table">
                 <thead>
                 <tr>
-                    <th>번호</th>
                     <th>제목</th>
                     <th>작성일자</th>
                     <th>수정일자</th>
                 </tr>
                 </thead>
-                <tbody>
-                <c:forEach items="${postList}" var="post" varStatus="status">
-                    <tr>
-                        <td>${status.index + 1}</td>
-                        <td>
-                            <a href="${pageContext.request.contextPath}/noticeBoard/detail?postId=${post.postSeq}">${post.title}</a>
-                        </td>
-                        <td>${post.createdAt}</td>
-                        <td>${post.updatedAt}</td>
-                    </tr>
-                </c:forEach>
-                </tbody>
+                <tbody id="noticeList"></tbody>
             </table>
-            <div class="d-flex justify-content-between">
-                <c:if test="${previousPostSeq != Integer.MAX_VALUE}">
-                    <a class="btn btn-primary" href="?previousPostSeq=${postList[0].postSeq + 11}">이전</a>
-                </c:if>
-                <c:if test="${!empty postList && postList.size() == 10}">
-                    <a class="btn btn-primary"
-                       href="?previousPostSeq=${postList[postList.size() - 1].postSeq}">다음</a>
-                </c:if>
-            </div>
+            <div class="pagination" id="pagination"></div>
 
         </div>
     </div>
+</main>
 
-</main><!-- End #main -->
+<script>
+  $(document).ready(function () {
+    loadPage(1);
+
+    $('#searchBtn').click(function() {
+      var searchStr = $('#search_str').val();
+      loadPage(1, searchStr);
+    });
+
+    function loadPage(page, searchStr = '') {
+      var apiUrl = searchStr ? "/notice-search" : "/notice";
+      $.ajax({
+        method: "POST",
+        url: apiUrl,
+        data: {
+          page: page,
+          search_str: searchStr
+        },
+        dataType: "json",
+        success: function (response) {
+          renderData(response.data);
+          renderPagination(response.totalPages, page, searchStr);
+        },
+        error: function () {
+          console.error("[ERROR] 공지리스트 초기화 중 오류 발생");
+        }
+      });
+    }
+
+    function renderData(data) {
+      var htmlStr = "";
+      $.map(data, function (val) {
+        var formattedCreatedAt = dayjs(val["createdAt"]).format('YYYY-MM-DD HH:mm');
+        var formattedUpdatedAt = dayjs(val["updatedAt"]).format('YYYY-MM-DD HH:mm');
+
+        htmlStr += "<tr>";
+        htmlStr += "<td><a href='/notice/detail?postId=" + val["postSeq"] + "'>" + val["title"]
+            + "</a></td>";
+        htmlStr += "<td>" + formattedCreatedAt + "</td>";
+        htmlStr += "<td>" + formattedUpdatedAt + "</td>";
+        htmlStr += "</tr>";
+      });
+      $('#noticeList').empty().append(htmlStr);
+    }
+
+    function renderPagination(totalPages, currentPage, searchStr) {
+      var htmlStr = "";
+      var startPage = Math.floor((currentPage - 1) / 10) * 10 + 1;
+      var endPage = startPage + 9;
+      if (endPage > totalPages) {
+        endPage = totalPages;
+      }
+
+      if (startPage > 1) {
+        htmlStr += "<a href='#' class='page-link' data-page='" + (startPage - 1) + "' data-search='" + searchStr + "' style='color: black;'>이전</a>";
+      } else {
+        htmlStr += "<span style='color: grey;'>이전</span>";
+      }
+
+      for (var i = startPage; i <= endPage; i++) {
+        if (i === currentPage) {
+          htmlStr += "<span class='current-page'>" + i + "</span>";
+        } else {
+          htmlStr += "<a href='#' class='page-link' data-page='" + i + "' data-search='" + searchStr + "'>" + i + "</a>";
+        }
+      }
+
+      if (endPage < totalPages) {
+        htmlStr += "<a href='#' class='page-link' data-page='" + (endPage + 1) + "' data-search='" + searchStr + "' style='color: black;'>다음</a>";
+      } else {
+        htmlStr += "<span style='color: grey;'>다음</span>";
+      }
+
+      $('#pagination').html(htmlStr);
+    }
+
+    $('#pagination').on('click', 'a.page-link', function (e) {
+      e.preventDefault();
+      var page = $(this).data('page');
+      var searchStr = $(this).data('search');
+      loadPage(page, searchStr);
+    });
+  });
+</script>
 
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">

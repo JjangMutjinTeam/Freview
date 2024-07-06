@@ -30,7 +30,7 @@ public class RegisterDAO {
     }
 
     try {
-      String sql = "SELECT * FROM member WHERE mid=?";
+      String sql = "SELECT * FROM member WHERE id=?";
       pstmt = conn.prepareStatement(sql);
       pstmt.setString(1, id);
       rs = pstmt.executeQuery();
@@ -101,8 +101,7 @@ public class RegisterDAO {
 
   }
 
-  public int registReviewer(String id, String password, String email, String nickname,
-      String agegroup) { // 체험단 회원가입
+  public int insertReviewer(String id, String password, String email, String nickname, String agegroup) { // 체험단 회원가입
 
     int result = 0;
 
@@ -115,9 +114,8 @@ public class RegisterDAO {
       throw new RuntimeException(e);
     }
     try {
-      String sql =
-          "INSERT INTO member (gubun, mid, mpw, nickname, email, age_group, introduce, business_number, store_loc, profile_photo_url)\n"
-              + "VALUES('C', ?, ?, ?, ?, ?, null, null, null, 'https://i.namu.wiki/i/4ukhA0R0S3pz7uj01_PgIPpFHwkovV0JKN4NfXdko0mIUAOBYUCjVN79sI6dSWWkriBy_5kldFmoJ3jNT21-Oul_vkNYmB0QgHVZTSi7Ek8_MAcGXCXOAHHiWN1ykglhPlYDTg7_P3D00OjArvgS2g.webp')";
+      String sql = "INSERT INTO member (gubun, id, pw, nickname, email, age_group, introduce, business_number, store_location, profile_photo_url)\n"
+          + "VALUES('C', ?, ?, ?, ?, ?, null, null, null, 'http://example.com/photo57.jpg')";
 
       pstmt = conn.prepareStatement(sql);
       pstmt.setString(1, id);
@@ -189,8 +187,7 @@ public class RegisterDAO {
     return result;
   }
 
-  public int registBoss(String id, String password, String nickname, String email,
-      String buisnessNumber, String agegroup, String storeLoc) { // 사장님 회원가입
+  public int insertBoss(String id, String password,String nickname ,String email, String buisnessNumber, String agegroup, String storeLoc) { // 사장님 회원가입
     int result = 0;
 
     try {
@@ -203,9 +200,8 @@ public class RegisterDAO {
     }
 
     try {
-      String sql =
-          "INSERT INTO member (gubun, mid, mpw, nickname, email, age_group, introduce, business_number, store_loc, profile_photo_url)\n"
-              + "VALUES('B',?,?,?,?,?,null,?,?, 'https://i.namu.wiki/i/4ukhA0R0S3pz7uj01_PgIPpFHwkovV0JKN4NfXdko0mIUAOBYUCjVN79sI6dSWWkriBy_5kldFmoJ3jNT21-Oul_vkNYmB0QgHVZTSi7Ek8_MAcGXCXOAHHiWN1ykglhPlYDTg7_P3D00OjArvgS2g.webp')"; // Boss 회원 가입
+      String sql = "INSERT INTO member (gubun, id, pw, nickname, email, age_group, introduce, business_number, store_location, profile_photo_url)\n"
+          + "VALUES('B', ?, ?, ?, ?, ?, null, ?, ?, 'http://example.com/photo2.jpg')"; // Boss 회원 가입
 
       pstmt = conn.prepareStatement(sql);
       pstmt.setString(1, id);
@@ -277,5 +273,42 @@ public class RegisterDAO {
     }
 
     return result;
+  }
+
+  public String getFindIdByEmail(String email) {
+    String id = null;
+
+    try {
+      Class.forName(DB_DRIVER_CLASS);
+      conn = DriverManager.getConnection(DB_URL,DB_USERNAME,DB_PASSWORD);
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+
+    try {
+      String sql = "SELECT id\n"
+          + "FROM member\n"
+          + "WHERE email = ?";
+      pstmt = conn.prepareStatement(sql);
+      pstmt.setString(1,email);
+      rs = pstmt.executeQuery();
+      if(rs.next()){
+        id = rs.getString(1) ;
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }finally {
+      try {
+        if(rs!=null)rs.close();
+        if(pstmt!=null)pstmt.close();
+        if(conn!=null)conn.close();
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    }
+
+    return id;
   }
 }

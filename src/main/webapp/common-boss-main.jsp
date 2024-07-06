@@ -9,6 +9,7 @@
 <%
     Member user = (Member)session.getAttribute("Member");
     int seq = user.getMemberSeq();
+
 %>
 <html>
 <head>

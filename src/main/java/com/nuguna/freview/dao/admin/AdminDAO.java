@@ -1,6 +1,7 @@
 package com.nuguna.freview.dao.admin;
 
 import static com.nuguna.freview.config.DbConfig.*;
+import static com.nuguna.freview.util.DbUtil.closeResource;
 
 import com.nuguna.freview.dto.StoreAndBoss;
 import com.nuguna.freview.entity.admin.StoreBusinessInfo;
@@ -18,10 +19,9 @@ import lombok.extern.slf4j.Slf4j;
 public class AdminDAO {
 
   private final String SELECT_ALL_MEMBER_NOT_ADMIN = "SELECT * FROM member WHERE gubun != 'A'";
-  private final String SELECT_MEMBER_BY_ID = "SELECT * FROM member WHERE id = ?";
-  private final String DELETE_MEMBER_BY_ID = "DELETE FROM member WHERE mid = ?";
-  private final String SELECT_ADMIN_PW = "SELECT MPW FROM member WHERE gubun = 'A'";
-  private final String SELECT_STORE_BUSINESS_INFO = "SELECT s.store_name, s.business_number, m.mid, m.created_at FROM store_business_info s LEFT JOIN member m ON s.business_number = m.business_number";
+  private final String DELETE_MEMBER_BY_ID = "DELETE FROM member WHERE id = ?";
+  private final String SELECT_ADMIN_PW = "SELECT pw FROM member WHERE gubun = 'A'";
+  private final String SELECT_STORE_BUSINESS_INFO = "SELECT s.store_name, s.business_number, m.id, m.created_at FROM store_business_info s LEFT JOIN member m ON s.business_number = m.business_number";
   private final String DELETE_STORE_BY_BUSINESS_NUMBER = "DELETE FROM store_business_info WHERE business_number = ?";
   private final String INSERT_STORE = "INSERT INTO store_business_info(business_number, store_name) VALUES(?, ?)";
 
@@ -202,32 +202,4 @@ public class AdminDAO {
     return conn;
   }
 
-  public void closeResource(PreparedStatement pstmt, Connection conn, ResultSet rs) {
-    try {
-      if (rs != null) {
-        rs.close();
-      }
-      if (pstmt != null) {
-        pstmt.close();
-      }
-      if (conn != null) {
-        conn.close();
-      }
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  public void closeResource(PreparedStatement pstmt, Connection conn) {
-    try {
-      if (pstmt != null) {
-        pstmt.close();
-      }
-      if (conn != null) {
-        conn.close();
-      }
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
-  }
 }

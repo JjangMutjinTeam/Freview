@@ -39,13 +39,11 @@ public class MainPageDAO {
       throw new RuntimeException(e);
     }
     try {
-      String sql = "SELECT *\n"
-          + "\n"
-          + "FROM(SELECT * ,@ROWNUM:=@ROWNUM+1 as rowNum\n"
-          + "\n"
-          + "     FROM post,(SELECT @ROWNUM:=0) AS R ) T\n"
+      String sql = "SELECT  *\n"
+          + "FROM post\n"
           + "WHERE gubun = 'MJ'\n"
-          + "LIMIT 0,3";
+          + "ORDER BY updated_at DESC\n"
+          + "LIMIT 3";
       pstmt = conn.prepareStatement(sql);
       rs = pstmt.executeQuery();
       while(rs.next()){
@@ -95,21 +93,13 @@ public class MainPageDAO {
     }
 
     try{
-      String sql ="SELECT SUB2.*\n"
-          + "FROM(SELECT @rownum:=@rownum+1 AS RNUM\n"
-          + "     , SUB.*\n"
-          + "FROM (SELECT m.member_seq\n"
-          + "           , m.nickname\n"
-          + "           , m.profile_photo_url\n"
-          + "      FROM ( SELECT @ROWNUM :=0 ) R\n"
-          + "         , member m\n"
-          + "               INNER JOIN ( SELECT customer_seq,status, updated_at\n"
-          + "                            FROM review) v\n"
-          + "                          ON m.member_seq = v.customer_seq\n"
-          + "      WHERE v.status = 'WRITTEN'\n"
-          + "      ORDER BY v.updated_at DESC\n"
-          + "     ) SUB)SUB2\n"
-          + "WHERE SUB2.RNUM BETWEEN 1 AND 5";
+      String sql ="SELECT *\n"
+          + "FROM(SELECT ROW_NUMBER() over () as RNUM, m.member_seq, m.nickname, m.profile_photo_url\n"
+          + "     FROM review r, member m\n"
+          + "     WHERE r.customer_seq = m.member_seq AND\n"
+          + "           r.status = 'WRITTEN'\n"
+          + "    ORDER BY r.updated_at DESC) as SUB\n"
+          + "WHERE RNUM <=5";
 
       pstmt = conn.prepareStatement(sql);
       rs = pstmt.executeQuery();
@@ -153,13 +143,11 @@ public class MainPageDAO {
     }
 
     try{
-      String sql ="SELECT post_seq,title,created_at,updated_at\n"
-          + "\n"
-          + "FROM(SELECT * ,@ROWNUM:=@ROWNUM+1 as rowNum\n"
-          + "\n"
-          + "     FROM post,(SELECT @ROWNUM:=0) AS R ) T\n"
-          + "WHERE gubun = 'GJ' ORDER BY updated_at DESC\n"
-          + "LIMIT 0,4";
+      String sql ="SELECT  post_seq,title,created_at,updated_at\n"
+          + "FROM post\n"
+          + "WHERE gubun = 'GJ'\n"
+          + "ORDER BY updated_at DESC\n"
+          + "LIMIT 5";
 
       pstmt = conn.prepareStatement(sql);
       rs = pstmt.executeQuery();
