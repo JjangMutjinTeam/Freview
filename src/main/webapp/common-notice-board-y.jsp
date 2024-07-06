@@ -131,7 +131,7 @@
             <p>매우 중요한 공지가 올라옵니다<br></p>
             <div class="d-flex justify-content-between">
                 <div>
-                    <input type="text" name="search_str" id="search_str" placeholder="제목/내용으로 검색하세요!">
+                    <input type="text" name="searchStr" id="searchStr" placeholder="제목/내용으로 검색하세요!">
                     <input type="button" id="searchBtn" value="검색">
                 </div>
                 <c:if test="${gubun == 'A'}">
@@ -163,7 +163,7 @@
     loadPage(1);
 
     $('#searchBtn').click(function() {
-      var searchStr = $('#search_str').val();
+      var searchStr = $('#searchStr').val();
       loadPage(1, searchStr);
     });
 
@@ -174,7 +174,7 @@
         url: apiUrl,
         data: {
           page: page,
-          search_str: searchStr
+          searchStr: searchStr
         },
         dataType: "json",
         success: function (response) {
