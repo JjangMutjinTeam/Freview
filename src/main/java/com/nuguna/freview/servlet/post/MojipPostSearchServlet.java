@@ -1,13 +1,11 @@
 package com.nuguna.freview.servlet.post;
 
 import static com.nuguna.freview.util.EncodingUtil.setEncodingToUTF8AndJson;
-import static com.nuguna.freview.util.EncodingUtil.setEncodingToUTF8AndText;
 import static com.nuguna.freview.util.JsonResponseUtil.sendJsonResponse;
 
 import com.google.gson.Gson;
 import com.nuguna.freview.dao.post.MojipPostDAO;
 import com.nuguna.freview.dto.MojipPostDTO;
-import com.nuguna.freview.entity.member.Member;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -17,32 +15,15 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-@WebServlet("/mojip")
-public class MojipBoardServlet extends HttpServlet {
+@WebServlet("/mojip-search")
+public class MojipPostSearchServlet extends HttpServlet {
 
   private MojipPostDAO mojipPostDAO = new MojipPostDAO();
-  private final int LIMIT = 12;
   private Gson gson = new Gson();
 
-  @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
-    setEncodingToUTF8AndText(request, response);
-
-    HttpSession session = request.getSession();
-    Member loginUser = (Member) session.getAttribute("Member");
-
-    //TODO: 비로그인 시 로그인페이지로 이동하는 메서드 유틸로 작성하기
-    if (loginUser == null) {
-      response.sendRedirect("common-login.jsp");
-      return;
-    }
-    request.setAttribute("loginUser", loginUser);
-
-    request.getRequestDispatcher("/common-mojip-board-y.jsp").forward(request, response);
-  }
+  //TODO: 전역변수 설정
+  private final int LIMIT = 12;
 
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -50,7 +31,8 @@ public class MojipBoardServlet extends HttpServlet {
     setEncodingToUTF8AndJson(request, response);
 
     int previousPostSeq = getPreviousPostSeq(request);
-    List<MojipPostDTO> postList = loadMojipPosts(previousPostSeq);
+    String searchWord = request.getParameter("searchWord");
+    List<MojipPostDTO> postList = loadMojipPosts(previousPostSeq, searchWord);
     boolean hasMore = postList.size() == LIMIT;
     Map<String, Object> responseMap = new HashMap<>();
     responseMap.put("data", postList);
@@ -71,7 +53,7 @@ public class MojipBoardServlet extends HttpServlet {
     return previousPostSeq;
   }
 
-  private List<MojipPostDTO> loadMojipPosts(int previousPostSeq) {
-    return mojipPostDAO.getMojipPostList(previousPostSeq, LIMIT);
+  private List<MojipPostDTO> loadMojipPosts(int previousPostSeq, String searchWord) {
+    return mojipPostDAO.getMojipPostList(previousPostSeq, LIMIT, searchWord);
   }
 }

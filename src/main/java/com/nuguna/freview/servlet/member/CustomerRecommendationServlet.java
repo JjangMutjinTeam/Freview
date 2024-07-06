@@ -1,5 +1,8 @@
 package com.nuguna.freview.servlet.member;
 
+import static com.nuguna.freview.util.EncodingUtil.setEncodingToUTF8AndJson;
+import static com.nuguna.freview.util.EncodingUtil.setEncodingToUTF8AndText;
+
 import com.google.gson.Gson;
 import com.nuguna.freview.dao.member.RecommendationMemberDAO;
 import com.nuguna.freview.dto.MemberRecommendationInfo;
@@ -24,36 +27,34 @@ public class CustomerRecommendationServlet extends HttpServlet {
 
   @Override
   protected void doGet(
-      HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    req.setCharacterEncoding("UTF-8");
-    resp.setContentType("text/html;charset=UTF-8");
+      HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    setEncodingToUTF8AndText(request, response);
 
-    int previousPostSeq = getPreviousMemberSeq(req);
+    int previousPostSeq = getPreviousMemberSeq(request);
     String requestedMemberGubun = MemberGubun.CUSTOMER.getCode();
     List<MemberRecommendationInfo> customerInfoList = loadRecommendationLists(requestedMemberGubun, previousPostSeq);
-    req.setAttribute("customerInfoList", customerInfoList);
+    request.setAttribute("customerInfoList", customerInfoList);
 
-    HttpSession session = req.getSession();
+    HttpSession session = request.getSession();
     Member loginUser = (Member) session.getAttribute("Member");
 
     //TODO: 비로그인 시 로그인페이지로 이동하는 메서드 유틸로 작성하기
     if (loginUser == null) {
-      resp.sendRedirect("common-login.jsp");
+      response.sendRedirect("common-login.jsp");
       return;
     }
 
-    req.setAttribute("loginUser", loginUser);
+    request.setAttribute("loginUser", loginUser);
 
-    req.getRequestDispatcher("/customer-recommendation-board-y.jsp").forward(req, resp);
+    request.getRequestDispatcher("/customer-recommendation-board-y.jsp").forward(request, response);
   }
 
   @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    req.setCharacterEncoding("UTF-8");
-    resp.setContentType("application/json;charset=utf-8");
+    setEncodingToUTF8AndJson(request, response);
 
-    int previousMemberSeq = getPreviousMemberSeq(req);
+    int previousMemberSeq = getPreviousMemberSeq(request);
     String requestedMemberGubun = MemberGubun.CUSTOMER.getCode();
     List<MemberRecommendationInfo> customerInfoList = loadRecommendationLists(requestedMemberGubun, previousMemberSeq);
 
@@ -65,7 +66,7 @@ public class CustomerRecommendationServlet extends HttpServlet {
     Gson gson = new Gson();
     String str = gson.toJson(responseMap);
 
-    resp.getWriter().write(str);
+    response.getWriter().write(str);
   }
 
   private int getPreviousMemberSeq(HttpServletRequest req) {

@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebServlet("/notice-createPost")
+@WebServlet("/notice-create")
 public class NoticePostAddServlet extends HttpServlet {
 
   private NoticePostDAO noticePostdao = new NoticePostDAO();

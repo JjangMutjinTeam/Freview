@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 public class RecommendationFilterServlet extends HttpServlet {
 
   private final RecommendationMemberDAO recommendationMemberDAO = new RecommendationMemberDAO();
-  private final int LIMIT = 10;
+  private final int LIMIT = 20;
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)

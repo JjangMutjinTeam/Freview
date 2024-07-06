@@ -11,17 +11,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/mojipBoard/detail/apply")
+@WebServlet("/mojip-detail-apply")
 public class MojipApplyServlet extends HttpServlet {
 
-  RequestDAO requestDAO = new RequestDAO();
+  private RequestDAO requestDAO = new RequestDAO();
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
     Request request = new Request();
 
-    int fromMemberSeq = Integer.parseInt(req.getParameter("applicantSeq"));
+    int fromMemberSeq = Integer.parseInt(req.getParameter("memberSeq"));
     int toMemberSeq = Integer.parseInt(req.getParameter("writerSeq"));
     String gubun = "AP";
     int fromPostSeq = Integer.parseInt(req.getParameter("postSeq"));
