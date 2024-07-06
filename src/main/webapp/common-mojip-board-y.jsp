@@ -38,7 +38,7 @@
 
     <!-- Template Main CSS File -->
     <link href="assets/css/style.css" rel="stylesheet">
-<%--    <link href="/assets/css/hr.css" rel="stylesheet">--%>
+    <%--    <link href="/assets/css/hr.css" rel="stylesheet">--%>
 
     <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
@@ -51,6 +51,7 @@
       table tbody tr {
         background-color: white !important;
       }
+
       .post-list {
         display: flex;
         flex-wrap: wrap;
@@ -144,49 +145,87 @@
             </div>
         </div>
     </div>
+    <div class="d-flex justify-content-center">
+        <button class="btn btn-primary" id="loadMoreBtn" data-previous-post-seq="0">더보기</button>
+    </div>
 
 </main>
 
 <script>
-    $(document).ready(function() {
+  $(document).ready(function () {
 
-      loadInitialData();
+    loadInitialData();
 
-      function loadInitialData() {
-        $.ajax({
-          method: "POST",
-          url: "/mojip",
-          dataType: "json",
-          success: function (response) {
+    $('#loadMoreBtn').click(function () {
+      var previousPostSeq = $(this).data('previous-post-seq');
+      loadMoreData(previousPostSeq);
+    });
+
+    function loadInitialData() {
+      $.ajax({
+        method: "POST",
+        url: "/mojip",
+        dataType: "json",
+        success: function (response) {
+          renderData(response.data);
+          if (response.hasMore) {
+            $('#loadMoreBtn').data('previous-post-seq',
+                response.data[response.data.length - 1].postSeq).show();
+          } else {
+            $('#loadMoreBtn').hide();
+          }
+        },
+        error: function () {
+          console.error("[ERROR] 데이터 초기화 중 오류 발생");
+        }
+      });
+    }
+
+    function loadMoreData(previousPostSeq) {
+      $.ajax({
+        method: "POST",
+        url: "/mojip",
+        data: {
+          previousPostSeq: previousPostSeq
+        },
+        dataType: "json",
+        success: function (response) {
+          if (response.data.length > 0) {
             renderData(response.data);
             if (response.hasMore) {
-              $('#loadMoreBtn').data('previous-member-seq', response.data[response.data.length - 1].memberSeq).show();
+              $('#loadMoreBtn').data('previous-post-seq',
+                  response.data[response.data.length - 1].postSeq).show();
+              console.log(response.data[response.data.length - 1].postSeq);
             } else {
               $('#loadMoreBtn').hide();
             }
-          },
-          error: function() {
-            console.error("[ERROR] 데이터 초기화 중 오류 발생");
+          } else {
+            $('#loadMoreBtn').hide();
           }
-        });
-      }
+        },
+        error: function () {
+          console.error("[ERROR] 추가 데이터 로딩 중 오류 발생");
+        }
+      });
+    }
 
-      function renderData(data) {
-        var htmlStr = "";
-        $.map(data, function (post) {
-          htmlStr += "<a href='/mojipboard/detail?postSeq=" + post["postSeq"] + "' class='post-item'>";
-          htmlStr += "<img src='" + post["profilePhotoUrl"] + "' alt='Profile' class='profile-img'>";
-          htmlStr += "<h5>" + post["title"] + "</h5>";
-          htmlStr += "<p>모집 가게: " + post["storeName"] + "</p>";
-          htmlStr += "<p>모집 기간: " + post["applyStartDate"] + " ~ " + post["applyEndDate"] + "</p>";
-          htmlStr += "<p>방문 날짜: " + post["experienceDate"] + "</p>";
-          htmlStr += "<p>좋아요 수: " + post["numberOfLikes"] + "</p>";
-          htmlStr += "</a>";
-        });
-        $('#postList').empty().append(htmlStr);
-    };
+    function renderData(data) {
+      var htmlStr = "";
+      $.map(data, function (post) {
+        htmlStr += "<a href='/mojipboard/detail?postSeq=" + post["postSeq"]
+            + "' class='post-item'>";
+        htmlStr += "<img src='" + post["profilePhotoUrl"] + "' alt='Profile' class='profile-img'>";
+        htmlStr += "<h5>" + post["title"] + "</h5>";
+        htmlStr += "<p>모집 가게: " + post["storeName"] + "</p>";
+        htmlStr += "<p>모집 기간: " + post["applyStartDate"] + " ~ " + post["applyEndDate"] + "</p>";
+        htmlStr += "<p>방문 날짜: " + post["experienceDate"] + "</p>";
+        htmlStr += "<p>좋아요 수: " + post["numberOfLikes"] + "</p>";
+        htmlStr += "</a>";
+      });
+      $('#postList').append(htmlStr);
+    }
 
-    });
+  });
 </script>
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
