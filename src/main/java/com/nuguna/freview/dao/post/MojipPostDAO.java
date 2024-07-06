@@ -191,7 +191,7 @@ public class MojipPostDAO {
         "LEFT JOIN tag t ON mt.tag_seq = t.tag_seq " +
         "LEFT JOIN store_business_info s ON m.business_number = s.business_number " +
         "WHERE p.gubun = ? AND p.post_seq < ? " +
-        "AND (p.title LIKE CONCAT('%', ?, '%') OR p.content LIKE CONCAT('%', ?, '%') OR ft.name LIKE CONCAT('%', ?, '%') OR t.name LIKE CONCAT('%', ?, '%') OR m.store_location LIKE CONCAT('%', ?, '%')) " +
+        "AND (p.title LIKE CONCAT('%', ?, '%') OR p.content LIKE CONCAT('%', ?, '%') OR ft.name LIKE CONCAT('%', ?, '%') OR t.name LIKE CONCAT('%', ?, '%') OR m.store_location LIKE CONCAT('%', ?, '%') OR s.store_name LIKE CONCAT('%', ?, '%')) " +
         "GROUP BY p.post_seq, m.member_seq, m.gubun, m.business_number, m.profile_photo_url, s.store_name, p.title, p.apply_start_date, p.apply_end_date, p.experience_date, p.content " +
         "ORDER BY p.post_seq DESC " +
         "LIMIT ?";
@@ -209,6 +209,7 @@ public class MojipPostDAO {
       int paramIndex = 1;
       pstmt.setString(paramIndex++, PostGubun.MJ.getCode());
       pstmt.setInt(paramIndex++, previousPostSeq);
+      pstmt.setString(paramIndex++, searchWord);
       pstmt.setString(paramIndex++, searchWord);
       pstmt.setString(paramIndex++, searchWord);
       pstmt.setString(paramIndex++, searchWord);
