@@ -38,7 +38,7 @@
 
     <!-- Template Main CSS File -->
     <link href="assets/css/style.css" rel="stylesheet">
-    <%--    <link href="/assets/css/hr.css" rel="stylesheet">--%>
+    <link href="/assets/css/hr.css" rel="stylesheet">
 
     <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
@@ -47,37 +47,35 @@
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1.10.7/dayjs.min.js"></script>
 
     <style>
-      /* Custom CSS to make all table rows white */
-      table tbody tr {
-        background-color: white !important;
-      }
-
       .post-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 16px; /* 카드 사이의 간격을 설정합니다 */
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 16px !important;
+        justify-content: flex-start !important;
+        width: 100%;
       }
 
       .post-item {
-        flex: 0 0 calc(25% - 16px); /* 카드의 너비를 4등분하여 설정합니다. 카드 간격을 고려하여 너비를 계산합니다 */
-        box-sizing: border-box;
-        border: 1px solid #ddd; /* 카드 테두리 */
-        border-radius: 8px; /* 카드 모서리를 둥글게 */
-        padding: 16px; /* 카드 내부 여백 */
-        background-color: #fff; /* 카드 배경색 */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 카드 그림자 */
-        text-decoration: none; /* 링크의 기본 밑줄 제거 */
-        color: inherit; /* 링크의 기본 색상 상속 */
+        flex: 0 0 calc(25% - 16px) !important;
+        box-sizing: border-box !important;
+        border: 1px solid #ddd !important;
+        border-radius: 8px !important;
+        padding: 16px !important;
+        background-color: #fff !important;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+        text-decoration: none !important;
+        color: inherit !important;
+        margin-bottom: 16px !important;
       }
 
       .post-item img.profile-img {
-        max-width: 100%;
-        height: auto;
-        border-radius: 50%; /* 이미지 둥글게 */
+        max-width: 100% !important;
+        height: auto !important;
+        border-radius: 50% !important;
       }
 
-      .post-item h3, .post-item p {
-        margin: 8px 0; /* 제목과 내용의 여백 설정 */
+      .post-item h5, .post-item p {
+        margin: 8px 0 !important;
       }
     </style>
 
@@ -118,14 +116,7 @@
 <main id="main" style="margin:auto; margin-top:50px">
 
     <div class="pagetitle">
-        <h1>모집 게시판</h1>
-        <nav>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/mojipBoard">Home</a></li>
-                <li class="breadcrumb-item">Pages</li>
-                <li class="breadcrumb-item active">Blank</li>
-            </ol>
-        </nav>
+        <h1>모집</h1>
     </div><!-- End Page Title -->
 
     <div class="card">
@@ -133,9 +124,14 @@
             <h5 class="card-title">모집 게시판</h5>
             <p>매우 중요한 모집글이 올라옵니다 <br></p>
 
+            <div>
+                <input type="text" name="searchWord" id="searchWord" placeholder="원하는 키워드로 검색하세요!">
+                <input type="button" id="searchBtn" value="검색">
+            </div>
+
             <c:if test="${gubun == 'B'}">
                 <div>
-                    <a href="/mojipBoard/createPost" class="btn btn-primary">
+                    <a href="/mojip-create" class="btn btn-primary">
                         모집 등록
                     </a>
                 </div>
@@ -153,20 +149,32 @@
 
 <script>
   $(document).ready(function () {
+    var currentSearchWord = '';
 
     loadInitialData();
 
-    $('#loadMoreBtn').click(function () {
-      var previousPostSeq = $(this).data('previous-post-seq');
-      loadMoreData(previousPostSeq);
+    $('#searchBtn').click(function() {
+      currentSearchWord = $('#searchWord').val();
+      $('#postList').empty();
+      loadInitialData(currentSearchWord);
     });
 
-    function loadInitialData() {
+    $('#loadMoreBtn').click(function () {
+      var previousPostSeq = $(this).data('previous-post-seq');
+      loadMoreData(previousPostSeq, currentSearchWord);
+    });
+
+    function loadInitialData(searchWord = '') {
+      var apiUrl = searchWord ? "/mojip-search" : "/mojip";
       $.ajax({
         method: "POST",
-        url: "/mojip",
+        url: apiUrl,
+        data: {
+          searchWord: searchWord
+        },
         dataType: "json",
         success: function (response) {
+          $('#postList').empty();
           renderData(response.data);
           if (response.hasMore) {
             $('#loadMoreBtn').data('previous-post-seq',
@@ -181,12 +189,14 @@
       });
     }
 
-    function loadMoreData(previousPostSeq) {
+    function loadMoreData(previousPostSeq, searchWord = '') {
+      var apiUrl = searchWord ? "/mojip-search" : "/mojip";
       $.ajax({
         method: "POST",
-        url: "/mojip",
+        url: apiUrl,
         data: {
-          previousPostSeq: previousPostSeq
+          previousPostSeq: previousPostSeq,
+          searchWord: searchWord
         },
         dataType: "json",
         success: function (response) {
@@ -212,13 +222,14 @@
     function renderData(data) {
       var htmlStr = "";
       $.map(data, function (post) {
-        htmlStr += "<a href='/mojipboard/detail?postSeq=" + post["postSeq"]
+        htmlStr += "<a href='/mojip-detail?postSeq=" + post["postSeq"]
             + "' class='post-item'>";
         htmlStr += "<img src='" + post["profilePhotoUrl"] + "' alt='Profile' class='profile-img'>";
         htmlStr += "<h5>" + post["title"] + "</h5>";
         htmlStr += "<p>모집 가게: " + post["storeName"] + "</p>";
-        htmlStr += "<p>모집 기간: " + post["applyStartDate"] + " ~ " + post["applyEndDate"] + "</p>";
-        htmlStr += "<p>방문 날짜: " + post["experienceDate"] + "</p>";
+        htmlStr += "<p>체험 위치: " + post["storeLocation"] + "</p>";
+        htmlStr += "<p>체험 기간: " + post["applyStartDate"] + " ~ " + post["applyEndDate"] + "</p>";
+        htmlStr += "<p>체험 날짜: " + post["experienceDate"] + "</p>";
         htmlStr += "<p>좋아요 수: " + post["numberOfLikes"] + "</p>";
         htmlStr += "</a>";
       });
