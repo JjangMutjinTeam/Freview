@@ -1,4 +1,3 @@
-<%@ page import="com.nuguna.freview.entity.member.Member" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -39,43 +38,28 @@
 
     <!-- Template Main CSS File -->
     <link href="/assets/css/style.css" rel="stylesheet">
+    <link href="/assets/css/hr.css" rel="stylesheet">
 
-    <style>
-      /* Custom CSS to make all table rows white */
-      table tbody tr {
-        background-color: white !important;
-      }
-    </style>
-    <style>
-      .content-cell {
-        height: 200px; /* 높이를 약 10줄 정도로 설정 */
-        vertical-align: top;
-        white-space: pre-wrap; /* 띄어쓰기 인식 */
-      }
-    </style>
-    <style>
-      .fixed-width {
-        width: 150px;
-        word-wrap: break-word;
-      }
-
-      .table {
-        table-layout: fixed;
-        width: 100%;
-      }
-    </style>
     <style>
       .button-container {
         display: flex;
         justify-content: center;
-        align-items: center;
-        height: 20vh;
+        gap: 10px; /* 버튼 사이의 간격 조정 */
+        margin-top: 20px; /* 상단 여백 추가 */
       }
 
-      .button-container div {
-        margin: 0 10px;
+      .like-button {
+        background-color: #ff79c6 !important; /* 연한 분홍색 배경 */
+        border-color: #ff79c6 !important; /* 연한 분홍색 테두리 */
+        color: #fff !important; /* 흰색 텍스트 */
+        display: inline-block !important;
+      }
+
+      .apply-button {
+        display: inline-block !important;
       }
     </style>
+
     <!-- =======================================================
     * Template Name: NiceAdmin
     * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
@@ -110,302 +94,321 @@
 </header>
 
 <main id="main" style="margin:auto; margin-top:50px">
-
     <div class="pagetitle">
-        <h1>모집게시판</h1>
+        <h1>모집</h1>
     </div>
 
     <div class="card">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="card-title mb-0">모집글 상세보기</h5>
-                        <div>
-                            <c:if test="${memberSeq == mojipPost.memberSeq || gubun == 'A'}">
-                                <button type="button" class="btn btn-danger" onclick="confirmDelete()">
-                                    삭제
-                                </button>
-                            </c:if>
-                            <c:if test="${memberSeq == mojipPost.memberSeq}">
-                                <button type="button" class="btn btn-primary" onclick="editPost()">수정</button>
-                            </c:if>
-                            <button type="button" class="btn btn-secondary" onclick="location.href='/mojip'">목록으로</button>
-                        </div>
-                    </div>
-                    <div class="d-flex mb-4">
-                        <img src="${mojipPost.profilePhotoUrl}" alt="Profile" class="profile-img">
-                        <div class="ml-4">
-                            <h3>${mojipPost.storeName}</h3>
-                            <p>분야: ${mojipPost.codeName}</p>
-                            <p>태그: ${mojipPost.name}</p>
-                        </div>
-                    </div>
-                    <form id="postForm" action="/mojipBoard-detail-update" method="post">
-                        <input type="hidden" name="postSeq" value="${mojipPost.postSeq}">
-                        <input type="hidden" name="writerSeq" value="${mojipPost.memberSeq}">
-                        <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
-                            <tbody>
-                            <tr>
-                                <th class="fixed-width">제목</th>
-                                <td>
-                                    <span id="titleView">${mojipPost.title}</span>
-                                    <input type="text" class="form-control d-none" id="titleEdit" name="title" value="${mojipPost.title}">
-                                </td>
-                            </tr>
-                            <tr>
-                                <th class="fixed-width">모집 시작 일자</th>
-                                <td>
-                                    <span id="mojipView">${mojipPost.applyStartDate}</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th class="fixed-width">모집 종료 일자</th>
-                                <td>${mojipPost.applyEndDate}</td>
-                            </tr>
-                            <tr>
-                                <th class="fixed-width">체험 날짜</th>
-                                <td>${mojipPost.experienceDate}</td>
-                            </tr>
-                            <tr>
-                                <th class="fixed-width">체험 장소</th>
-                                <td>${mojipPost.storeLocation}</td>
-                            </tr>
-                            <tr>
-                                <th class="fixed-width">내용</th>
-                                <td>
-                                    <span id="contentView" style="white-space: pre-line;">${mojipPost.content}</span>
-                                    <textarea class="form-control d-none" id="contentEdit" name="content" rows="10">${mojipPost.content}</textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th class="fixed-width">좋아요 수</th>
-                                <td>${mojipPost.numberOfLikes}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <div id="editButtons" class="d-none">
-                            <button type="submit" class="btn btn-primary">완료</button>
-                            <button type="button" class="btn btn-secondary" onclick="cancelEdit()">취소</button>
-                        </div>
-                    </form>
-                    <div class="button-container">
-                        <c:if test="${gubun == 'B' || gubun == 'C'}">
-                            <c:choose>
-                                <c:when test="${isLiked}">
-                                    <button type="button" class="btn btn-primary" onclick="cancelLike(${mojipPost.postSeq}, ${applicantSeq})">
-                                        <i class="bi bi-heart-fill me-1"></i> 좋아요
-                                    </button>
-                                </c:when>
-                                <c:otherwise>
-                                    <button type="button" class="btn btn-primary" onclick="addLike(${mojipPost.postSeq}, ${applicantSeq})">
-                                        <i class="bi bi-heart me-1"></i> 좋아요
-                                    </button>
-                                </c:otherwise>
-                            </c:choose>
-                        </c:if>
-                        <c:if test="${gubun == 'C'}">
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#applyModal">지원하기</button>
-                        </c:if>
-                    </div>
+                <h5 class="card-title mb-0">모집글 상세보기</h5>
+                <div>
+                    <c:if test="${memberSeq == mojipPost.memberSeq || gubun == 'A'}">
+                        <button type="button" class="btn btn-danger" onclick="confirmDelete()">
+                            삭제
+                        </button>
+                    </c:if>
+                    <c:if test="${memberSeq == mojipPost.memberSeq}">
+                        <button type="button" class="btn btn-primary" onclick="editPost()">수정
+                        </button>
+                    </c:if>
+                    <button type="button" class="btn btn-secondary"
+                            onclick="location.href='/mojip'">목록으로
+                    </button>
                 </div>
             </div>
+            <div class="d-flex mb-4">
+                <img src="${mojipPost.profilePhotoUrl}" alt="Profile" class="profile-img">
+                <div class="ml-4">
+                    <h3>${mojipPost.storeName}</h3>
+                    <p>분야: ${mojipPost.codeName}</p>
+                    <p>태그: ${mojipPost.name}</p>
+                </div>
+            </div>
+            <form id="postForm" action="/mojip-detail-update" method="post">
+                <input type="hidden" name="postSeq" value="${mojipPost.postSeq}">
+                <input type="hidden" name="writerSeq" value="${mojipPost.memberSeq}">
+                <input type="hidden" name="memberSeq" value="${memberSeq}">
+                <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
+                    <tbody>
+                    <tr>
+                        <th class="fixed-width">제목</th>
+                        <td>
+                            <span id="titleView">${mojipPost.title}</span>
+                            <input type="text" class="form-control d-none" id="titleEdit"
+                                   name="title" value="${mojipPost.title}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="fixed-width">모집 시작 일자</th>
+                        <td>
+                            <span id="mojipView">${mojipPost.applyStartDate}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="fixed-width">모집 종료 일자</th>
+                        <td>${mojipPost.applyEndDate}</td>
+                    </tr>
+                    <tr>
+                        <th class="fixed-width">체험 날짜</th>
+                        <td>${mojipPost.experienceDate}</td>
+                    </tr>
+                    <tr>
+                        <th class="fixed-width">체험 장소</th>
+                        <td>${mojipPost.storeLocation}</td>
+                    </tr>
+                    <tr>
+                        <th class="fixed-width">내용</th>
+                        <td>
+                            <span id="contentView"
+                                  style="white-space: pre-line;">${mojipPost.content}</span>
+                            <textarea class="form-control d-none" id="contentEdit" name="content"
+                                      rows="10">${mojipPost.content}</textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="fixed-width">좋아요 수</th>
+                        <td>${mojipPost.numberOfLikes}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div id="editButtons" class="d-none">
+                    <button type="submit" class="btn btn-primary">완료</button>
+                    <button type="button" class="btn btn-secondary" onclick="cancelEdit()">취소
+                    </button>
+                </div>
+            </form>
+            <div id="likeButtons" class="button-container text-center">
+                <c:if test="${gubun == 'B' || gubun == 'C'}">
+                    <c:choose>
+                        <c:when test="${isLiked}">
+                            <button type="button" class="btn btn-primary like-button"
+                                    onclick="cancelLike(${mojipPost.postSeq}, ${applicantSeq})">
+                                <i class="bi bi-heart-fill me-1"></i> 좋아요
+                            </button>
+                        </c:when>
+                        <c:otherwise>
+                            <button type="button" class="btn btn-primary like-button"
+                                    onclick="addLike(${mojipPost.postSeq}, ${applicantSeq})">
+                                <i class="bi bi-heart me-1"></i> 좋아요
+                            </button>
+                        </c:otherwise>
+                    </c:choose>
+                </c:if>
+                <c:if test="${gubun == 'C'}">
+                    <button type="button" class="btn btn-primary apply-button"
+                            data-bs-toggle="modal" data-bs-target="#applyModal">지원하기
+                    </button>
+                </c:if>
+            </div>
+        </div>
+    </div>
 
-        <div class="modal fade" id="applyModal" tabindex="-1" aria-labelledby="applyModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="applyModalLabel">지원 확인</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        정말 지원하겠습니까?
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                        <button type="button" class="btn btn-danger" onclick="applyPost()">확인</button>
-                    </div>
+    <div class="modal fade" id="applyModal" tabindex="-1" aria-labelledby="applyModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="applyModalLabel">지원 확인</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    정말 지원하겠습니까?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="applyPost()">확인</button>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="deleteModalLabel">삭제 확인</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        정말 삭제하겠습니까?
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                        <button type="button" class="btn btn-danger" onclick="deletePost()">확인</button>
-                    </div>
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">삭제 확인</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    정말 삭제하겠습니까?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="deletePost()">확인</button>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
+</main>
 
-    <script>
-      function editPost() {
-        document.getElementById('titleView').classList.add('d-none');
-        document.getElementById('titleEdit').classList.remove('d-none');
-        document.getElementById('contentView').classList.add('d-none');
-        document.getElementById('contentEdit').classList.remove('d-none');
-        document.getElementById('editButtons').classList.remove('d-none');
-      }
+<script>
+  function editPost() {
+    document.getElementById('titleView').classList.add('d-none');
+    document.getElementById('titleEdit').classList.remove('d-none');
+    document.getElementById('contentView').classList.add('d-none');
+    document.getElementById('contentEdit').classList.remove('d-none');
+    document.getElementById('editButtons').classList.remove('d-none');
+    document.getElementById('likeButtons').style.display = 'none';
+  }
 
-      function cancelEdit() {
-        document.getElementById('titleView').classList.remove('d-none');
-        document.getElementById('titleEdit').classList.add('d-none');
-        document.getElementById('contentView').classList.remove('d-none');
-        document.getElementById('contentEdit').classList.add('d-none');
-        document.getElementById('editButtons').classList.add('d-none');
-      }
+  function cancelEdit() {
+    document.getElementById('titleView').classList.remove('d-none');
+    document.getElementById('titleEdit').classList.add('d-none');
+    document.getElementById('contentView').classList.remove('d-none');
+    document.getElementById('contentEdit').classList.add('d-none');
+    document.getElementById('editButtons').classList.add('d-none');
+    document.getElementById('likeButtons').style.display = 'flex';
+  }
 
-      function applyPost() {
-        var postSeq = document.querySelector('input[name="postSeq"]').value;
-        var writerSeq = document.querySelector('input[name="writerSeq"]').value;
-        var applicantSeq = document.querySelector('input[name="applicantSeq"]').value;
+  function applyPost() {
+    var postSeq = document.querySelector('input[name="postSeq"]').value;
+    var writerSeq = document.querySelector('input[name="writerSeq"]').value;
+    var memberSeq = document.querySelector('input[name="memberSeq"]').value;
 
-        var formData = new URLSearchParams();
-        formData.append('postSeq', postSeq);
-        formData.append('writerSeq', writerSeq);
-        formData.append('applicantSeq', applicantSeq);
+    var formData = new URLSearchParams();
+    formData.append('postSeq', postSeq);
+    formData.append('writerSeq', writerSeq);
+    formData.append('memberSeq', memberSeq);
 
-        fetch('/mojipBoard/detail/apply', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: formData.toString()
-        })
-        .then(response => {
-          if (response.ok) {
-            return response.text().then(data => {
-              console.log(data);
-              alert('성공적으로 지원되었습니다.');
-              location.reload();
-            });
-          } else {
-            response.text().then(data => {
-              console.error(data);
-              alert('지원에 실패했습니다. 다시 시도해 주세요.');
-            });
-          }
-        })
-        .catch(error => console.error('Error:', error));
-      }
-
-      function confirmDelete() {
-        var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-        deleteModal.show();
-      }
-
-      document.getElementById('postForm').addEventListener('submit', function (event) {
-        event.preventDefault();
-
-        var formData = new URLSearchParams(new FormData(this));
-
-        fetch('/mojipBoard/detail/update', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: formData.toString()
-        })
-        .then(response => {
-          if (response.ok) {
-            return response.text().then(data => {
-              console.log(data);
-              alert('게시글이 성공적으로 수정되었습니다.');
-              location.replace("/mojipBoard");
-            });
-          } else {
-            response.text().then(data => {
-              console.error(data);
-              alert('게시글 수정에 실패했습니다. 다시 시도해 주세요.');
-            });
-          }
-        })
-        .catch(error => console.error('Error:', error));
-      });
-
-      function deletePost() {
-        var postSeq = document.querySelector('input[name="postSeq"]').value;
-
-        fetch('/mojipBoard/detail/delete', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: new URLSearchParams({ postSeq: postSeq }).toString()
-        })
-        .then(response => {
-          if (response.ok) {
-            return response.text().then(data => {
-              console.log(data);
-              alert('게시글이 성공적으로 삭제되었습니다.');
-              location.replace("/mojipBoard");
-            });
-          } else {
-            response.text().then(data => {
-              console.error(data);
-              alert('게시글 삭제에 실패했습니다. 다시 시도해 주세요.');
-            });
-          }
-        })
-        .catch(error => console.error('Error:', error));
-      }
-
-      function addLike(postSeq, applicantSeq) {
-        fetch('/likes-add', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: new URLSearchParams({
-            postSeq: postSeq,
-            applicantSeq: ${memberSeq}
-          }).toString()
-        })
-        .then(response => {
-          if (response.ok) {
-            location.reload();
-          } else {
-            alert('좋아요를 추가하는 데 실패했습니다. 다시 시도해 주세요.');
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          alert('좋아요를 추가하는 도중 오류가 발생했습니다.');
+    fetch('/mojip-detail-apply', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: formData.toString()
+    })
+    .then(response => {
+      if (response.ok) {
+        return response.text().then(data => {
+          console.log(data);
+          alert('성공적으로 지원되었습니다.');
+          location.reload();
+        });
+      } else {
+        response.text().then(data => {
+          console.error(data);
+          alert('지원에 실패했습니다. 다시 시도해 주세요.');
         });
       }
+    })
+    .catch(error => console.error('Error:', error));
+  }
 
-      function cancelLike(postSeq, applicantSeq) {
-        fetch('/likes-cancel', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: new URLSearchParams({
-            postSeq: postSeq,
-            applicantSeq: ${memberSeq}
-          }).toString()
-        })
-        .then(response => {
-          if (response.ok) {
-            location.reload();
-          } else {
-            alert('좋아요를 취소하는 데 실패했습니다. 다시 시도해 주세요.');
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          alert('좋아요를 취소하는 도중 오류가 발생했습니다.');
+  function confirmDelete() {
+    var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+    deleteModal.show();
+  }
+
+  document.getElementById('postForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    var formData = new URLSearchParams(new FormData(this));
+
+    fetch('/mojip-detail-update', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: formData.toString()
+    })
+    .then(response => {
+      if (response.ok) {
+        return response.text().then(data => {
+          console.log(data);
+          alert('게시글이 성공적으로 수정되었습니다.');
+          location.replace("/mojip");
+        });
+      } else {
+        response.text().then(data => {
+          console.error(data);
+          alert('게시글 수정에 실패했습니다. 다시 시도해 주세요.');
         });
       }
-    </script>
+    })
+    .catch(error => console.error('Error:', error));
+  });
+
+  function deletePost() {
+    var postSeq = document.querySelector('input[name="postSeq"]').value;
+
+    fetch('/mojip-detail-delete', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({postSeq: postSeq}).toString()
+    })
+    .then(response => {
+      if (response.ok) {
+        return response.text().then(data => {
+          console.log(data);
+          alert('게시글이 성공적으로 삭제되었습니다.');
+          location.replace("/mojip");
+        });
+      } else {
+        response.text().then(data => {
+          console.error(data);
+          alert('게시글 삭제에 실패했습니다. 다시 시도해 주세요.');
+        });
+      }
+    })
+    .catch(error => console.error('Error:', error));
+  }
+
+  function addLike(postSeq) {
+    fetch('/likes-add', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({
+        postSeq: postSeq,
+        memberSeq: ${memberSeq}
+      }).toString()
+    })
+    .then(response => {
+      if (response.ok) {
+        location.reload();
+      } else {
+        alert('좋아요를 추가하는 데 실패했습니다. 다시 시도해 주세요.');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('좋아요를 추가하는 도중 오류가 발생했습니다.');
+    });
+  }
+
+  function cancelLike(postSeq, applicantSeq) {
+    fetch('/likes-cancel', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({
+        postSeq: postSeq,
+        memberSeq: ${memberSeq}
+      }).toString()
+    })
+    .then(response => {
+      if (response.ok) {
+        location.reload();
+      } else {
+        alert('좋아요를 취소하는 데 실패했습니다. 다시 시도해 주세요.');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('좋아요를 취소하는 도중 오류가 발생했습니다.');
+    });
+  }
+</script>
 
 
 </main><!-- End #main -->

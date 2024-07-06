@@ -49,10 +49,8 @@ public class MojipBoardServlet extends HttpServlet {
       throws ServletException, IOException {
     setEncodingToUTF8AndJson(request, response);
 
-    //TODO: 페이지네이션 구현 때 활용
     int previousPostSeq = getPreviousPostSeq(request);
     List<MojipPostDTO> postList = loadMojipPosts(previousPostSeq);
-
     boolean hasMore = postList.size() == LIMIT;
     Map<String, Object> responseMap = new HashMap<>();
     responseMap.put("data", postList);

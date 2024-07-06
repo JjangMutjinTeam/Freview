@@ -227,7 +227,7 @@
         htmlStr += "<img src='" + post["profilePhotoUrl"] + "' alt='Profile' class='profile-img'>";
         htmlStr += "<h5>" + post["title"] + "</h5>";
         htmlStr += "<p>모집 가게: " + post["storeName"] + "</p>";
-        htmlStr += "<p>체험 위치: " + post["storeLocation"] + "</p>";
+        htmlStr += "<p>체험 장소: " + post["storeLocation"] + "</p>";
         htmlStr += "<p>체험 기간: " + post["applyStartDate"] + " ~ " + post["applyEndDate"] + "</p>";
         htmlStr += "<p>체험 날짜: " + post["experienceDate"] + "</p>";
         htmlStr += "<p>좋아요 수: " + post["numberOfLikes"] + "</p>";

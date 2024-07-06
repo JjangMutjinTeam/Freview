@@ -21,7 +21,7 @@ public class MojipApplyServlet extends HttpServlet {
       throws ServletException, IOException {
     Request request = new Request();
 
-    int fromMemberSeq = Integer.parseInt(req.getParameter("applicantSeq"));
+    int fromMemberSeq = Integer.parseInt(req.getParameter("memberSeq"));
     int toMemberSeq = Integer.parseInt(req.getParameter("writerSeq"));
     String gubun = "AP";
     int fromPostSeq = Integer.parseInt(req.getParameter("postSeq"));

@@ -250,7 +250,6 @@ public class MojipPostDAO {
   public boolean insertMojipPost(Post post) {
     Connection conn = null;
     PreparedStatement pstmt = null;
-    ResultSet rs = null;
 
     String sql = "INSERT INTO post(title, member_seq, apply_start_date, apply_end_date, experience_date, content, gubun) VALUES(?, ?, ?, ?, ?, ?, ?) ";
 
