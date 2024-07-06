@@ -103,7 +103,7 @@
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center">
     <div class="d-flex align-items-center justify-content-between">
-        <a href="/main?seq=<%=memberSeq%>&pagecode=Requester"
+        <a href="${pageContext.request.contextPath}/main?seq=<%=memberSeq%>}&pagecode=Requester"
            class="logo d-flex align-items-center">
             <img src="assets/img/logo/logo-vertical.png" alt="">
             <span class="d-none d-lg-block">FReview</span>
@@ -172,7 +172,8 @@
                 <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
                     <img src="assets/img/basic/basic-profile-img.png" alt="Profile"
                          class="rounded-circle">
-                    <h2 id="nickname-holder-section">${brandInfo.nickname}</h2>
+                    <h2 id="nickname-holder-section"><%=member.getNickname()%>
+                    </h2>
                     <div class="social-links mt-2 ri-heart-3-fill">
                         ${brandInfo.zzimCount}
                     </div>
@@ -210,57 +211,12 @@
                                 </div>
                             </div>
 
-                            <script>
-                              $(document).ready(function () {
-                                $("#introduce-cancel-btn").click(function () {
-                                  $("#introduce-cancel-btn").hide();
-                                  $("#introduce-submit-btn").hide();
-                                  $("#introduce-update-btn").show();
-                                  $('#introduce-input').prop('readonly', false);
-                                });
-
-                                $("#introduce-update-btn").click(function () {
-                                  $("#introduce-update-btn").hide();
-                                  $("#introduce-cancel-btn").show();
-                                  $("#introduce-submit-btn").show();
-                                  $('#introduce-input').prop('readonly', false);
-                                });
-
-                                $("#introduce-submit-btn").click(function () {
-                                  var newIntroduce = $('#introduce-input').val();
-                                  // Ajax 요청
-                                  $.ajax({
-                                    url: '<%=request.getContextPath()%>/api/my-brand/introduce',
-                                    method: 'POST',
-                                    data: JSON.stringify({
-                                      'member_seq': ${member_seq},
-                                      'to_introduce': newIntroduce
-                                    }),
-                                    success: function (response) {
-                                      // 성공적으로 응답을 받았을 때 처리
-                                      $('#introduce-input').val(response.item).prop('readonly',
-                                          true);
-                                      $("#introduce-submit-btn").hide();
-                                      $("#introduce-cancel-btn").hide();
-                                      $("#introduce-update-btn").show();
-                                      alert('소개글 변경에 성공했습니다.');
-                                    },
-                                    error: function (error) {
-                                      // 실패 시 처리
-                                      console.log(error);
-                                      alert('소개글 변경에 실패하였습니다.');
-                                    }
-                                  });
-                                });
-                              });
-                            </script>
-
                             <!-- 닉네임 보여주기/등록하기 -->
                             <div class="row">
                                 <div class="col-lg-3 col-md-4 label">닉네임</div>
                                 <div class="col-lg-8 col-md-6">
                                     <input id="nickname-input" type="text" name="to_nickname"
-                                           value="<%= brandInfo.getNickname() %>"
+                                           value="<%= member.getNickname() %>"
                                            class="form-control" readonly>
                                 </div>
                                 <div class="col-lg-1 col-md-2">
@@ -278,11 +234,61 @@
 
                             <script>
                               $(document).ready(function () {
+                                function initializeIntroduceForm() {
+                                  $('#introduce-input').val(
+                                      '<%= brandInfo.getIntroduce() == null? "" : brandInfo.getIntroduce() %>').prop(
+                                      'readonly', true);
+                                  $('#introduce-update-btn').show();
+                                  $('#introduce-submit-btn').hide();
+                                  $('#introduce-cancel-btn').hide();
+                                }
+
+                                function initializeNicknameForm() {
+                                  $('#nickname-input').val('<%= member.getNickname() %>').prop(
+                                      'readonly', true);
+                                  $('#nickname-update-btn').show();
+                                  $('#nickname-submit-btn').hide();
+                                  $('#nickname-cancel-btn').hide();
+                                }
+
+                                $("#introduce-cancel-btn").click(function () {
+                                  initializeIntroduceForm();
+                                });
+
+                                $("#introduce-update-btn").click(function () {
+                                  $("#introduce-update-btn").hide();
+                                  $("#introduce-cancel-btn").show();
+                                  $("#introduce-submit-btn").show();
+                                  $('#introduce-input').prop('readonly', false);
+                                });
+
+                                $("#introduce-submit-btn").click(function () {
+                                  var newIntroduce = $('#introduce-input').val();
+                                  $.ajax({
+                                    url: '<%=request.getContextPath()%>/api/my-brand/introduce',
+                                    method: 'POST',
+                                    data: JSON.stringify({
+                                      'member_seq': <%=memberSeq%>,
+                                      'to_introduce': newIntroduce
+                                    }),
+                                    contentType: 'application/json',
+                                    success: function (response) {
+                                      $('#introduce-input').val(response.item).prop('readonly',
+                                          true);
+                                      $("#introduce-submit-btn").hide();
+                                      $("#introduce-cancel-btn").hide();
+                                      $("#introduce-update-btn").show();
+                                      alert('소개글 변경에 성공했습니다.');
+                                    },
+                                    error: function (error) {
+                                      console.log(error);
+                                      alert('소개글 변경에 실패하였습니다.');
+                                    }
+                                  });
+                                });
+
                                 $("#nickname-cancel-btn").click(function () {
-                                  $("#nickname-cancel-btn").hide();
-                                  $("#nickname-submit-btn").hide();
-                                  $("#nickname-update-btn").show();
-                                  $('#nickname-input').prop('readonly', false);
+                                  initializeNicknameForm();
                                 });
 
                                 $("#nickname-update-btn").click(function () {
@@ -294,16 +300,15 @@
 
                                 $("#nickname-submit-btn").click(function () {
                                   var newNickname = $('#nickname-input').val();
-                                  // Ajax 요청
                                   $.ajax({
                                     url: '<%=request.getContextPath()%>/api/my-brand/nickname',
                                     method: 'POST',
                                     data: JSON.stringify({
-                                      'member_seq': ${member_seq},
+                                      'member_seq': <%=memberSeq%>,
                                       'to_nickname': newNickname
                                     }),
+                                    contentType: 'application/json',
                                     success: function (response) {
-                                      // 성공적으로 응답을 받았을 때 처리
                                       $('#nickname-input').val(response.item).prop('readonly',
                                           true);
                                       $("#nickname-holder-head").text(response.item);
@@ -311,10 +316,9 @@
                                       $("#nickname-submit-btn").hide();
                                       $("#nickname-cancel-btn").hide();
                                       $("#nickname-update-btn").show();
-                                      alert('닉네임 변경 변경에 성공하였습니다.');
+                                      alert('닉네임 변경에 성공하였습니다.');
                                     },
                                     error: function (error) {
-                                      // 실패 시 처리
                                       console.log(error);
                                       alert('닉네임 변경에 실패하였습니다.');
                                     }
@@ -325,26 +329,28 @@
 
                             <!-- 연령대 보여주기/등록하기 -->
                             <div class="row">
-                                <div class="col-lg-3 col-md-4 label">연령대</div>
-                                <select id="age-group-input"
-                                        class="form-control form-control-readonly col-lg-8 col-md-6"
-                                        aria-label="Default select example" disabled>
-                                    <%
-                                        String[] ageGroups = {"10대", "20대", "30대", "40대", "50대",
-                                                "60대", "70대", "80대", "90대"};
-                                        String selectedAgeGroup = brandInfo.getAgeGroup();
-                                    %>
-                                    <%
-                                        for (String ageGroup : ageGroups) {
-                                    %>
-                                    <option value="<%= ageGroup %>" <%=
-                                    ageGroup.equals(selectedAgeGroup) ? "selected"
-                                            : "" %>><%= ageGroup %>
-                                    </option>
-                                    <%
-                                        }
-                                    %>
-                                </select>
+                                <div class="col-lg-3 col-md-4">연령대</div>
+                                <div class="col-lg-8 col-md-6">
+                                    <select id="age-group-input"
+                                            class="form-control form-control-readonly" disabled>
+                                        <!-- col-lg-8 col-md-6 -->
+                                        <%
+                                            String[] ageGroups = {"10대", "20대", "30대", "40대", "50대",
+                                                    "60대", "70대", "80대", "90대"};
+                                            String selectedAgeGroup = brandInfo.getAgeGroup();
+                                        %>
+                                        <%
+                                            for (String ageGroup : ageGroups) {
+                                        %>
+                                        <option value="<%= ageGroup %>" <%=
+                                        ageGroup.equals(selectedAgeGroup) ? "selected"
+                                                : "" %>><%= ageGroup %>
+                                        </option>
+                                        <%
+                                            }
+                                        %>
+                                    </select>
+                                </div>
 
                                 <script>
                                   $(document).ready(function () {
@@ -369,7 +375,7 @@
                                         url: '<%=request.getContextPath()%>/api/customer/my-brand/age-group',
                                         method: 'POST',
                                         data: JSON.stringify({
-                                          'member_seq': ${member_seq},
+                                          'member_seq': <%=memberSeq%>,
                                           'to_age_group': newAgeGroup
                                         }),
                                         success: function (response) {
@@ -433,139 +439,98 @@
                                     </button>
                                 </div>
                             </div>
-
                             <script>
-                              // 서버에서 받아온 foodType 목록을 JSON 형태로 포함
                               var selectedFoodTypes = JSON.parse(
                                   '<%= gson.toJson(brandInfo.getFoodTypes()) %>');
 
-                              // foodType 목록을 미리 선택된 상태로 설정
-                              document.addEventListener('DOMContentLoaded', function () {
-                                var foodTypeSelect = document.getElementById('food-type-select');
-                                for (var i = 0; i < foodTypeSelect.options.length; i++) {
-                                  if (selectedFoodTypes.includes(foodTypeSelect.options[i].value)) {
-                                    foodTypeSelect.options[i].selected = true;
-                                    foodTypeSelect.options[i].classList.add('selected-option');
+                              function initializeFoodTypeSelect() {
+                                var foodTypeSelect = $('#food-type-select');
+                                foodTypeSelect.find('option').each(function () {
+                                  if (selectedFoodTypes.includes($(this).val())) {
+                                    $(this).prop('selected', true);
+                                    $(this).addClass('selected-option');
+                                  } else {
+                                    $(this).prop('selected', false);
+                                    $(this).removeClass('selected-option');
                                   }
-                                }
-                              });
+                                });
+                              }
 
-                              document.getElementById('food-type-update-btn').addEventListener(
-                                  'click', function () {
-                                    document.getElementById(
-                                        'food-type-submit-btn').style.display = 'inline-block';
-                                    document.getElementById(
-                                        'food-type-cancel-btn').style.display = 'inline-block';
-                                    document.getElementById(
-                                        'food-type-update-btn').style.display = 'none';
+                              $(document).ready(function () {
+                                initializeFoodTypeSelect();
 
-                                    $('#food-type-select').prop('disabled', false);
+                                $("#food-type-update-btn").click(function () {
+                                  $("#food-type-update-btn").hide();
+                                  $("#food-type-cancel-btn").show();
+                                  $("#food-type-submit-btn").show();
+                                  $('#food-type-select').prop('disabled', false);
+                                });
 
-                                    var foodTypeSelect = document.getElementById(
-                                        'food-type-select');
-                                    for (var i = 0; i < foodTypeSelect.options.length; i++) {
-                                      if (foodTypeSelect.options[i].selected) {
-                                        foodTypeSelect.options[i].classList.add('selected-option');
-                                      } else {
-                                        foodTypeSelect.options[i].classList.remove(
-                                            'selected-option');
-                                      }
+                                $('#food-type-cancel-btn').click(function () {
+                                  $('#food-type-cancel-btn').hide();
+                                  $('#food-type-submit-btn').hide();
+                                  $('#food-type-update-btn').show();
+                                  $('#food-type-select').prop('disabled', true);
+                                  initializeFoodTypeSelect();
+                                });
+
+                                $('#food-type-select').on('change', function () {
+                                  $('#food-type-select option').each(function () {
+                                    if ($(this).is(':selected')) {
+                                      $(this).addClass('selected-option');
+                                    } else {
+                                      $(this).removeClass('selected-option');
                                     }
                                   });
+                                });
 
-                              document.getElementById('food-type-select').addEventListener('change',
-                                  function () {
-                                    var foodTypeSelect = document.getElementById(
-                                        'food-type-select');
-                                    for (var i = 0; i < foodTypeSelect.options.length; i++) {
-                                      if (foodTypeSelect.options[i].selected) {
-                                        foodTypeSelect.options[i].classList.add('selected-option');
-                                      } else {
-                                        foodTypeSelect.options[i].classList.remove(
-                                            'selected-option');
-                                      }
+                                $("#food-type-submit-btn").click(function () {
+                                  var selectedFoodTypes = Array.from(
+                                      $("#food-type-select option:selected")).map(
+                                      option => option.value);
+
+                                  $.ajax({
+                                    url: '<%=request.getContextPath()%>/api/my-brand/food-type',
+                                    method: 'POST',
+                                    contentType: 'application/json',
+                                    data: JSON.stringify({
+                                      'member_seq': <%=memberSeq%>,
+                                      'to_food_types': selectedFoodTypes
+                                    }),
+                                    success: function (response) {
+                                      var foodTypesFromServer = response.item;
+
+                                      $("#food-type-submit-btn").hide();
+                                      $("#food-type-cancel-btn").hide();
+                                      $("#food-type-update-btn").show();
+                                      $('#food-type-select').prop('disabled', true);
+
+                                      var foodTypeSelect = document.getElementById(
+                                          'food-type-select');
+                                      var currentOptions = Array.from(foodTypeSelect.options).map(
+                                          option => option.value);
+                                      var newOptions = new Set(
+                                          [...currentOptions, ...foodTypesFromServer]);
+
+                                      foodTypeSelect.innerHTML = '';
+
+                                      newOptions.forEach(function (foodType) {
+                                        var option = document.createElement('option');
+                                        option.value = foodType;
+                                        option.text = foodType;
+                                        if (foodTypesFromServer.includes(foodType)) {
+                                          option.selected = true;
+                                          option.classList.add('selected-option');
+                                        }
+                                        foodTypeSelect.appendChild(option);
+                                      });
+                                      alert('활동 분야 변경에 성공하였습니다.');
+                                    },
+                                    error: function (error) {
+                                      console.log(error);
+                                      alert('활동 분야 변경에 실패하였습니다.');
                                     }
                                   });
-
-                              document.getElementById('food-type-cancel-btn').addEventListener(
-                                  'click', function () {
-                                    document.getElementById(
-                                        'food-type-submit-btn').style.display = 'none';
-                                    document.getElementById(
-                                        'food-type-cancel-btn').style.display = 'none';
-                                    document.getElementById(
-                                        'food-type-update-btn').style.display = 'inline-block';
-
-                                    var foodTypeSelect = document.getElementById(
-                                        'food-type-select');
-                                    for (var i = 0; i < foodTypeSelect.options.length; i++) {
-                                      if (selectedFoodTypes.includes(
-                                          foodTypeSelect.options[i].value)) {
-                                        foodTypeSelect.options[i].selected = true;
-                                        foodTypeSelect.options[i].classList.add('selected-option');
-                                      } else {
-                                        foodTypeSelect.options[i].selected = false;
-                                        foodTypeSelect.options[i].classList.remove(
-                                            'selected-option');
-                                      }
-                                    }
-                                  });
-
-                              $("#food-type-submit-btn").click(function () {
-                                var selectedFoodTypes = Array.from(
-                                    $("#food-type-select option:selected")).map(
-                                    option => option.value);
-
-                                // Ajax 요청
-                                $.ajax({
-                                  url: '<%=request.getContextPath()%>/api/my-brand/food-type',
-                                  method: 'POST',
-                                  contentType: 'application/json',
-                                  data: JSON.stringify({
-                                    'member_seq': ${member_seq},
-                                    'to_food_types': selectedFoodTypes
-                                  }),
-                                  success: function (response) {
-                                    // 서버로부터 받은 음식 유형 목록
-                                    var foodTypesFromServer = response.item;
-
-                                    $("#food-type-submit-btn").hide();
-                                    $("#food-type-cancel-btn").hide();
-                                    $("#food-type-update-btn").show();
-                                    $('#food-type-select').prop('disabled', true);
-
-                                    var foodTypeSelect = document.getElementById(
-                                        'food-type-select');
-
-                                    // 현재 select 요소에 있는 옵션들 저장
-                                    var currentOptions = Array.from(foodTypeSelect.options).map(
-                                        option => option.value);
-
-                                    // 새로운 옵션 목록
-                                    var newOptions = new Set(
-                                        [...currentOptions, ...foodTypesFromServer]);
-
-                                    // select 요소 초기화
-                                    foodTypeSelect.innerHTML = '';
-
-                                    // 모든 옵션을 select 요소에 추가
-                                    newOptions.forEach(function (foodType) {
-                                      var option = document.createElement('option');
-                                      option.value = foodType;
-                                      option.text = foodType;
-                                      if (foodTypesFromServer.includes(foodType)) {
-                                        option.selected = true;
-                                        option.classList.add('selected-option');
-                                      }
-                                      foodTypeSelect.appendChild(option);
-                                    });
-                                    alert('활동 분야 변경에 성공하였습니다.');
-                                  },
-                                  error: function (error) {
-                                    // 실패 시 처리
-                                    console.log(error);
-                                    alert('활동 분야 변경에 실패하였습니다.');
-                                  }
                                 });
                               });
                             </script>
@@ -640,7 +605,7 @@
                                     url: '<%=request.getContextPath()%>/api/my-brand/tag',
                                     method: 'POST',
                                     data: JSON.stringify({
-                                      'member_seq': ${member_seq},
+                                      'member_seq': <%=memberSeq%>,
                                       'to_tags': selectedTags
                                     }),
                                     success: function (response) {
