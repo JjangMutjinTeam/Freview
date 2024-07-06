@@ -120,7 +120,7 @@
             <div class="d-flex mb-4">
                 <img src="${mojipPost.profilePhotoUrl}" alt="Profile" class="profile-img">
                 <div class="ml-4">
-                    <h3>${mojipPost.storeName}</h3>
+                    <h3><a href='/brand-page?member_seq=${mojipPost.memberSeq}'>${mojipPost.storeName}</a></h3>
                     <p>분야: ${mojipPost.codeName}</p>
                     <p>태그: ${mojipPost.name}</p>
                 </div>
