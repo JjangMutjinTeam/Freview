@@ -45,10 +45,10 @@ public class ActivityPageServlet extends HttpServlet {
             "유효하지 않은 유저입니다.");
         return;
       }
-      // request.setAttribute("member_seq", memberSeq);
       // 세션에 Member를 넣었기에, 이를 꺼내주면 됨
       List<CustMyLikePostDto> likeposts = custMyActivityDAO.getLikePosts(memberSeq);
       request.setAttribute("likePosts", likeposts);
+//      request.setAttribute("nickname", )
       log.info("likePosts = " + likeposts);
       JsonResponseUtil.sendBackJsonWithStatus(200, new ResponseMessage<>("Hi", likeposts), response,
           new Gson());

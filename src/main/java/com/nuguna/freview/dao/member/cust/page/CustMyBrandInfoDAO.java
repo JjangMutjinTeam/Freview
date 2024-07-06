@@ -44,7 +44,6 @@ public class CustMyBrandInfoDAO {
         + "       m.member_seq as ms,\n"
         + "       m.introduce,\n"
         + "       m.age_group,\n"
-        + "       m.nickname,\n"
         + "       m.profile_photo_url\n"
         + "    FROM\n"
         + "        member as m\n"
@@ -121,14 +120,12 @@ public class CustMyBrandInfoDAO {
 
       String introduce = null;
       String ageGroup = null;
-      String nickname = null;
       String profilePhotoUrl = null;
       Integer zzimCount = null;
 
       if (rs.next()) {
         introduce = rs.getString("introduce");
         ageGroup = rs.getString("age_group");
-        nickname = rs.getString("nickname");
         profilePhotoUrl = rs.getString("profile_photo_url");
         zzimCount = rs.getInt("zzimCount");
       }
@@ -178,7 +175,7 @@ public class CustMyBrandInfoDAO {
 
       // Create DTO
       custMyBrandInfoDto = new CustMyBrandInfoDto(
-          profilePhotoUrl, nickname, ageGroup, introduce, zzimCount, foodTypes, tagInfos,
+          profilePhotoUrl, ageGroup, introduce, zzimCount, foodTypes, tagInfos,
           reviewInfos);
 
     } catch (SQLException e) {

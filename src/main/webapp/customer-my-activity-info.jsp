@@ -111,7 +111,7 @@
                     <img src="assets/img/basic/basic-profile-img.png" alt="Profile"
                          class="rounded-circle">
                     <span id="nickname-holder-head"
-                          class="d-none d-md-block">닉네임 자리(userNickname)</span>
+                          class="d-none d-md-block"><%=member.getNickname()%></span>
                 </a>
             </li>
         </ul>

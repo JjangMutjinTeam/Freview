@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CustMyLikePostDto {
 
-  private Integer seq;
+  private Integer seq; // 게시물 seq
   private String title;
   private String content;
   private Integer likesCount;
