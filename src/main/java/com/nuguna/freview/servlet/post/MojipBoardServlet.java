@@ -31,7 +31,6 @@ public class MojipBoardServlet extends HttpServlet {
       throws ServletException, IOException {
     setEncodingToUTF8AndText(request, response);
 
-    // 로그한 멤버 정보 loginUser 담기
     HttpSession session = request.getSession();
     Member loginUser = (Member) session.getAttribute("Member");
 
@@ -52,7 +51,7 @@ public class MojipBoardServlet extends HttpServlet {
 
     //TODO: 페이지네이션 구현 때 활용
     int previousPostSeq = getPreviousPostSeq(request);
-    List<MojipPostDTO> postList = mojipPostDAO.getMojipPostList();
+    List<MojipPostDTO> postList = loadMojipPosts(previousPostSeq);
 
     boolean hasMore = postList.size() == LIMIT;
     Map<String, Object> responseMap = new HashMap<>();
@@ -72,5 +71,9 @@ public class MojipBoardServlet extends HttpServlet {
       }
     }
     return previousPostSeq;
+  }
+
+  private List<MojipPostDTO> loadMojipPosts(int previousPostSeq) {
+    return mojipPostDAO.getMojipPostList(previousPostSeq, LIMIT);
   }
 }

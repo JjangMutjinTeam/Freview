@@ -23,7 +23,7 @@ public class MojipPostDetailServlet extends HttpServlet {
     int postSeq = Integer.parseInt(request.getParameter("postSeq"));
     int memberSeq = ((Member) request.getSession().getAttribute("Member")).getMemberSeq();
 
-    MojipPostDTO mojipPost = mojipPostDAO.getMojipPost(postSeq);
+    MojipPostDTO mojipPost = mojipPostDAO.getMojipPostOne(postSeq);
     boolean isLiked = postDAO.isLikedPost(memberSeq, postSeq);
 
     request.setAttribute("mojipPost", mojipPost);

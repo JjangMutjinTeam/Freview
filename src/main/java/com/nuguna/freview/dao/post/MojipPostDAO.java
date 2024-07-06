@@ -16,32 +16,6 @@ import java.util.List;
 public class MojipPostDAO {
 
   //TODO: 성능 개선
-  private final String SELECT_MOJIP_LIST = "SELECT " +
-      "    p.post_seq, " +
-      "    m.member_seq, " +
-      "    m.gubun, " +
-      "    m.business_number, " +
-      "    m.profile_photo_url, " +
-      "    GROUP_CONCAT(DISTINCT ft.name ORDER BY ft.name ASC SEPARATOR ', ') AS food_type_names, " +
-      "    GROUP_CONCAT(DISTINCT t.name ORDER BY t.name ASC SEPARATOR ', ') AS tag_names, " +
-      "    s.store_name, " +
-      "    p.title, " +
-      "    p.apply_start_date, " +
-      "    p.apply_end_date, " +
-      "    p.experience_date, " +
-      "    p.content, " +
-      "    (SELECT COUNT(*) FROM likes l WHERE l.post_seq = p.post_seq) AS number_of_likes " +
-      "FROM " +
-      "    post p " +
-      "LEFT JOIN member m ON p.member_seq = m.member_seq " +
-      "LEFT JOIN member_food_type mft ON m.member_seq = mft.member_seq " +
-      "LEFT JOIN food_type ft ON mft.food_type_seq = ft.food_type_seq " +
-      "LEFT JOIN member_tag mt ON m.member_seq = mt.member_seq " +
-      "LEFT JOIN tag t ON mt.tag_seq = t.tag_seq " +
-      "LEFT JOIN store_business_info s ON m.business_number = s.business_number " +
-      "WHERE p.gubun = ? " +
-      "GROUP BY p.post_seq, m.member_seq, m.gubun, m.business_number, m.profile_photo_url, s.store_name, p.title, p.apply_start_date, p.apply_end_date, p.experience_date, p.content";
-
   private final String INSERT_MOJIP = "INSERT INTO post(title, member_seq, apply_start_date, apply_end_date, experience_date, content, gubun) VALUES(?, ?, ?, ?, ?, ?, ?) ";
 
   private final String SELECT_MOJIP_BY_SEQ = "SELECT " +
@@ -79,7 +53,7 @@ public class MojipPostDAO {
       "GROUP BY " +
       "    p.post_seq, m.member_seq, m.gubun, m.business_number, m.profile_photo_url, s.store_name, p.title, p.apply_start_date, p.apply_end_date, p.experience_date, p.content";
 
-  public MojipPostDTO getMojipPost(int poseSeq) {
+  public MojipPostDTO getMojipPostOne(int postSeq) {
     Connection conn = null;
     PreparedStatement pstmt = null;
     ResultSet rs = null;
@@ -90,7 +64,7 @@ public class MojipPostDAO {
       conn = getConnection();
       pstmt = conn.prepareStatement(SELECT_MOJIP_BY_SEQ);
       pstmt.setString(1, PostGubun.MJ.getCode());
-      pstmt.setInt(2, poseSeq);
+      pstmt.setInt(2, postSeq);
       rs = pstmt.executeQuery();
 
       while (rs.next()) {
@@ -117,7 +91,35 @@ public class MojipPostDAO {
     return mojipPost;
   }
 
-  public List<MojipPostDTO> getMojipPostList() {
+  public List<MojipPostDTO> getMojipPostList(int previousPostSeq, int limit) {
+    String sql = "SELECT " +
+        "    p.post_seq, " +
+        "    m.member_seq, " +
+        "    m.gubun, " +
+        "    m.business_number, " +
+        "    m.profile_photo_url, " +
+        "    GROUP_CONCAT(DISTINCT ft.name ORDER BY ft.name ASC SEPARATOR ', ') AS food_type_names, " +
+        "    GROUP_CONCAT(DISTINCT t.name ORDER BY t.name ASC SEPARATOR ', ') AS tag_names, " +
+        "    s.store_name, " +
+        "    p.title, " +
+        "    p.apply_start_date, " +
+        "    p.apply_end_date, " +
+        "    p.experience_date, " +
+        "    p.content, " +
+        "    (SELECT COUNT(*) FROM likes l WHERE l.post_seq = p.post_seq) AS number_of_likes " +
+        "FROM " +
+        "    post p " +
+        "LEFT JOIN member m ON p.member_seq = m.member_seq " +
+        "LEFT JOIN member_food_type mft ON m.member_seq = mft.member_seq " +
+        "LEFT JOIN food_type ft ON mft.food_type_seq = ft.food_type_seq " +
+        "LEFT JOIN member_tag mt ON m.member_seq = mt.member_seq " +
+        "LEFT JOIN tag t ON mt.tag_seq = t.tag_seq " +
+        "LEFT JOIN store_business_info s ON m.business_number = s.business_number " +
+        "WHERE p.gubun = ? AND p.post_seq < ? " +
+        "GROUP BY p.post_seq, m.member_seq, m.gubun, m.business_number, m.profile_photo_url, s.store_name, p.title, p.apply_start_date, p.apply_end_date, p.experience_date, p.content " + // 공백 추가
+        "ORDER BY p.post_seq DESC " +
+        "LIMIT ?";
+
     Connection conn = null;
     PreparedStatement pstmt = null;
     ResultSet rs = null;
@@ -126,8 +128,10 @@ public class MojipPostDAO {
 
     try {
       conn = getConnection();
-      pstmt = conn.prepareStatement(SELECT_MOJIP_LIST);
+      pstmt = conn.prepareStatement(sql);
       pstmt.setString(1, PostGubun.MJ.getCode());
+      pstmt.setInt(2, previousPostSeq);
+      pstmt.setInt(3, limit);
       rs = pstmt.executeQuery();
 
       while (rs.next()) {
