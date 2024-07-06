@@ -12,10 +12,10 @@
 
 <%
     Member loginUser = null;
-    int userSeq = -1;
+    int memberSeq = -1;
     if(session.getAttribute("Member") != null) {
         loginUser = (Member) session.getAttribute("Member");
-        userSeq = loginUser.getMemberSeq();
+        memberSeq = loginUser.getMemberSeq();
     }
 %>
 
@@ -67,7 +67,7 @@
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center">
     <div class="d-flex align-items-center justify-content-between">
-        <a href="/main?seq=${userSeq}&pagecode=Requester"
+        <a href="/main?seq=${memberSeq}&pagecode=Requester"
            class="logo d-flex align-items-center">
             <img src="assets/img/logo/logo-vertical.png" alt="">
             <span class="d-none d-lg-block">Freeview</span>
@@ -82,7 +82,7 @@
                     <img src="assets/img/basic/basic-profile-img.png" alt="Profile"
                          class="rounded-circle">
                     <span id="nickname-holder-head"
-                          class="d-none d-md-block">${loginUser.getNickname}</span>
+                          class="d-none d-md-block">${getNickname}</span>
                 </a><!-- End Profile Iamge Icon -->
             </li><!-- End Profile Nav -->
         </ul>
@@ -96,7 +96,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="/my-info?member_seq=<%=((Member) session.getAttribute("Member")).getMemberSeq()%>">
+               href="/my-info?member_seq=${memberSeq}">
                 <i class="bi bi-grid"></i>
                 <span>브랜딩</span>
             </a>
@@ -217,9 +217,6 @@
       dataType: "json",
       error: function (data) { console.log("여기 에러다 : ", data); },
       success: function (data) {
-        console.log(data);
-        // console.log("데이터 수신 완료:", data);
-        // 받은 데이터를 처리 == zzimInfos 배열의 각 요소에서 필요한 데이터 추출
         var zzimInfosReceived = data.zzimInfos;
         var bossReceivedLikes = data.likesInfos;
         var htmlStr = "<div>"
@@ -227,7 +224,7 @@
           htmlStr += "<div class='card'>";
           htmlStr += "<div class='card-body'>"
           htmlStr += "<h5 class='card-title'><br> From. " + val["nickname"] + "</h5>";
-          htmlStr += "<p><a href='${pageContext.request.contextPath}/brand-page?member_seq=" + val["from_member_seq"]
+          htmlStr += "<p><a href='${pageContext.request.contextPath}/brand-page?user_seq=" + val["memberSeq"]
                   + "'>" + val["nickname"] + "</a>님이 나를 찜하였습니다.</p>";
           htmlStr += "</div>";
           htmlStr += "</div>";
@@ -236,7 +233,7 @@
           htmlStr += "<div class='card'>";
           htmlStr += "<div class='card-body'>";
           htmlStr += "<h5 class='card-title'>From. " + val["nickname"] + "</h5>";
-          htmlStr += "<p><a href='${pageContext.request.contextPath}/brand-page?member_seq="+ val["memberSeq"]+ " '> " + val["nickname"] +"</a>"+"님이 내 글 <a href='${pageContext.request.contextPath}/mojipboard/detail?post_seq=" + val["postSeq"]
+          htmlStr += "<p><a href='${pageContext.request.contextPath}/brand-page?user_seq="+ val["memberSeq"]+ " '> " + val["nickname"] +"</a>"+"님이 내 글 <a href='${pageContext.request.contextPath}/mojipboard/detail?post_seq=" + val["postSeq"]
                   + "'>";
           htmlStr += val["title"] +"</a> 을 좋아요♥했습니다.</p>";
           htmlStr += "</div>";
@@ -254,14 +251,9 @@
         dataType: "json",
         error: function (data) { console.log("여기 에러다 : ", data); },
         success: function (data) {
-          console.log(data);
-          // 받은 데이터를 처리
-          // zzimInfos 배열의 각 요소에서 필요한 데이터 추출
           var bossSendZzim = data.zzimInfos;
           var bossSendLike = data.likesInfos;
-
-          var htmlStr = "<div>"
-          // 수정할 부분
+          var htmlStr = "<div>";
           $.map(bossSendZzim, function (val, idx) {
              htmlStr += "<div class='card'>";
              htmlStr += "<div class='card-body'>";
@@ -275,7 +267,7 @@
                 htmlStr += "<div class='card'>";
                 htmlStr += "<div class='card-body'>";
                 htmlStr += "<h5 class='card-title'>TO. " + val["nickname"] + "</h5>";
-                htmlStr += "<p><a href='${pageContext.request.contextPath}/brand-page?member_seq="+ val["memberSeq"]+ " '> "+ val["nickname"] ;
+                htmlStr += "<p><a href='${pageContext.request.contextPath}/brand-page?user_seq="+ val["memberSeq"]+ " '> "+ val["nickname"] ;
                 htmlStr += "</a> 님의 글 <a href='${pageContext.request.contextPath}/mojipboard/detail?post_seq=" + val["postSeq"] + "'>";
                 htmlStr += val["title"] +"</a>을 좋아요♥ 했습니다.</p>";
                 htmlStr += "</div>";
@@ -283,7 +275,6 @@
               });
              htmlStr += "</div>";
              $("#bossSendInform").html(htmlStr);
-             //console.log(bossSendLike);
         }
       });
     });

@@ -2,7 +2,7 @@ package com.nuguna.freview.servlet.member.api.boss;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
-import com.nuguna.freview.dao.member.BossSendInformDAO;
+import com.nuguna.freview.dao.member.boss.BossSendInformDAO;
 import com.nuguna.freview.dto.api.boss.BossSendLikesDto;
 import com.nuguna.freview.dto.api.boss.BossSendZzimInfoDto;
 import com.nuguna.freview.dto.common.ResponseMessage;
@@ -37,18 +37,16 @@ public class SendInformServlet extends HttpServlet {
 
     HttpSession session = request.getSession();
     Member loginUser = (Member) session.getAttribute("Member");
-    System.out.println("받은알림 진입");
 
     try {
       int memberSeq = loginUser.getMemberSeq();
-      System.out.println("memberSeq = " + memberSeq);
+      System.out.println("userSeq = " + memberSeq);
 
-      System.out.println("send 진입");
       List<BossSendZzimInfoDto> zzimSendInfos = BossSendInformDAO.sendZzimDAO(memberSeq);
       List<BossSendLikesDto> likesSendInfos = BossSendInformDAO.sendDdabongDAO(memberSeq);
 
       System.out.println("zzimSendInfos:" + zzimSendInfos);
-      System.out.println("ddabongSendInfos:" + likesSendInfos);
+      System.out.println("likesSendInfos:" + likesSendInfos);
 
       PrintWriter out = response.getWriter();
       Map<String, Object> responseData = new HashMap<>();
@@ -57,7 +55,6 @@ public class SendInformServlet extends HttpServlet {
 
       out.println(gson.toJson(responseData));
       out.flush();
-      System.out.println("얘도 오케이");
 
     } catch (IOException e) {
       throw new RuntimeException(e);

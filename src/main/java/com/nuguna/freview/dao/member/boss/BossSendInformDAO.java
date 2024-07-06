@@ -1,4 +1,4 @@
-package com.nuguna.freview.dao.member;
+package com.nuguna.freview.dao.member.boss;
 
 import static com.nuguna.freview.util.DbUtil.closeResource;
 import static com.nuguna.freview.util.DbUtil.getConnection;
@@ -65,7 +65,6 @@ public class BossSendInformDAO {
     List<BossSendLikesDto> ddabongInfos = new ArrayList<>();
 
     try {
-      System.out.println("dao안 rs밖: "+seq);
       conn = getConnection();
       pstmt = conn.prepareStatement(sql);
       pstmt.setInt(1, seq);

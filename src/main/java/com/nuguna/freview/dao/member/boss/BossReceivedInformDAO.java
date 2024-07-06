@@ -1,4 +1,4 @@
-package com.nuguna.freview.dao.member;
+package com.nuguna.freview.dao.member.boss;
 
 import static com.nuguna.freview.util.DbUtil.closeResource;
 import static com.nuguna.freview.util.DbUtil.getConnection;
@@ -50,7 +50,6 @@ public class BossReceivedInformDAO {
 
 
   // 받은 따봉
-  // TODO : 쿼리문 수정 필요!
   public List<BossReceivedLikesDto> receivedLikeDAO(int seq) {
     Connection conn = null;
     PreparedStatement pstmt = null;

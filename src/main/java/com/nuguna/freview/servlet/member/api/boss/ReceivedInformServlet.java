@@ -2,7 +2,7 @@ package com.nuguna.freview.servlet.member.api.boss;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
-import com.nuguna.freview.dao.member.BossReceivedInformDAO;
+import com.nuguna.freview.dao.member.boss.BossReceivedInformDAO;
 import com.nuguna.freview.dto.api.boss.BossReceivedLikesDto;
 import com.nuguna.freview.dto.api.boss.BossReceivedZzimInfoDto;
 import com.nuguna.freview.dto.common.ResponseMessage;
@@ -39,7 +39,6 @@ public class ReceivedInformServlet extends HttpServlet  {
 
     try {
       int memberSeq = loginUser.getMemberSeq();  // session에서 memberSeq 추출
-      System.out.println("ReceivedInform 진입 = " + memberSeq);
 
       List<BossReceivedZzimInfoDto> zzimInfos = BossReceivedInformDAO.receivedZzimDAO(memberSeq);
       List<BossReceivedLikesDto> likesInfos = BossReceivedInformDAO.receivedLikeDAO(memberSeq);
