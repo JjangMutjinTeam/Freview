@@ -12,6 +12,7 @@ import lombok.ToString;
 public class CustMyBrandInfoDto {
 
   private String profilePhotoUrl;
+  private String nickname;
   private String ageGroup;
   private String introduce;
   private Integer zzimCount;

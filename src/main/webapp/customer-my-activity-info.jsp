@@ -1,9 +1,11 @@
 <%@ page import="com.nuguna.freview.entity.member.Member" %>
 <%@ page import="com.nuguna.freview.dto.cust.activitylog.CustMyLikePostDto" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.text.SimpleDateFormat" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <%
     Member member = null;
@@ -12,7 +14,9 @@
         member = (Member) session.getAttribute("Member");
         memberSeq = member.getMemberSeq();
     }
-    List<CustMyLikePostDto> likePosts = (List<CustMyLikePostDto>) request.getAttribute("likePosts");
+//    List<CustMyLikePostDto> likePosts = (List<CustMyLikePostDto>) request.getAttribute("likePosts");
+    // 날짜 포맷 설정
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일");
 %>
 
 
@@ -20,34 +24,6 @@
 <html lang="en">
 
 <head>
-    <style>
-      .selected-option {
-        background-color: lightgreen; /* 연초록색으로 선택된 옵션 표시 */
-      }
-    </style>
-
-    <style>
-      .form-control {
-        width: 100%;
-        height: 38px;
-        padding: 6px 12px;
-        font-size: 14px;
-        line-height: 1.42857143;
-        color: #555;
-        background-color: #fff;
-        background-image: none;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-        transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-      }
-
-      .form-control-readonly {
-        background-color: #e9ecef;
-        opacity: 1;
-      }
-    </style>
-
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
@@ -77,6 +53,53 @@
     <link href="assets/css/style.css" rel="stylesheet">
     <link href="assets/css/style-h.css" rel="stylesheet">
 
+    <style>
+      .post-box {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+        background-color: #f9f9f9;
+        transition: background-color 0.3s;
+      }
+
+      .post-likes {
+        display: inline-block;
+        margin-top: 15px;
+        font-size: 1rem;
+        color: #e74c3c; /* 빨간색으로 설정 */
+      }
+
+      .post-meta {
+        margin-right: 6px;
+        display: inline-block;
+        margin-top: 15px;
+        font-size: 1rem;
+        color: #999; /* 회색으로 설정 */
+      }
+
+      .post-box:hover {
+        background-color: #f1f1f1;
+      }
+
+      .post-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .post-title a {
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .post-content {
+        margin-top: 10px;
+        font-size: 1rem;
+        color: #555;
+      }
+    </style>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <!-- icon bootstrap -->
@@ -90,29 +113,6 @@
 </head>
 
 <body>
-
-<script>
-  // JavaScript에서 likePosts 배열을 사용합니다.
-  var likePosts = [
-    // EL을 사용하여 각 항목을 JavaScript 객체로 변환합니다.
-    <c:forEach var="post" items="${likePosts}" varStatus="status">
-    {
-      seq: ${post.seq},
-      title: "${post.title}",
-      content: "${post.content}",
-      likesCount: ${post.likesCount},
-      createdAt: "${post.createdAt}"
-    }<c:if test="${!status.last}">, </c:if>
-    </c:forEach>
-  ];
-
-  // 배열이 비어있지 않은 경우에만 접근
-  if (likePosts.length > 0) {
-    console.log("첫 번째 게시물의 내용:", likePosts[0].content);
-  } else {
-    console.log("likePosts 배열이 비어있습니다.");
-  }
-</script>
 
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center">
@@ -177,7 +177,8 @@
 
     <div class="pagetitle">
         <h1>활동 로그</h1>
-    </div><!-- End Page Title -->
+    </div>
+    <!-- End Page Title -->
 
     <section class="section profile">
         <div class="row">
@@ -208,12 +209,14 @@
                         <div class="tab-content pt-1">
                             <div class="tab-pane show fade active profile-edit pt-6"
                                  id="receivedBtn">
+                                <div id="postsContainer" class="container-fluid">
 
+                                </div>
                             </div>
                         </div>
                         <div class="tab-content pt-2">
                             <div class="tab-pane fade active pt-6" id="requestBtn">
-
+                                <!-- Content for other tabs if needed -->
                             </div>
                         </div>
                         <!-- End Bordered Tabs -->
@@ -225,20 +228,53 @@
 
     <script>
       $(document).ready(function () {
-        $('#myZzimStores').on('click', function () {
+        // 좋아요 한 글 데이터를 가져오는 함수
+        function fetchLikedPosts() {
           $.ajax({
-            url: '/api/customer/my-activity/zzim-stores',
+            url: '/api/customer/my-activity/liked-posts',  // 좋아요 한 글 데이터를 가져올 API 엔드포인트
             type: 'GET',
-            success: function (data) {
-              console.log(data);
-              // 데이터를 화면에 표시하려면 이곳에 추가할 수 있습니다.
+            success: function (likePosts) {
+              $('#postsContainer').empty(); // 기존 내용 초기화
+
+              if (likePosts.length === 0) {
+                $('#postsContainer').append('<div class="alert alert-info">좋아요한 글이 없어요</div>');
+              } else {
+                // Generate HTML for likePosts
+                likePosts.item.forEach(function (post) {
+                  var postBox = $('<div class="post-box"></div>');
+
+                  var postTitle = $('<div class="post-title"></div>');
+                  var postLink = $('<a></a>').attr('href', '/post/' + post.seq).text(
+                      post.title.length > 20 ? post.title.slice(0, 20) + '...' : post.title);
+                  postTitle.append(postLink);
+
+                  var postContent = $('<div class="post-content"></div>').text(
+                      post.content.length > 30 ? post.content.slice(0, 30) + '...' : post.content);
+
+                  var postMeta = $('<div class="post-meta"></div>').text(post.createdAt);
+                  var postLikes = $('<div class="post-likes"></div>').html(
+                      ' ❤️ ' + post.likesCount);
+
+                  postBox.append(postTitle).append(postContent).append(postMeta).append(postLikes);
+                  $('#postsContainer').append(postBox);
+                });
+              }
             },
             error: function (error) {
-              console.error('Error fetching data:', error);
+              console.error('Error fetching liked posts:', error);
             }
           });
+        }
+
+        // 페이지 로드 시 좋아요 한 글 데이터 초기 로드
+        fetchLikedPosts();
+
+        // 좋아요 한 글 버튼 클릭 이벤트 처리
+        $('#likedPost').on('click', function () {
+          fetchLikedPosts(); // 좋아요 한 글 데이터 다시 불러오기
         });
 
+        // 나를 찜한 스토어 버튼 클릭 이벤트 처리
         $('#zzimedMeStores').on('click', function () {
           $.ajax({
             url: '/api/customer/my-activity/zzimed-me-stores',
@@ -248,7 +284,22 @@
               // 데이터를 화면에 표시하려면 이곳에 추가할 수 있습니다.
             },
             error: function (error) {
-              console.error('Error fetching data:', error);
+              console.error('Error fetching zzimed me stores:', error);
+            }
+          });
+        });
+
+        // 내가 찜한 스토어 버튼 클릭 이벤트 처리
+        $('#myZzimStores').on('click', function () {
+          $.ajax({
+            url: '/api/customer/my-activity/zzim-stores',
+            type: 'GET',
+            success: function (data) {
+              console.log(data);
+              // 데이터를 화면에 표시하려면 이곳에 추가할 수 있습니다.
+            },
+            error: function (error) {
+              console.error('Error fetching my zzim stores:', error);
             }
           });
         });

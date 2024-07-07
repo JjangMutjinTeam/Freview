@@ -100,7 +100,7 @@ public class BossMyBrandInfoDAO {
       if (rs.next()) {
         introduce = rs.getString("introduce");
         profilePhotoUrl = rs.getString("profile_photo_url");
-        storeLoc = rs.getString("store_loc");
+        storeLoc = rs.getString("store_location");
         zzimCount = rs.getInt("zzimCount");
       }
 

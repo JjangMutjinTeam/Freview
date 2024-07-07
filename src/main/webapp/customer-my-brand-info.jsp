@@ -118,7 +118,7 @@
                     <img src="assets/img/basic/basic-profile-img.png" alt="Profile"
                          class="rounded-circle">
                     <span id="nickname-holder-head"
-                          class="d-none d-md-block"><%=member.getNickname()%></span>
+                          class="d-none d-md-block"><%=brandInfo.getNickname()%></span>
                 </a><!-- End Profile Iamge Icon -->
             </li><!-- End Profile Nav -->
         </ul>
@@ -172,7 +172,7 @@
                 <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
                     <img src="assets/img/basic/basic-profile-img.png" alt="Profile"
                          class="rounded-circle">
-                    <h2 id="nickname-holder-section"><%=member.getNickname()%>
+                    <h2 id="nickname-holder-section"><%=brandInfo.getNickname()%>
                     </h2>
                     <div class="social-links mt-2 ri-heart-3-fill">
                         ${brandInfo.zzimCount}
@@ -216,7 +216,7 @@
                                 <div class="col-lg-3 col-md-4 label">닉네임</div>
                                 <div class="col-lg-8 col-md-6">
                                     <input id="nickname-input" type="text" name="to_nickname"
-                                           value="<%= member.getNickname() %>"
+                                           value="<%=brandInfo.getNickname()%>"
                                            class="form-control" readonly>
                                 </div>
                                 <div class="col-lg-1 col-md-2">
@@ -244,7 +244,7 @@
                                 }
 
                                 function initializeNicknameForm() {
-                                  $('#nickname-input').val('<%= member.getNickname() %>').prop(
+                                  $('#nickname-input').val('<%=brandInfo.getNickname()%>').prop(
                                       'readonly', true);
                                   $('#nickname-update-btn').show();
                                   $('#nickname-submit-btn').hide();
