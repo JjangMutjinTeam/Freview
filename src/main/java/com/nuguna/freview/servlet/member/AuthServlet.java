@@ -122,6 +122,8 @@ public class AuthServlet extends HttpServlet {
       String password = req.getParameter("password");
       String sha_password = new ShaUtil().sha256Encodeing(password);
       Member user = ldao.getMemberByIdPw(id,sha_password);
+      HttpSession session = req.getSession();
+      session.setAttribute("Member",user);
       System.out.println(user);
 
         if(user==null){
@@ -129,19 +131,13 @@ public class AuthServlet extends HttpServlet {
           rd.forward(req,resp);
         }
         else if(user.getGubun().equals("B")){
-          HttpSession session = req.getSession();
-          session.setAttribute("Member",user);
           RequestDispatcher rd = req.getRequestDispatcher("common-boss-main.jsp");
           rd.forward(req,resp);
         } else if(user.getGubun().equals("C")){
-          HttpSession session = req.getSession();
-          session.setAttribute("Member",user);
           RequestDispatcher rd = req.getRequestDispatcher("common-reviewer-main.jsp");
           rd.forward(req,resp);
         }
         else if(user.getGubun().equals("A")){
-          HttpSession session = req.getSession();
-          session.setAttribute("Member",user);
           System.out.println("user : " + user);
           resp.sendRedirect(req.getContextPath() + "/AdminPage/user");
         }

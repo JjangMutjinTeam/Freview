@@ -42,9 +42,10 @@ public class LoginDAO {
         member.setMemberSeq(memberSeq);
         String nickname = rs.getString("nickname");
         member.setNickname(nickname);
-
         String gubun = rs.getString("gubun");
         member.setGubun(gubun);
+        String photo = rs.getString("profile_photo_url");
+        member.setProfilePhotoUrl(photo);
       }
     } catch (SQLException e) {
       throw new RuntimeException(e);
