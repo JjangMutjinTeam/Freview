@@ -1,13 +1,12 @@
 package com.nuguna.freview.dao.admin;
 
-import static com.nuguna.freview.config.DbConfig.*;
 import static com.nuguna.freview.util.DbUtil.closeResource;
+import static com.nuguna.freview.util.DbUtil.getConnection;
 
 import com.nuguna.freview.dto.StoreAndBoss;
 import com.nuguna.freview.entity.admin.StoreBusinessInfo;
 import com.nuguna.freview.entity.member.Member;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,10 +19,36 @@ public class AdminDAO {
 
   private final String SELECT_ALL_MEMBER_NOT_ADMIN = "SELECT * FROM member WHERE gubun != 'A'";
   private final String DELETE_MEMBER_BY_ID = "DELETE FROM member WHERE id = ?";
-  private final String SELECT_ADMIN_PW = "SELECT pw FROM member WHERE gubun = 'A'";
   private final String SELECT_STORE_BUSINESS_INFO = "SELECT s.store_name, s.business_number, m.id, m.created_at FROM store_business_info s LEFT JOIN member m ON s.business_number = m.business_number";
   private final String DELETE_STORE_BY_BUSINESS_NUMBER = "DELETE FROM store_business_info WHERE business_number = ?";
   private final String INSERT_STORE = "INSERT INTO store_business_info(business_number, store_name) VALUES(?, ?)";
+
+  public boolean selectMatchingMember(String memberPw) {
+    //TODO: 암호 암호화 메서드 활용
+//    String encryptedPw =
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+
+    String sql = "select count(*) from member where gubun = 'A' and pw = ?";
+    try {
+      conn = getConnection();
+      pstmt = conn.prepareStatement(sql);
+      pstmt.setString(1, memberPw);
+      rs = pstmt.executeQuery();
+
+      if (rs.next()) {
+        int count = rs.getInt(1);
+        return count > 0;
+      }
+      return false;
+
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    } finally {
+      closeResource(pstmt, conn, rs);
+    }
+  }
 
   public List<Member> selectAllMember() {
     Connection conn = null;
@@ -64,7 +89,7 @@ public class AdminDAO {
     return list;
   }
 
-  public boolean deleteMember(String userId) {
+  public boolean deleteMember(String memberId) {
     boolean isDeleted = false;
     Connection conn = null;
     PreparedStatement pstmt = null;
@@ -72,7 +97,7 @@ public class AdminDAO {
     try {
       conn = getConnection();
       pstmt = conn.prepareStatement(DELETE_MEMBER_BY_ID);
-      pstmt.setString(1, userId);
+      pstmt.setString(1, memberId);
 
       int rows = pstmt.executeUpdate();
       if (rows > 0) {
@@ -85,31 +110,6 @@ public class AdminDAO {
     }
 
     return isDeleted;
-  }
-
-  public String selectAdminPW() {
-    String adminPW = "";
-
-    Connection conn = null;
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-
-    try {
-      conn = getConnection();
-      pstmt = conn.prepareStatement(SELECT_ADMIN_PW);
-      rs = pstmt.executeQuery();
-
-      while (rs.next()) {
-        adminPW = rs.getString(1);
-      }
-
-      return adminPW;
-
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    } finally {
-      closeResource(pstmt, conn, rs);
-    }
   }
 
   public List<StoreAndBoss> selectStoreBusinessInfo() {
@@ -187,19 +187,6 @@ public class AdminDAO {
     }
 
     return isInserted;
-  }
-
-  private Connection getConnection() {
-    Connection conn = null;
-    try {
-      Class.forName(DRIVER_NAME);
-      conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PW);
-    } catch (ClassNotFoundException e) {
-      log.error("JDBC Driver not found");
-    } catch (SQLException e) {
-      log.error("connection failed");
-    }
-    return conn;
   }
 
 }
