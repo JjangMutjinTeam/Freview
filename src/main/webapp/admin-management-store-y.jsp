@@ -185,8 +185,8 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">스토어 리스트</h5>
-                        <p>전국 스토어 리스트와 가입한 사장님 목록입니다 <br>
-                            아이디를 클릭하면 해당 유저의 브랜딩 페이지로 이동할 수 있습니다 <br>
+                        <p>전국에 등록된 스토어 리스트와 가입한 사장님 리스트입니다 <br>
+                            아이디를 클릭하면 해당 멤버의 브랜딩 페이지로 이동할 수 있습니다 <br>
                             가입한 사장님이 있는 스토어는 삭제할 수 없습니다 <br>
                         </p>
                         <div class="search-container">
@@ -254,12 +254,7 @@
         success: function (response) {
           $('#storeList').empty();
           renderData(response.data);
-          console.log("1-" + response.data[response.data.length -1]);
-          console.log("2-" + response.data[response.data.length -1].businessNumber);
           if (response.hasMore) {
-            console.log("hasMore = true");
-            console.log("3-" + response.data[response.data.length -1]);
-            console.log("4-" + response.data[response.data.length -1].businessNumber);
             $('#loadMoreBtn').data('previous-business-number',
                 response.data[response.data.length - 1].businessNumber).show();
           } else {
@@ -285,12 +280,8 @@
         success: function (response) {
           if (response.data.length > 0) {
             renderData(response.data);
-            console.log("5-" + response.data[response.data.length -1]);
-            console.log("6-" + response.data[response.data.length -1].businessNumber);
             if (response.hasMore) {
               console.log("hasMore = true");
-              console.log("7-" + response.data[response.data.length -1]);
-              console.log("8-" + response.data[response.data.length -1].businessNumber);
               $('#loadMoreBtn').data('previous-business-number',
                   response.data[response.data.length - 1].businessNumber).show();
             } else {
