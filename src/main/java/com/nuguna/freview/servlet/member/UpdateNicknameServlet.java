@@ -8,23 +8,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/password-update")
-public class UpdatePasswordServlet extends HttpServlet {
+@WebServlet("/nickname-update")
+public class UpdateNicknameServlet extends HttpServlet {
 
   private MemberDAO memberDAO = new MemberDAO();
 
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-
     int memberSeq = Integer.parseInt(request.getParameter("memberSeq"));
-    String currentPassword = request.getParameter("currentPassword");
-    String newPassword = request.getParameter("newPassword");
+    String newNickname = request.getParameter("newNickname");
 
-    boolean isMatching = memberDAO.isMatchingMember(memberSeq, currentPassword);
+    boolean isDuplicate = memberDAO.isDuplicateNickName(newNickname);
 
-    if (isMatching) {
-      memberDAO.updatePassword(memberSeq, newPassword);
+    if (!isDuplicate) {
+      memberDAO.updateNickname(memberSeq, newNickname);
       response.setStatus(HttpServletResponse.SC_OK);
     } else {
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
