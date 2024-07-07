@@ -7,12 +7,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/AdminPage")
+@WebServlet("/admin")
 public class AdminServlet extends HttpServlet {
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    resp.sendRedirect(req.getContextPath() + "/AdminPage/user");
+
+    request.getRequestDispatcher("/admin-member-management").forward(request, response);
   }
 }

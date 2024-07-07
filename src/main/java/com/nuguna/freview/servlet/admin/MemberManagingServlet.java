@@ -1,53 +1,59 @@
 package com.nuguna.freview.servlet.admin;
 
+import static com.nuguna.freview.util.EncodingUtil.setEncodingToUTF8AndJson;
+import static com.nuguna.freview.util.EncodingUtil.setEncodingToUTF8AndText;
+import static com.nuguna.freview.util.JsonResponseUtil.sendJsonResponse;
+
+import com.google.gson.Gson;
 import com.nuguna.freview.dao.admin.AdminDAO;
 import com.nuguna.freview.entity.member.Member;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
-import javax.servlet.RequestDispatcher;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-@WebServlet("/AdminPage/user")
+@WebServlet("/admin-member-management")
 public class MemberManagingServlet extends HttpServlet {
 
-  AdminDAO adminDAO = new AdminDAO();
+  private AdminDAO adminDAO = new AdminDAO();
+  private final int LIMIT = 10;
+  private Gson gson = new Gson();
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    req.setCharacterEncoding("UTF-8");
-    resp.setContentType("text/html;charset=UTF-8");
-    List<Member> memberAllList = adminDAO.selectAllMember();
-    req.setAttribute("memberAllList", memberAllList);
-    RequestDispatcher rd = req.getRequestDispatcher("/admin-mg-users-y.jsp");
-    rd.forward(req, resp);
-  }
+    setEncodingToUTF8AndText(request, response);
 
-  @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-      throws ServletException, IOException {
-    String userId = req.getParameter("userId");
-    String inputPassword = req.getParameter("password");
-    String adminPassword = adminDAO.selectAdminPW();
+    HttpSession session = request.getSession();
+    Member loginUser = (Member) session.getAttribute("Member");
 
-    if (isPasswordMatch(inputPassword, adminPassword)) {
-      boolean isDeleted = adminDAO.deleteMember(userId);
-
-      if (isDeleted) {
-        resp.setStatus(HttpServletResponse.SC_OK);
-      } else {
-        resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-      }
-    } else {
-      resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+    //TODO: 비로그인 시 로그인페이지로 이동하는 메서드 유틸로 작성하기
+    if (loginUser == null) {
+      response.sendRedirect("common-login.jsp");
+      return;
     }
+    request.setAttribute("loginUser", loginUser);
+
+    request.getRequestDispatcher("/admin-management-member-y.jsp").forward(request, response);
   }
 
-  private boolean isPasswordMatch(String inputPassword, String adminPassword) {
-    return inputPassword.equals(adminPassword);
+  @Override
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
+    setEncodingToUTF8AndJson(request, response);
+
+    List<Member> memberList = adminDAO.selectAllMember();
+    boolean hasMore = memberList.size() == LIMIT;
+    Map<String, Object> responseMap = new HashMap<>();
+    responseMap.put("data", memberList);
+    responseMap.put("hasMore", hasMore);
+
+    sendJsonResponse(responseMap, response, gson);
   }
 }
