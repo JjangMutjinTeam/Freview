@@ -144,14 +144,18 @@
             <h5 class="card-title">유저 리스트</h5>
             <p>가입한 유저 리스트입니다. <br>아이디를 클릭하면 해당 유저의 브랜딩 페이지로 이동할 수 있습니다.</p>
 
-            <!-- Table with stripped rows -->
+            <div>
+              <input type="text" name="searchWord" id="searchWord" placeholder="원하는 키워드로 검색하세요!">
+              <input type="button" id="searchBtn" value="검색">
+            </div>
+
             <table class="table">
               <thead>
               <tr>
                 <th>유형</th>
                 <th>닉네임</th>
                 <th>아이디</th>
-                <th data-type="date" data-format="YYYY/DD/MM">가입일자</th>
+                <th>가입일자</th>
                 <th>탈퇴</th>
               </tr>
               </thead>
@@ -175,6 +179,12 @@
 
     loadInitialData();
 
+    $('#searchBtn').click(function() {
+      currentSearchWord = $('#searchWord').val();
+      $('#memberList').empty();
+      loadInitialData(currentSearchWord);
+    });
+
     $('#loadMoreBtn').click(function () {
       var previousMemberSeq = $(this).data('previous-member-seq');
       loadMoreData(previousMemberSeq, currentSearchWord);
@@ -190,7 +200,7 @@
         },
         dataType: "json",
         success: function (response) {
-          $('#postList').empty();
+          $('#memberList').empty();
           renderData(response.data);
           if (response.hasMore) {
             $('#loadMoreBtn').data('previous-member-seq',
@@ -238,11 +248,13 @@
     function renderData(data) {
       var htmlStr = "";
       $.map(data, function (member) {
+        var formattedCreatedAt = dayjs(member["createdAt"]).format('YYYY-MM-DD HH:mm');
+
         htmlStr += "<tr>";
         htmlStr += "<td>" + member["gubun"] + "</td>";
         htmlStr += "<td>" + member["nickname"] + "</td>";
         htmlStr += "<td><a href='/brand-page?member_seq=" + member["memberSeq"] + "'>" + member["id"] + "</a></td>";
-        htmlStr += "<td>" + member["createdAt"] + "</td>";
+        htmlStr += "<td>" + formattedCreatedAt + "</td>";
         htmlStr += "<td><button class='btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#deleteModal' data-id='" + member["id"] + "'>x</button></td>";
         htmlStr += "</tr>";
       });
