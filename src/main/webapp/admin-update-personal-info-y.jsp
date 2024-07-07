@@ -206,6 +206,44 @@
         $('#memberInfo').html(htmlStr);
       }
 
+      $('#passwordForm').on('submit', function(event) {
+        event.preventDefault();
+
+        let currentPassword = $('#currentPassword').val();
+        let newPassword = $('#newPassword').val();
+        let confirmPassword = $('#confirmPassword').val();
+
+        let reg = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,25}$/;
+        if (!reg.test(newPassword)) {
+          alert('비밀번호는 영문자와 숫자를 포함하여 8자 이상 25자 이하로 입력해주세요.');
+          return;
+        }
+
+        if (newPassword !== confirmPassword) {
+          alert('새 비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+          return;
+        }
+
+        $.ajax({
+          type: 'POST',
+          url: '/password-update',
+          data: {
+            currentPassword: currentPassword,
+            newPassword: newPassword,
+            memberSeq: ${memberSeq}
+          },
+          success: function(response) {
+            alert('비밀번호가 성공적으로 수정되었습니다.');
+            $('#passwordModal').modal('hide');
+            location.replace("/personal-info-update");
+          },
+          error: function(error) {
+            alert('비밀번호 수정에 실패했습니다. 다시 시도해 주세요.');
+            console.error(error);
+          }
+        });
+      });
+
     });
 
     function showPasswordModal() {
