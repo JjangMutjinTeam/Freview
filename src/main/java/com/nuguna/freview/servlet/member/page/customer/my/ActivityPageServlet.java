@@ -3,10 +3,12 @@ package com.nuguna.freview.servlet.member.page.customer.my;
 
 import com.nuguna.freview.dao.member.common.MemberUtilDAO;
 import com.nuguna.freview.dao.member.cust.page.CustMyActivityDAO;
+import com.nuguna.freview.dto.cust.activitylog.CustMyLikePostDto;
 import com.nuguna.freview.entity.member.Member;
 import com.nuguna.freview.entity.member.MemberGubun;
 import com.nuguna.freview.util.EncodingUtil;
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -42,8 +44,8 @@ public class ActivityPageServlet extends HttpServlet {
             "유효하지 않은 유저입니다.");
         return;
       }
-      log.info("mylikesInfo = ");
-      request.setAttribute("member_seq", memberSeq);
+      List<CustMyLikePostDto> likePosts = custMyActivityDAO.getLikePosts(memberSeq);
+      request.setAttribute("likePosts", likePosts);
       RequestDispatcher dispatcher = request.getRequestDispatcher("/customer-my-activity-info.jsp");
       dispatcher.forward(request, response);
     } catch (Exception e) {

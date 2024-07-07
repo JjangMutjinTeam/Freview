@@ -52,7 +52,6 @@ public class MainPageServlet extends HttpServlet {
       req.getRequestDispatcher("boss_main.jsp").forward(req, resp);
     } else if (pageCode.equals("Requester")) {
       int seq = Integer.parseInt(req.getParameter("seq"));
-      log.info("HI");
       MainpageMemberInfoDTO minfodto = mdao.getMemberInfoForMainPageHeader(seq);
       ArrayList<MainpageMojipDTO> mojipPost = mdao.getMojipPostforMainPage();
       ArrayList<MainpageGongjiDTO> gongji = mdao.getGongjisForMainPage();

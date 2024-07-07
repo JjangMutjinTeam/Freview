@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
@@ -95,8 +96,73 @@ public class CustMyActivityDAO {
     return myLikePostDtos;
   }
 
-  public List<CustMyZzimStoreDto> getZzimStores(int membeSeq) {
-    return null;
+  public List<CustMyZzimStoreDto> getZzimStores(int memberSeq /* , int pageCount */) {
+    Connection conn = null;
+    PreparedStatement zzimStoresPstsmt = null;
+    ResultSet rs = null;
+
+    String zzimStoresSql = "SELECT \n"
+        + "    m.member_seq AS bossSeq,\n"
+        + "    sbi.store_name AS storeName,\n"
+        + "    m.store_location AS storeLoc,\n"
+        + "    GROUP_CONCAT(DISTINCT ft.name) AS foodTypes,\n"
+        + "    GROUP_CONCAT(DISTINCT t.name) AS tagInfos\n"
+        + "FROM \n"
+        + "    ZZIM z\n"
+        + "JOIN \n"
+        + "    MEMBER m ON z.to_member_seq = m.member_seq\n"
+        + "LEFT JOIN \n"
+        + "    STORE_BUSINESS_INFO sbi ON m.business_number = sbi.business_number\n"
+        + "LEFT JOIN \n"
+        + "    MEMBER_FOOD_TYPE mft ON m.member_seq = mft.member_seq\n"
+        + "LEFT JOIN \n"
+        + "    FOOD_TYPE ft ON mft.food_type_seq = ft.food_type_seq\n"
+        + "LEFT JOIN \n"
+        + "    MEMBER_TAG mt ON m.member_seq = mt.member_seq\n"
+        + "LEFT JOIN \n"
+        + "    TAG t ON mt.tag_seq = t.tag_seq\n"
+        + "WHERE \n"
+        + "    z.from_member_seq = ?\n"
+        + "    AND m.gubun = 'B'\n"
+        + "GROUP BY \n"
+        + "    m.member_seq, sbi.store_name, m.store_location;\n";
+
+    List<CustMyZzimStoreDto> zzimStoresDto = new ArrayList<>();
+
+    try {
+      conn = getConnection();
+      // 유저가 좋아하는 글들의 seq를 가져온다.
+      zzimStoresPstsmt = conn.prepareStatement(zzimStoresSql);
+      zzimStoresPstsmt.setInt(1, memberSeq);
+      rs = zzimStoresPstsmt.executeQuery();
+
+      while (rs.next()) {
+        Integer bossSeq = rs.getInt("bossSeq");
+        String storeName = rs.getString("storeName");
+        String storeLoc = rs.getString("storeLoc");
+        String foodTypesStr = rs.getString("foodTypes");
+        String tagInfosStr = rs.getString("tagInfos");
+
+        List<String> foodTypes = new ArrayList<>();
+        if (foodTypesStr != null && !foodTypesStr.isEmpty()) {
+          String[] foodType = foodTypesStr.split(",");
+          foodTypes.addAll(Arrays.asList(foodType));
+        }
+
+        List<String> tagInfos = new ArrayList<>();
+        if (tagInfosStr != null && !tagInfosStr.isEmpty()) {
+          String[] tagInfo = tagInfosStr.split(",");
+          foodTypes.addAll(Arrays.asList(tagInfo));
+        }
+        zzimStoresDto.add(
+            new CustMyZzimStoreDto(bossSeq, storeName, storeLoc, foodTypes, tagInfos));
+      }
+    } catch (SQLException e) {
+      log.error("SQL error", e);
+    } finally {
+      closeResource(zzimStoresPstsmt, conn, rs);
+    }
+    return zzimStoresDto;
   }
 
   public List<CustZzimedMeStoreDto> getZzimedMeStores(int membeSeq) {

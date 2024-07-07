@@ -1,19 +1,18 @@
-<%@ page import="com.nuguna.freview.dto.cust.brand.CustMyBrandInfoDto" %>
-<%@ page import="com.google.gson.Gson" %>
 <%@ page import="com.nuguna.freview.entity.member.Member" %>
+<%@ page import="com.nuguna.freview.dto.cust.activitylog.CustMyLikePostDto" %>
+<%@ page import="java.util.List" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <%
-    CustMyBrandInfoDto brandInfo = (CustMyBrandInfoDto) request.getAttribute("brandInfo");
-    Gson gson = new Gson();
     Member member = null;
     int memberSeq = 0;
     if (session.getAttribute("Member") != null) {
         member = (Member) session.getAttribute("Member");
         memberSeq = member.getMemberSeq();
     }
+    List<CustMyLikePostDto> likePosts = (List<CustMyLikePostDto>) request.getAttribute("likePosts");
 %>
 
 
@@ -91,6 +90,29 @@
 </head>
 
 <body>
+
+<script>
+  // JavaScript에서 likePosts 배열을 사용합니다.
+  var likePosts = [
+    // EL을 사용하여 각 항목을 JavaScript 객체로 변환합니다.
+    <c:forEach var="post" items="${likePosts}" varStatus="status">
+    {
+      seq: ${post.seq},
+      title: "${post.title}",
+      content: "${post.content}",
+      likesCount: ${post.likesCount},
+      createdAt: "${post.createdAt}"
+    }<c:if test="${!status.last}">, </c:if>
+    </c:forEach>
+  ];
+
+  // 배열이 비어있지 않은 경우에만 접근
+  if (likePosts.length > 0) {
+    console.log("첫 번째 게시물의 내용:", likePosts[0].content);
+  } else {
+    console.log("likePosts 배열이 비어있습니다.");
+  }
+</script>
 
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center">
@@ -200,6 +222,24 @@
             </div>
         </div>
     </section>
+
+    <script>
+      $(document).ready(function () {
+        $('#myZzimStores').on('click', function () {
+          $.ajax({
+            url: '/api/customer/my-activity/zzim-stores',
+            type: 'GET',
+            success: function (data) {
+              console.log(data);
+              // 데이터를 화면에 표시하려면 이곳에 추가할 수 있습니다.
+            },
+            error: function (error) {
+              console.error('Error fetching data:', error);
+            }
+          });
+        });
+      });
+    </script>
 </main><!-- End #main -->
 
 <!-- ======= Footer ======= -->
