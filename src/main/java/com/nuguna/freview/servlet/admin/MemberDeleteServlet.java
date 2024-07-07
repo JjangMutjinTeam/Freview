@@ -18,8 +18,7 @@ public class MemberDeleteServlet extends HttpServlet {
       throws ServletException, IOException {
     String deleteMemberId = req.getParameter("deleteMemberId");
     String adminVerificationPW = req.getParameter("adminVerificationPW");
-    boolean isRightPassword = adminDAO.selectMatchingMember(adminVerificationPW);
-    System.out.println(isRightPassword);
+    boolean isRightPassword = adminDAO.getMatchingMember(adminVerificationPW);
 
     if (isRightPassword) {
       boolean isDeleted = adminDAO.deleteMember(deleteMemberId);

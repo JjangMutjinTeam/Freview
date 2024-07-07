@@ -22,8 +22,9 @@ import javax.servlet.http.HttpSession;
 public class MemberManagingServlet extends HttpServlet {
 
   private AdminDAO adminDAO = new AdminDAO();
-  private final int LIMIT = 30;
   private Gson gson = new Gson();
+
+  private final int LIMIT = 30;
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
