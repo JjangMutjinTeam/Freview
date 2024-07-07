@@ -54,7 +54,7 @@
     <link href="assets/css/style-h.css" rel="stylesheet">
 
     <style>
-      .post-box {
+      .item-box {
         border: 1px solid #ddd;
         border-radius: 8px;
         padding: 15px;
@@ -70,7 +70,7 @@
         color: #e74c3c; /* 빨간색으로 설정 */
       }
 
-      .post-meta {
+      .item-meta {
         margin-right: 6px;
         display: inline-block;
         margin-top: 15px;
@@ -78,30 +78,37 @@
         color: #999; /* 회색으로 설정 */
       }
 
-      .post-box:hover {
+      .item-meta-non-inline {
+        margin-right: 6px;
+        margin-top: 15px;
+        font-size: 1rem;
+        color: #999; /* 회색으로 설정 */
+      }
+
+      .item-box:hover {
         background-color: #f1f1f1;
       }
 
-      .post-title {
+      .item-title {
         font-size: 1.25rem;
         font-weight: bold;
         color: #333;
       }
 
-      .post-title a {
+      .item-title a {
         text-decoration: none;
         color: inherit;
       }
 
-      .post-content {
+      .item-content {
         margin-top: 10px;
         font-size: 1rem;
         color: #555;
       }
 
-      #postsContainer {
+      #itemsContainer {
         margin-left: -15px;
-        margin-top: 10px;
+        margin-top: 15px;
       }
     </style>
 
@@ -200,13 +207,13 @@
                             </li>
                             <li class="nav-item">
                                 <button class="nav-link" data-bs-toggle="tab"
-                                        data-bs-target="#requestBtn" id="myZzimStores">
+                                        data-bs-target="#receivedBtn" id="myZzimStores">
                                     내가 찜한 스토어
                                 </button>
                             </li>
                             <li class="nav-item">
                                 <button class="nav-link" data-bs-toggle="tab"
-                                        data-bs-target="#requestBtn" id="zzimedMeStores">
+                                        data-bs-target="#receivedBtn" id="zzimedMeStores">
                                     나를 찜한 스토어
                                 </button>
                             </li>
@@ -214,7 +221,7 @@
                         <div class="tab-content pt-1">
                             <div class="tab-pane show fade active profile-edit pt-6"
                                  id="receivedBtn">
-                                <div id="postsContainer" class="container-fluid">
+                                <div id="itemsContainer" class="container-fluid">
 
                                 </div>
                             </div>
@@ -233,29 +240,29 @@
             url: '/api/customer/my-activity/liked-posts',  // 좋아요 한 글 데이터를 가져올 API 엔드포인트
             type: 'GET',
             success: function (likePosts) {
-              $('#postsContainer').empty(); // 기존 내용 초기화
+              $('#itemsContainer').empty(); // 기존 내용 초기화
 
               if (likePosts.item.length === 0) {
-                $('#postsContainer').append('<div class="alert alert-info">좋아요한 글이 없어요</div>');
+                $('#itemsContainer').append('<div class="alert alert-info">좋아요한 글이 없어요</div>');
               } else {
                 // Generate HTML for likePosts
                 likePosts.item.forEach(function (post) {
-                  var postBox = $('<div class="post-box"></div>');
+                  var postBox = $('<div class="item-box"></div>');
 
-                  var postTitle = $('<div class="post-title"></div>');
+                  var postTitle = $('<div class="item-title"></div>');
                   var postLink = $('<a></a>').attr('href', '/post/' + post.seq).text(
                       post.title.length > 20 ? post.title.slice(0, 20) + '...' : post.title);
                   postTitle.append(postLink);
 
-                  var postContent = $('<div class="post-content"></div>').text(
+                  var postContent = $('<div class="item-content"></div>').text(
                       post.content.length > 30 ? post.content.slice(0, 30) + '...' : post.content);
 
-                  var postMeta = $('<div class="post-meta"></div>').text(post.createdAt);
+                  var postMeta = $('<div class="item-meta"></div>').text(post.createdAt);
                   var postLikes = $('<div class="post-likes"></div>').html(
                       ' ❤️ ' + post.likesCount);
 
                   postBox.append(postTitle).append(postContent).append(postMeta).append(postLikes);
-                  $('#postsContainer').append(postBox);
+                  $('#itemsContainer').append(postBox);
                 });
               }
             },
@@ -278,9 +285,36 @@
           $.ajax({
             url: '/api/customer/my-activity/zzimed-me-stores',
             type: 'GET',
-            success: function (data) {
-              console.log(data);
-              // 데이터를 화면에 표시하려면 이곳에 추가할 수 있습니다.
+            success: function (zzimedMeStores) {
+              console.log(zzimedMeStores);
+              $('#itemsContainer').empty(); // 기존 내용 초기화
+
+              if (zzimedMeStores.item.length === 0) {
+                $('#itemsContainer').append('<div class="alert alert-info">나를 찜한 스토어가 없어요</div>');
+              } else {
+                zzimedMeStores.item.forEach(function (store) {
+                  var zzimedMeStoreBox = $('<div class="item-box"></div>');
+
+                  var zzimedMeStoreName = $('<div class="item-title"></div>');
+                  var storeLink = $('<a></a>').attr('href', '/branding/' + store.bossSeq).text(
+                      store.storeName);
+                  zzimedMeStoreName.append(storeLink);
+
+                  var zzimedMeStoreLocation = $('<div class="item-content"></div>').text(
+                      '위치: ' + store.storeLoc);
+
+                  var zzimedMeStoreFoodTypes = $('<div class="item-meta-non-inline"></div>').text(
+                      '분야: ' + store.foodTypes.join(', '));
+
+                  var zzimedMeStoreTagInfos = $('<div class="item-meta-non-inline"></div>').html(
+                      store.tagInfos.map(tag => '#' + tag).join(' '));
+
+                  zzimedMeStoreBox.append(zzimedMeStoreName).append(zzimedMeStoreLocation).append(
+                      zzimedMeStoreFoodTypes).append(
+                      zzimedMeStoreTagInfos);
+                  $('#itemsContainer').append(zzimedMeStoreBox);
+                });
+              }
             },
             error: function (error) {
               console.error('Error fetching zzimed me stores:', error);
