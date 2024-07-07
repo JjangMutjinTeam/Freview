@@ -236,7 +236,7 @@
             success: function (likePosts) {
               $('#postsContainer').empty(); // 기존 내용 초기화
 
-              if (likePosts.length === 0) {
+              if (likePosts.item.length === 0) {
                 $('#postsContainer').append('<div class="alert alert-info">좋아요한 글이 없어요</div>');
               } else {
                 // Generate HTML for likePosts
