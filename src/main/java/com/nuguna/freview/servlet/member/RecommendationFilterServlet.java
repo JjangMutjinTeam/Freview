@@ -2,7 +2,7 @@ package com.nuguna.freview.servlet.member;
 
 import com.google.gson.Gson;
 import com.nuguna.freview.dao.member.RecommendationMemberDAO;
-import com.nuguna.freview.dto.MemberRecommendationInfo;
+import com.nuguna.freview.dto.MemberRecommendationInfoDTO;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +30,7 @@ public class RecommendationFilterServlet extends HttpServlet {
     String[] tags = req.getParameterValues("tag");
 
     int previousMemberSeq = getPreviousMemberSeq(req);
-    List<MemberRecommendationInfo> list = loadFilteredRecommendationLists(req, memberGubun, previousMemberSeq, foodTypes, tags);
+    List<MemberRecommendationInfoDTO> list = loadFilteredRecommendationLists(req, memberGubun, previousMemberSeq, foodTypes, tags);
 
     boolean hasMore = list.size() == LIMIT;
     Map<String, Object> responseMap = new HashMap<>();
@@ -55,7 +55,7 @@ public class RecommendationFilterServlet extends HttpServlet {
     return previousPostSeq;
   }
 
-  private List<MemberRecommendationInfo> loadFilteredRecommendationLists(HttpServletRequest req, String memberGubun,
+  private List<MemberRecommendationInfoDTO> loadFilteredRecommendationLists(HttpServletRequest req, String memberGubun,
       int previousPostSeq, String[] foodTypes, String[] tags) {
       return recommendationMemberDAO.filterMembers(
           memberGubun, previousPostSeq, LIMIT, foodTypes, tags);

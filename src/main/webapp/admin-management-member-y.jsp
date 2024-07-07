@@ -123,8 +123,7 @@
           </a>
         </li>
       </ul>
-    </li><!-- End Tables Nav -->
-
+    </li>
   </ul>
 
 </aside><!-- End Sidebar-->
@@ -132,7 +131,7 @@
 <main id="main" class="main">
 
   <div class="pagetitle">
-    <h1>유저</h1>
+    <h1>멤버 관리</h1>
   </div>
 
   <section class="section">
@@ -141,8 +140,8 @@
 
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">유저 리스트</h5>
-            <p>가입한 유저 리스트입니다. <br>아이디를 클릭하면 해당 유저의 브랜딩 페이지로 이동할 수 있습니다.</p>
+            <h5 class="card-title">멤버 리스트</h5>
+            <p>가입한 멤버 리스트입니다. <br>아이디를 클릭하면 해당 멤버의 브랜딩 페이지로 이동할 수 있습니다.</p>
 
             <div>
               <input type="text" name="searchWord" id="searchWord" placeholder="원하는 키워드로 검색하세요!">
@@ -231,7 +230,6 @@
             if (response.hasMore) {
               $('#loadMoreBtn').data('previous-member-seq',
                       response.data[response.data.length - 1].memberSeq).show();
-              console.log(response.data[response.data.length - 1].memberSeq);
             } else {
               $('#loadMoreBtn').hide();
             }
