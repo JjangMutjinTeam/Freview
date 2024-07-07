@@ -244,6 +244,31 @@
         });
       });
 
+      $('#nicknameForm').on('submit', function(event) {
+        event.preventDefault();
+
+        let newNickname = $('#newNickname').val();
+
+        $.ajax({
+          type: 'POST',
+          url: '/nickname-update',
+          data: {
+            memberSeq : ${memberSeq},
+            newNickname: newNickname,
+          },
+          success: function(response) {
+            alert('닉네임이 성공적으로 수정되었습니다.');
+            $('#passwordModal').modal('hide');
+            location.replace("/personal-info-update");
+          },
+          error: function(error) {
+            alert('닉네임 수정에 실패했습니다. 다시 시도해 주세요.');
+            console.error(error);
+          }
+        });
+      });
+
+
     });
 
     function showPasswordModal() {
@@ -304,7 +329,7 @@
                         <label for="newEmail" class="form-label">새 이메일</label>
                         <input type="email" class="form-control" id="newEmail" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">저장</button>
+                    <button type="submit" class="btn btn-primary">확인</button>
                 </form>
             </div>
         </div>
@@ -322,10 +347,10 @@
             <div class="modal-body">
                 <form id="nicknameForm">
                     <div class="mb-3">
-                        <label for="newEmail" class="form-label">새 닉네임</label>
-                        <input type="email" class="form-control" id="newNickname" required>
+                        <label for="newNickname" class="form-label">새 닉네임</label>
+                        <input type="text" class="form-control" id="newNickname" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">저장</button>
+                    <button type="submit" class="btn btn-primary">확인</button>
                 </form>
             </div>
         </div>
