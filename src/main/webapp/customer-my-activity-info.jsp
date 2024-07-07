@@ -322,7 +322,7 @@
           });
         });
 
-        // 내가 찜한 스토어 버튼 클릭 이벤트 처리
+        /*// 내가 찜한 스토어 버튼 클릭 이벤트 처리
         $('#myZzimStores').on('click', function () {
           $.ajax({
             url: '/api/customer/my-activity/zzim-stores',
@@ -330,6 +330,47 @@
             success: function (data) {
               console.log(data);
               // 데이터를 화면에 표시하려면 이곳에 추가할 수 있습니다.
+            },
+            error: function (error) {
+              console.error('Error fetching my zzim stores:', error);
+            }
+          });
+        });*/
+        // 내가 찜한 스토어 버튼 클릭 이벤트 처리
+        $('#myZzimStores').on('click', function () {
+          $.ajax({
+            url: '/api/customer/my-activity/zzim-stores',
+            type: 'GET',
+            success: function (myZzimStores) {
+              console.log(myZzimStores);
+              $('#itemsContainer').empty(); // 기존 내용 초기화
+
+              if (myZzimStores.item.length === 0) {
+                $('#itemsContainer').append('<div class="alert alert-info">내가 찜한 스토어가 없어요</div>');
+              } else {
+                myZzimStores.item.forEach(function (store) {
+                  var myZzimStoreBox = $('<div class="item-box"></div>');
+
+                  var myZzimStoreName = $('<div class="item-title"></div>');
+                  var storeLink = $('<a></a>').attr('href', '/branding/' + store.bossSeq).text(
+                      store.storeName);
+                  myZzimStoreName.append(storeLink);
+
+                  var myZzimStoreLocation = $('<div class="item-content"></div>').text(
+                      '위치: ' + store.storeLoc);
+
+                  var myZzimStoreFoodTypes = $('<div class="item-meta-non-inline"></div>').text(
+                      '분야: ' + store.foodTypes.join(', '));
+
+                  var myZzimStoreTagInfos = $('<div class="item-meta-non-inline"></div>').html(
+                      store.tagInfos.map(tag => '#' + tag).join(' '));
+
+                  myZzimStoreBox.append(myZzimStoreName).append(myZzimStoreLocation).append(
+                      myZzimStoreFoodTypes).append(
+                      myZzimStoreTagInfos);
+                  $('#itemsContainer').append(myZzimStoreBox);
+                });
+              }
             },
             error: function (error) {
               console.error('Error fetching my zzim stores:', error);
