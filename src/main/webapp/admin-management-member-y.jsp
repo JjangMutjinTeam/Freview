@@ -157,148 +157,150 @@
               </thead>
               <tbody id="memberList"></tbody>
             </table>
-
-            <script>
-              $(document).ready(function() {
-                loadInitialData();
-
-                $('#loadMoreBtn').click(function () {
-                  var previousPostSeq = $(this).data('previous-member-seq');
-                  loadMoreData(previousPostSeq, currentSearchWord);
-                });
-
-                function loadInitialData(searchWord = '') {
-                  var apiUrl = searchWord ? "/admin-member-search" : "/admin-member-management";
-                  $.ajax({
-                    method: "POST",
-                    url: apiUrl,
-                    data: {
-                      searchWord: searchWord
-                    },
-                    dataType: "json",
-                    success: function (response) {
-                      $('#postList').empty();
-                      renderData(response.data);
-                      if (response.hasMore) {
-                        $('#loadMoreBtn').data('previous-member-seq',
-                                response.data[response.data.length - 1].memberSeq).show();
-                      } else {
-                        $('#loadMoreBtn').hide();
-                      }
-                    },
-                    error: function () {
-                      console.error("[ERROR] 데이터 초기화 중 오류 발생");
-                    }
-                  });
-                }
-
-                function loadMoreData(previousMemberSeq, searchWord = '') {
-                  var apiUrl = searchWord ? "/admin-member-search" : "/admin-member-management";
-                  $.ajax({
-                    method: "POST",
-                    url: apiUrl,
-                    data: {
-                      previousMemberSeq: previousMemberSeq,
-                      searchWord: searchWord
-                    },
-                    dataType: "json",
-                    success: function (response) {
-                      if (response.data.length > 0) {
-                        renderData(response.data);
-                        if (response.hasMore) {
-                          $('#loadMoreBtn').data('previous-member-seq',
-                                  response.data[response.data.length - 1].memberSeq).show();
-                          console.log(response.data[response.data.length - 1].memberSeq);
-                        } else {
-                          $('#loadMoreBtn').hide();
-                        }
-                      } else {
-                        $('#loadMoreBtn').hide();
-                      }
-                    },
-                    error: function () {
-                      console.error("[ERROR] 추가 데이터 로딩 중 오류 발생");
-                    }
-                  });
-                }
-
-                function renderData(data) {
-                  var htmlStr = "";
-                  $.map(data, function (member) {
-                    htmlStr += "<tr>";
-                    htmlStr += "<td>" + member["gubun"] + "</td>";
-                    htmlStr += "<td>" + member["nickname"] + "</td>";
-                    htmlStr += "<td><a href='/brand-page?member_seq=" + member["memberSeq"] + "'>" + member["id"] + "</a></td>";
-                    htmlStr += "<td>" + member["createdAt"] + "</td>";
-                    htmlStr += "<td><button class='btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#deleteModal' data-id='" + member["id"] + "'>x</button></td>";
-                    htmlStr += "</tr>";
-                  });
-                  $('#memberList').append(htmlStr);
-                }
-
-              });
-
-              var deleteModal = document.getElementById('deleteModal');
-              deleteModal.addEventListener('show.bs.modal', function (event) {
-                var button = event.relatedTarget;
-                var deleteMemberId = button.getAttribute('data-id');
-                var modalTitle = deleteModal.querySelector('.modal-title');
-                var modalBodyInput = deleteModal.querySelector('.modal-body input');
-
-                modalTitle.textContent = '정말 탈퇴시킬까요? (ID: ' + deleteMemberId + ')';
-                modalBodyInput.value = '';
-
-                document.getElementById('deleteForm').onsubmit = function(event) {
-                  event.preventDefault();
-                  var adminVerificationPW = modalBodyInput.value;
-
-                  fetch('/admin-member-delete', {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: 'deleteMemberId=' + encodeURIComponent(deleteMemberId) + '&adminVerificationPW=' + encodeURIComponent(adminVerificationPW)
-                  })
-                  .then(response => {
-                    if (response.status === 200) {
-                      return response.text().then(data => {
-                        console.log(data);
-                        alert('정상적으로 탈퇴 처리 되었습니다.');
-                        var modal = bootstrap.Modal.getInstance(deleteModal);
-                        modal.hide();
-                        location.reload();
-                      });
-                    } else if (response.status === 401) {
-                      modalBodyInput.classList.add('is-invalid');
-                      var invalidFeedback = deleteModal.querySelector('.invalid-feedback');
-                      if (!invalidFeedback) {
-                        invalidFeedback = document.createElement('div');
-                        invalidFeedback.classList.add('invalid-feedback');
-                        invalidFeedback.textContent = '비밀번호가 잘못되었습니다.';
-                        modalBodyInput.parentNode.appendChild(invalidFeedback);
-                      }
-                    } else {
-                      return response.text().then(data => {
-                        console.error(data);
-                        alert('오류가 발생했습니다. 다음에 다시 시도해주세요.');
-                      });
-                    }
-                  })
-                  .catch(error => console.error('Error:', error));
-                };
-              });
-            </script>
-
           </div>
         </div>
-
       </div>
     </div>
   </section>
 
+  <div class="d-flex justify-content-center">
+    <button class="btn btn-primary" id="loadMoreBtn" data-previous-member-seq="0">더보기</button>
+  </div>
 
+</main>
 
-</main><!-- End #main -->
+<script>
+  $(document).ready(function() {
+    var currentSearchWord = '';
+
+    loadInitialData();
+
+    $('#loadMoreBtn').click(function () {
+      var previousMemberSeq = $(this).data('previous-member-seq');
+      loadMoreData(previousMemberSeq, currentSearchWord);
+    });
+
+    function loadInitialData(searchWord = '') {
+      var apiUrl = searchWord ? "/admin-member-search" : "/admin-member-management";
+      $.ajax({
+        method: "POST",
+        url: apiUrl,
+        data: {
+          searchWord: searchWord
+        },
+        dataType: "json",
+        success: function (response) {
+          $('#postList').empty();
+          renderData(response.data);
+          if (response.hasMore) {
+            $('#loadMoreBtn').data('previous-member-seq',
+                    response.data[response.data.length - 1].memberSeq).show();
+          } else {
+            $('#loadMoreBtn').hide();
+          }
+        },
+        error: function () {
+          console.error("[ERROR] 데이터 초기화 중 오류 발생");
+        }
+      });
+    }
+
+    function loadMoreData(previousMemberSeq, searchWord = '') {
+      var apiUrl = searchWord ? "/admin-member-search" : "/admin-member-management";
+      $.ajax({
+        method: "POST",
+        url: apiUrl,
+        data: {
+          previousMemberSeq: previousMemberSeq,
+          searchWord: searchWord
+        },
+        dataType: "json",
+        success: function (response) {
+          if (response.data.length > 0) {
+            renderData(response.data);
+            if (response.hasMore) {
+              $('#loadMoreBtn').data('previous-member-seq',
+                      response.data[response.data.length - 1].memberSeq).show();
+              console.log(response.data[response.data.length - 1].memberSeq);
+            } else {
+              $('#loadMoreBtn').hide();
+            }
+          } else {
+            $('#loadMoreBtn').hide();
+          }
+        },
+        error: function () {
+          console.error("[ERROR] 추가 데이터 로딩 중 오류 발생");
+        }
+      });
+    }
+
+    function renderData(data) {
+      var htmlStr = "";
+      $.map(data, function (member) {
+        htmlStr += "<tr>";
+        htmlStr += "<td>" + member["gubun"] + "</td>";
+        htmlStr += "<td>" + member["nickname"] + "</td>";
+        htmlStr += "<td><a href='/brand-page?member_seq=" + member["memberSeq"] + "'>" + member["id"] + "</a></td>";
+        htmlStr += "<td>" + member["createdAt"] + "</td>";
+        htmlStr += "<td><button class='btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#deleteModal' data-id='" + member["id"] + "'>x</button></td>";
+        htmlStr += "</tr>";
+      });
+      $('#memberList').append(htmlStr);
+    }
+
+  });
+
+  var deleteModal = document.getElementById('deleteModal');
+  deleteModal.addEventListener('show.bs.modal', function (event) {
+    var button = event.relatedTarget;
+    var deleteMemberId = button.getAttribute('data-id');
+    var modalTitle = deleteModal.querySelector('.modal-title');
+    var modalBodyInput = deleteModal.querySelector('.modal-body input');
+
+    modalTitle.textContent = '정말 탈퇴시킬까요? (ID: ' + deleteMemberId + ')';
+    modalBodyInput.value = '';
+
+    document.getElementById('deleteForm').onsubmit = function(event) {
+      event.preventDefault();
+      var adminVerificationPW = modalBodyInput.value;
+
+      fetch('/admin-member-delete', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'deleteMemberId=' + encodeURIComponent(deleteMemberId) + '&adminVerificationPW=' + encodeURIComponent(adminVerificationPW)
+      })
+      .then(response => {
+        if (response.status === 200) {
+          return response.text().then(data => {
+            console.log(data);
+            alert('정상적으로 탈퇴 처리 되었습니다.');
+            var modal = bootstrap.Modal.getInstance(deleteModal);
+            modal.hide();
+            location.reload();
+          });
+        } else if (response.status === 401) {
+          modalBodyInput.classList.add('is-invalid');
+          var invalidFeedback = deleteModal.querySelector('.invalid-feedback');
+          if (!invalidFeedback) {
+            invalidFeedback = document.createElement('div');
+            invalidFeedback.classList.add('invalid-feedback');
+            invalidFeedback.textContent = '비밀번호가 잘못되었습니다.';
+            modalBodyInput.parentNode.appendChild(invalidFeedback);
+          }
+        } else {
+          return response.text().then(data => {
+            console.error(data);
+            alert('오류가 발생했습니다. 다음에 다시 시도해주세요.');
+          });
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    };
+  });
+</script>
 
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
