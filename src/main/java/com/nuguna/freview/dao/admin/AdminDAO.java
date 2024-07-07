@@ -3,7 +3,7 @@ package com.nuguna.freview.dao.admin;
 import static com.nuguna.freview.util.DbUtil.closeResource;
 import static com.nuguna.freview.util.DbUtil.getConnection;
 
-import com.nuguna.freview.dto.StoreAndBoss;
+import com.nuguna.freview.dto.StoreAndBossDTO;
 import com.nuguna.freview.entity.admin.StoreBusinessInfo;
 import com.nuguna.freview.entity.member.Member;
 import java.sql.Connection;
@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 public class AdminDAO {
 
   private final String DELETE_MEMBER_BY_ID = "DELETE FROM member WHERE id = ?";
-  private final String SELECT_STORE_BUSINESS_INFO = "SELECT s.store_name, s.business_number, m.id, m.created_at FROM store_business_info s LEFT JOIN member m ON s.business_number = m.business_number";
   private final String DELETE_STORE_BY_BUSINESS_NUMBER = "DELETE FROM store_business_info WHERE business_number = ?";
   private final String INSERT_STORE = "INSERT INTO store_business_info(business_number, store_name) VALUES(?, ?)";
 
@@ -49,7 +48,7 @@ public class AdminDAO {
     }
   }
 
-  public List<Member> getMemberList(int previousMemberSeq, int LIMIT) {
+  public List<Member> getMemberList(int previousMemberSeq, int limit) {
     String sql = "SELECT * FROM member WHERE gubun != 'A' AND member_seq < ? ORDER BY member_seq DESC LIMIT ?";
 
     Connection conn = null;
@@ -62,7 +61,7 @@ public class AdminDAO {
       conn = getConnection();
       pstmt = conn.prepareStatement(sql);
       pstmt.setInt(1, previousMemberSeq);
-      pstmt.setInt(2, LIMIT);
+      pstmt.setInt(2, limit);
       rs = pstmt.executeQuery();
 
       while (rs.next()) {
@@ -164,8 +163,10 @@ public class AdminDAO {
     return isDeleted;
   }
 
-  public List<StoreAndBoss> getStoreBusinessInfo() {
-    List<StoreAndBoss> list = new ArrayList<>();
+  public List<StoreAndBossDTO> getStoreBusinessInfo(String previousBusinessNumber, int limit) {
+    String sql = "SELECT s.store_name, s.business_number, m.id, m.created_at FROM store_business_info s LEFT JOIN member m ON s.business_number = m.business_number where s.business_number < ? ORDER BY s.business_number DESC LIMIT ?";
+
+    List<StoreAndBossDTO> list = new ArrayList<>();
 
     Connection conn = null;
     PreparedStatement pstmt = null;
@@ -173,14 +174,58 @@ public class AdminDAO {
 
     try {
       conn = getConnection();
-      pstmt = conn.prepareStatement(SELECT_STORE_BUSINESS_INFO);
+      pstmt = conn.prepareStatement(sql);
+      pstmt.setString(1, previousBusinessNumber);
+      pstmt.setInt(2, limit);
       rs = pstmt.executeQuery();
 
-      while(rs.next()) {
-        StoreAndBoss storeAndBoss = new StoreAndBoss();
+      while (rs.next()) {
+        StoreAndBossDTO storeAndBoss = new StoreAndBossDTO();
         storeAndBoss.setStoreName(rs.getString(1));
         storeAndBoss.setBusinessNumber(rs.getString(2));
-        storeAndBoss.setMid(rs.getString(3));
+        storeAndBoss.setId(rs.getString(3));
+        storeAndBoss.setCreatedAt(rs.getTimestamp(4));
+
+        list.add(storeAndBoss);
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    } finally {
+      closeResource(pstmt, conn, rs);
+    }
+
+    return list;
+  }
+
+  public List<StoreAndBossDTO> getStoreBusinessInfo(String previousBusinessNumber, int limit, String searchWord) {
+    String sql = "SELECT s.store_name, s.business_number, m.id, m.created_at " +
+        "FROM store_business_info s " +
+        "LEFT JOIN member m ON s.business_number = m.business_number " +
+        "WHERE s.business_number < ? " +
+        "AND (s.store_name LIKE CONCAT('%', ?, '%') OR m.id LIKE CONCAT('%', ?, '%')) " +
+        "LIMIT ?";
+
+    List<StoreAndBossDTO> list = new ArrayList<>();
+
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+
+    try {
+      conn = getConnection();
+      pstmt = conn.prepareStatement(sql);
+      int paramIndex = 1;
+      pstmt.setString(paramIndex++, previousBusinessNumber);
+      pstmt.setString(paramIndex++, searchWord);
+      pstmt.setString(paramIndex++, searchWord);
+      pstmt.setInt(paramIndex, limit);
+      rs = pstmt.executeQuery();
+
+      while (rs.next()) {
+        StoreAndBossDTO storeAndBoss = new StoreAndBossDTO();
+        storeAndBoss.setStoreName(rs.getString(1));
+        storeAndBoss.setBusinessNumber(rs.getString(2));
+        storeAndBoss.setId(rs.getString(3));
         storeAndBoss.setCreatedAt(rs.getTimestamp(4));
 
         list.add(storeAndBoss);
