@@ -22,7 +22,7 @@ import javax.servlet.http.HttpSession;
 public class MemberManagingServlet extends HttpServlet {
 
   private AdminDAO adminDAO = new AdminDAO();
-  private final int LIMIT = 10;
+  private final int LIMIT = 30;
   private Gson gson = new Gson();
 
   @Override
@@ -48,12 +48,29 @@ public class MemberManagingServlet extends HttpServlet {
       throws ServletException, IOException {
     setEncodingToUTF8AndJson(request, response);
 
-    List<Member> memberList = adminDAO.selectAllMember();
+    int previousMemberSeq = getPreviousMemberSeq(request);
+    List<Member> memberList = loadMemberList(previousMemberSeq);
     boolean hasMore = memberList.size() == LIMIT;
     Map<String, Object> responseMap = new HashMap<>();
     responseMap.put("data", memberList);
     responseMap.put("hasMore", hasMore);
 
     sendJsonResponse(responseMap, response, gson);
+  }
+
+  private int getPreviousMemberSeq(HttpServletRequest request) {
+    int previousMemberSeq = Integer.MAX_VALUE;
+    if (request.getParameter("previousMemberSeq") != null) {
+      try {
+        previousMemberSeq = Integer.parseInt(request.getParameter("previousMemberSeq"));
+      } catch (NumberFormatException e) {
+        previousMemberSeq = Integer.MAX_VALUE;
+      }
+    }
+    return previousMemberSeq;
+  }
+
+  private List<Member> loadMemberList(int previousMemberSeq) {
+    return adminDAO.getMemberList(previousMemberSeq, LIMIT);
   }
 }
