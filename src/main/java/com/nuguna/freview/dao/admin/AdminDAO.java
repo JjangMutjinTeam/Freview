@@ -1,13 +1,13 @@
 package com.nuguna.freview.dao.admin;
 
-import static com.nuguna.freview.config.DbConfig.*;
 import static com.nuguna.freview.util.DbUtil.closeResource;
+import static com.nuguna.freview.util.DbUtil.getConnection;
 
+import com.nuguna.freview.dto.AdminPersonalInfoDTO;
 import com.nuguna.freview.dto.StoreAndBoss;
 import com.nuguna.freview.entity.admin.StoreBusinessInfo;
 import com.nuguna.freview.entity.member.Member;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,14 +18,46 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AdminDAO {
 
-  private final String SELECT_ALL_MEMBER_NOT_ADMIN = "SELECT * FROM member WHERE gubun != 'A'";
   private final String DELETE_MEMBER_BY_ID = "DELETE FROM member WHERE id = ?";
   private final String SELECT_ADMIN_PW = "SELECT pw FROM member WHERE gubun = 'A'";
   private final String SELECT_STORE_BUSINESS_INFO = "SELECT s.store_name, s.business_number, m.id, m.created_at FROM store_business_info s LEFT JOIN member m ON s.business_number = m.business_number";
   private final String DELETE_STORE_BY_BUSINESS_NUMBER = "DELETE FROM store_business_info WHERE business_number = ?";
   private final String INSERT_STORE = "INSERT INTO store_business_info(business_number, store_name) VALUES(?, ?)";
 
+  public AdminPersonalInfoDTO getAdminPersonalInfo(int memberSeq) {
+    String sql = "select member_seq, gubun, id, nickname, email from member where member_seq = ?";
+
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+
+    try {
+      conn = getConnection();
+      pstmt = conn.prepareStatement(sql);
+      pstmt.setInt(1, memberSeq);
+      rs = pstmt.executeQuery();
+
+      AdminPersonalInfoDTO member = new AdminPersonalInfoDTO();
+
+      if (rs.next()) {
+        member.setMemberSeq(rs.getInt("member_seq"));
+        member.setId(rs.getString("id"));
+        member.setNickname(rs.getString("nickname"));
+        member.setEmail(rs.getString("email"));
+      }
+
+      return member;
+
+    } catch (SQLException e) {
+      throw new RuntimeException("SQLException : 멤버 기본정보를 받아오는 도중 에러 발생", e);
+    } finally {
+      closeResource(pstmt, conn, null);
+    }
+  }
+
   public List<Member> selectAllMember() {
+    String sql = "SELECT * FROM member WHERE gubun != 'A'";
+
     Connection conn = null;
     PreparedStatement pstmt = null;
     ResultSet rs = null;
@@ -34,7 +66,7 @@ public class AdminDAO {
 
     try {
       conn = getConnection();
-      pstmt = conn.prepareStatement(SELECT_ALL_MEMBER_NOT_ADMIN);
+      pstmt = conn.prepareStatement(sql);
       rs = pstmt.executeQuery();
 
       while (rs.next()) {
@@ -187,19 +219,6 @@ public class AdminDAO {
     }
 
     return isInserted;
-  }
-
-  private Connection getConnection() {
-    Connection conn = null;
-    try {
-      Class.forName(DRIVER_NAME);
-      conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PW);
-    } catch (ClassNotFoundException e) {
-      log.error("JDBC Driver not found");
-    } catch (SQLException e) {
-      log.error("connection failed");
-    }
-    return conn;
   }
 
 }
