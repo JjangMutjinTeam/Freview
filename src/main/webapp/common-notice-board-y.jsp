@@ -136,7 +136,7 @@
                 </div>
                 <c:if test="${gubun == 'A'}">
                     <div>
-                        <a href="/notice/createPost" class="btn btn-primary">
+                        <a href="/notice-create" class="btn btn-primary">
                             공지 등록
                         </a>
                     </div>

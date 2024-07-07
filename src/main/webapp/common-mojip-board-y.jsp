@@ -77,6 +77,23 @@
       .post-item h5, .post-item p {
         margin: 8px 0 !important;
       }
+
+      .btn-register {
+        background-color: #007bff; /* Bootstrap 기본 파란색 */
+        color: white;
+        text-decoration: none;
+      }
+
+      .btn-register:hover {
+        color: white; /* Hover 시에도 흰색 유지 */
+      }
+
+      .search-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
     </style>
 
 
@@ -124,21 +141,21 @@
             <h5 class="card-title">모집 게시판</h5>
             <p>매우 중요한 모집글이 올라옵니다 <br></p>
 
+            <div class="search-container">
             <div>
                 <input type="text" name="searchWord" id="searchWord" placeholder="원하는 키워드로 검색하세요!">
                 <input type="button" id="searchBtn" value="검색">
             </div>
 
             <c:if test="${gubun == 'B'}">
-                <div>
-                    <a href="/mojip-create" class="btn btn-primary">
-                        모집 등록
-                    </a>
-                </div>
+                <a href="/mojip-create" class="btn btn-register">
+                    모집 등록
+                </a>
             </c:if>
+            </div>
+            </div>
 
             <div id="postList" class="post-list">
-            </div>
         </div>
     </div>
     <div class="d-flex justify-content-center">
