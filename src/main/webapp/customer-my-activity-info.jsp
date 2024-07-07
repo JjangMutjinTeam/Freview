@@ -238,6 +238,20 @@
             }
           });
         });
+
+        $('#zzimedMeStores').on('click', function () {
+          $.ajax({
+            url: '/api/customer/my-activity/zzimed-me-stores',
+            type: 'GET',
+            success: function (data) {
+              console.log(data);
+              // 데이터를 화면에 표시하려면 이곳에 추가할 수 있습니다.
+            },
+            error: function (error) {
+              console.error('Error fetching data:', error);
+            }
+          });
+        });
       });
     </script>
 </main><!-- End #main -->
