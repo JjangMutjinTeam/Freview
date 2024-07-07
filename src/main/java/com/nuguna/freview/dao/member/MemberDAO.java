@@ -63,4 +63,51 @@ public class MemberDAO {
     }
   }
 
+  public boolean isDuplicateNickName(String nickname) {
+    String sql = "select count(*) from member where nickname = ?";
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+
+    try {
+      conn = getConnection();
+      pstmt = conn.prepareStatement(sql);
+      pstmt.setString(1, nickname);
+      rs = pstmt.executeQuery();
+
+      if (rs.next()) {
+        return rs.getInt(1) > 0;
+      } else {
+        return false;
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException("SQLException : 닉네임 중복 체크 도중 에러 발생", e);
+    } finally {
+      closeResource(pstmt, conn, rs);
+    }
+  }
+
+  public int updateNickname(int memberSeq, String newNickname) {
+    //TODO: 암호화 필요
+
+    String sql = "UPDATE member SET nickname = ? WHERE member_seq = ?";
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+
+    try {
+      conn = getConnection();
+      pstmt = conn.prepareStatement(sql);
+      pstmt.setString(1, newNickname);
+      pstmt.setInt(2, memberSeq);
+
+      int updateRows = pstmt.executeUpdate();
+
+      return updateRows;
+    } catch (SQLException e) {
+      throw new RuntimeException("SQLException : 닉네임을 업데이트 하는 도중 에러 발생", e);
+    } finally {
+      closeResource(pstmt, conn);
+    }
+  }
+
 }
