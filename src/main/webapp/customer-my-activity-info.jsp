@@ -98,6 +98,11 @@
         font-size: 1rem;
         color: #555;
       }
+
+      #postsContainer {
+        margin-left: -15px;
+        margin-top: 10px;
+      }
     </style>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -214,12 +219,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-content pt-2">
-                            <div class="tab-pane fade active pt-6" id="requestBtn">
-                                <!-- Content for other tabs if needed -->
-                            </div>
-                        </div>
-                        <!-- End Bordered Tabs -->
                     </div>
                 </div>
             </div>
