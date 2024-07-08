@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="loginUser" value="${requestScope.loginUser}"/>
 <c:set var="memberSeq" value="${loginUser.memberSeq}"/>
+<c:set var="nickname" value="${loginUser.nickname}" />
 
 <!DOCTYPE html>
 <html lang="en">
@@ -74,25 +75,41 @@
   .form-control {
     border-radius: 5px;
   }
-   .input-group .btn-custom {
-     border: 1px solid #0056b3;
-     background-color: #fff;
-     color: #0056b3;
-     border-radius: 0 5px 5px 0;
-   }
-
+  .input-group .btn-custom {
+    border: 1px solid #0056b3;
+    background-color: #fff;
+    color: #0056b3;
+    border-radius: 0 5px 5px 0;
+  }
   .input-group .form-control {
     border-radius: 5px 0 0 5px;
   }
-
   .input-group .btn-custom:hover {
     background-color: #0056b3;
     color: #fff;
   }
-
   .btn-block {
     display: block;
     width: 100%;
+  }
+  .edit-field {
+    display: none;
+    margin-top: 10px;
+  }
+  .edit-field .form-control {
+    margin-bottom: 10px;
+  }
+  .email-input-group {
+    display: flex;
+  }
+  .email-input-group input {
+    margin-right: 10px;
+  }
+  .email-input-group .btn {
+    margin-right: 10px;
+    height: 38px;
+    width: auto;
+    white-space: nowrap;
   }
 </style>
 
@@ -100,10 +117,10 @@
 
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center header-hr">
-    <div class="d-flex align-items-center justify-content-between ">
+    <div class="d-flex align-items-center justify-content-between">
         <a href="/main?seq=${memberSeq}&pagecode=Requester" class="logo d-flex align-items-center">
-            <img src="assets/img/logo/logo-vertical.png" alt="" style="  width: 50px; margin-top: 20px;">
-            <span class="d-none d-lg-block">Freview</span>
+            <img src="assets/img/logo/logo-vertical.png" alt="" style="width: 50px; margin-top: 20px;">
+            <span class="d-none d-lg-block">FReview</span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
     </div>
@@ -152,8 +169,7 @@
     </div>
     <div class="card">
         <div class="card-body">
-            <div id="memberInfo">
-            </div>
+            <div id="memberInfo"></div>
         </div>
     </div>
 </main>
@@ -188,8 +204,12 @@
       htmlStr += '<div class="mb-3">';
       htmlStr += '  <label for="nickname" class="form-label">닉네임</label>';
       htmlStr += '  <div class="input-group">';
-      htmlStr += '    <input type="text" id="nickname" class="form-control" value="' + data["nickname"] + '">';
-      htmlStr += '    <button class="btn btn-custom" type="button" onclick="showNicknameModal()">수정</button>';
+      htmlStr += '    <input type="text" id="nickname" class="form-control" value="' + data["nickname"] + '" readonly>';
+      htmlStr += '    <button class="btn btn-custom" type="button" data-toggle="edit" data-target="nickname-edit">수정</button>';
+      htmlStr += '  </div>';
+      htmlStr += '  <div id="nickname-edit" class="edit-field">';
+      htmlStr += '    <input type="text" id="newNickname" class="form-control" placeholder="새 닉네임">';
+      htmlStr += '    <button class="btn btn-primary" type="button" data-update="nickname">완료</button>';
       htmlStr += '  </div>';
       htmlStr += '</div>';
 
@@ -201,25 +221,85 @@
       htmlStr += '<div class="mb-3">';
       htmlStr += '  <label for="password" class="form-label">비밀번호</label>';
       htmlStr += '  <div class="input-group">';
-      htmlStr += '    <input type="password" id="password" class="form-control" value="' + data["password"] + '">';
-      htmlStr += '    <button class="btn btn-custom" type="button" onclick="showPasswordModal()">수정</button>';
+      htmlStr += '    <input type="password" id="password" class="form-control" value="' + data["password"] + '" readonly>';
+      htmlStr += '    <button class="btn btn-custom" type="button" data-toggle="edit" data-target="password-edit">수정</button>';
+      htmlStr += '  </div>';
+      htmlStr += '  <div id="password-edit" class="edit-field">';
+      htmlStr += '    <input type="password" id="currentPassword" class="form-control" placeholder="현재 비밀번호">';
+      htmlStr += '    <input type="password" id="newPassword" class="form-control" placeholder="새 비밀번호">';
+      htmlStr += '    <input type="password" id="confirmPassword" class="form-control" placeholder="비밀번호 확인">';
+      htmlStr += '    <button class="btn btn-primary" type="button" data-update="password">완료</button>';
       htmlStr += '  </div>';
       htmlStr += '</div>';
 
       htmlStr += '<div class="mb-3">';
       htmlStr += '  <label for="email" class="form-label">이메일</label>';
       htmlStr += '  <div class="input-group">';
-      htmlStr += '    <input type="text" id="email" class="form-control" value="' + data["email"] + '">';
-      htmlStr += '    <button class="btn btn-custom" type="button" onclick="showEmailModal()">수정</button>';
+      htmlStr += "    <input type='text' id='email' class='form-control' value='" + data["email"] + "' readonly>";
+      htmlStr += '    <button class="btn btn-custom" type="button" data-toggle="edit" data-target="email-edit">수정</button>';
+      htmlStr += '  </div>';
+      htmlStr += '  <div id="email-edit" class="edit-field">';
+      htmlStr += '    <div class="email-input-group">';
+      htmlStr += '      <input type="email" id="newEmail" class="form-control" placeholder="새 이메일">';
+      htmlStr += '      <button class="btn btn-outline-primary" type="button" id="sendVerificationCode">인증번호</button>';
+      htmlStr += '    </div>';
+      htmlStr += '    <div class="email-input-group">';
+      htmlStr += '      <input type="text" id="verificationCode" class="form-control" placeholder="인증번호 확인" disabled>';
+      htmlStr += '      <button class="btn btn-outline-primary" type="button" id="verifyCode" disabled>확인</button>';
+      htmlStr += '    </div>';
+      htmlStr += '    <button class="btn btn-primary" type="button" data-update="email">완료</button>';
       htmlStr += '  </div>';
       htmlStr += '</div>';
 
       $('#memberInfo').html(htmlStr);
     }
 
-    $('#passwordForm').on('submit', function(event) {
-      event.preventDefault();
+    function toggleEditField(fieldId, button) {
+      if ($(button).hasClass('active')) {
+        resetButtons();
+      } else {
+        resetButtons();
+        $(button).addClass('active').prop('disabled', false);
+        $('#' + fieldId).show();
+      }
+    }
 
+    function resetButtons() {
+      $('.btn-custom').prop('disabled', false).removeClass('active');
+      $('.edit-field').each(function() {
+        $(this).hide();
+        $(this).find('input').val('');
+      });
+    }
+
+    $(document).on('click', '[data-toggle="edit"]', function () {
+      let targetId = $(this).data('target');
+      toggleEditField(targetId, this);
+    });
+
+    $(document).on('click', '[data-update="nickname"]', function () {
+      let newNickname = $('#newNickname').val();
+
+      $.ajax({
+        type: 'POST',
+        url: '/nickname-update',
+        data: {
+          memberSeq: ${memberSeq},
+          newNickname: newNickname
+        },
+        success: function (response) {
+          alert('닉네임이 성공적으로 수정되었습니다.');
+          resetButtons();
+          location.replace("/personal-info-update");
+        },
+        error: function (error) {
+          alert('닉네임 수정에 실패했습니다. 다시 시도해 주세요.');
+          console.error(error);
+        }
+      });
+    });
+
+    $(document).on('click', '[data-update="password"]', function () {
       let currentPassword = $('#currentPassword').val();
       let newPassword = $('#newPassword').val();
       let confirmPassword = $('#confirmPassword').val();
@@ -243,43 +323,19 @@
           newPassword: newPassword,
           memberSeq: ${memberSeq}
         },
-        success: function(response) {
+        success: function (response) {
           alert('비밀번호가 성공적으로 수정되었습니다.');
-          $('#passwordModal').modal('hide');
+          resetButtons();
           location.replace("/personal-info-update");
         },
-        error: function(error) {
+        error: function (error) {
           alert('비밀번호 수정에 실패했습니다. 다시 시도해 주세요.');
           console.error(error);
         }
       });
     });
 
-    $('#nicknameForm').on('submit', function(event) {
-      event.preventDefault();
-
-      let newNickname = $('#newNickname').val();
-
-      $.ajax({
-        type: 'POST',
-        url: '/nickname-update',
-        data: {
-          memberSeq : ${memberSeq},
-          newNickname: newNickname,
-        },
-        success: function(response) {
-          alert('닉네임이 성공적으로 수정되었습니다.');
-          $('#nicknameModal').modal('hide');
-          location.replace("/personal-info-update");
-        },
-        error: function(error) {
-          alert('닉네임 수정에 실패했습니다. 다시 시도해 주세요.');
-          console.error(error);
-        }
-      });
-    });
-
-    $("#sendVerificationCode").click(function() {
+    $(document).on('click', '#sendVerificationCode', function () {
       let inputEmail = $("#newEmail").val();
       let reg = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
 
@@ -297,10 +353,10 @@
             "email": inputEmail,
             "randomNumber": randomFourDigitNumber
           },
-          error: function(myval) {
+          error: function (myval) {
             console.log("에러" + myval);
           },
-          success: function(myval) {
+          success: function (myval) {
             console.log("성공" + myval);
             emailVerificationCode = myval;
           }
@@ -310,7 +366,7 @@
       }
     });
 
-    $("#verifyCode").click(function() {
+    $(document).on('click', '#verifyCode', function () {
       let inputCode = $("#verificationCode").val();
       if (inputCode === emailVerificationCode) {
         alert("인증번호가 일치합니다.");
@@ -319,7 +375,7 @@
       }
     });
 
-    $("#submitEmailChange").click(function() {
+    $(document).on('click', '[data-update="email"]', function () {
       let newEmail = $("#newEmail").val();
 
       $.ajax({
@@ -329,114 +385,19 @@
           "email": newEmail,
           "memberSeq": ${memberSeq}
         },
-        error: function(myval) {
+        error: function (myval) {
           console.log("에러" + myval);
         },
-        success: function(myval) {
+        success: function (myval) {
           console.log("성공" + myval);
           alert("이메일이 성공적으로 업데이트되었습니다.");
-          $('#emailModal').modal('hide');
+          resetButtons();
           location.replace("/personal-info-update");
         }
       });
     });
   });
-
-  function showPasswordModal() {
-    $('#passwordModal').modal('show');
-  }
-
-  function showEmailModal() {
-    $('#emailModal').modal('show');
-  }
-
-  function showNicknameModal() {
-    $('#nicknameModal').modal('show');
-  }
 </script>
-
-<!-- 닉네임 수정 모달 -->
-<div class="modal fade" id="nicknameModal" tabindex="-1" aria-labelledby="nicknameModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="nicknameModalLabel">닉네임 수정</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="nicknameForm">
-                    <div class="mb-3">
-                        <label for="newNickname" class="form-label">새 닉네임</label>
-                        <input type="text" class="form-control" id="newNickname" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block">완료</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- 비밀번호 수정 모달 -->
-<div class="modal fade" id="passwordModal" tabindex="-1" aria-labelledby="passwordModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="passwordModalLabel">비밀번호 수정</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="passwordForm">
-                    <div class="mb-3">
-                        <label for="newPassword" class="form-label">현재 비밀번호</label>
-                        <input type="password" class="form-control" id="currentPassword" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="newPassword" class="form-label">새 비밀번호</label>
-                        <input type="password" class="form-control" id="newPassword" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="confirmPassword" class="form-label">비밀번호 확인</label>
-                        <input type="password" class="form-control" id="confirmPassword" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block">완료</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- 이메일 수정 모달 -->
-<div class="modal fade" id="emailModal" tabindex="-1" aria-labelledby="emailModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="emailModalLabel">이메일 수정</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="emailForm">
-                    <div class="mb-3">
-                        <label for="newEmail" class="form-label">새 이메일</label>
-                        <div class="input-group">
-                            <input type="email" class="form-control" id="newEmail" required>
-                            <button type="button" class="btn btn-outline-primary" id="sendVerificationCode">인증번호</button>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="verificationCode" class="form-label">인증번호확인</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="verificationCode" required disabled>
-                            <button type="button" class="btn btn-outline-primary" id="verifyCode" disabled>확인</button>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-end">
-                        <button type="button" class="btn btn-primary btn-block" id="submitEmailChange">완료</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
@@ -459,3 +420,4 @@
 </body>
 
 </html>
+
