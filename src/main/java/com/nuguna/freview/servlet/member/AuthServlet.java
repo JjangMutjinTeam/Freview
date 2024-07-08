@@ -18,8 +18,10 @@ import javax.servlet.http.HttpSession;
 @WebServlet("/auth")
 public class AuthServlet extends HttpServlet {
 
+  private ShaUtil sha;
   @Override
   public void init() throws ServletException {
+    sha = new ShaUtil();
   }
 
   @Override
@@ -73,7 +75,7 @@ public class AuthServlet extends HttpServlet {
 
       String id = req.getParameter("id");
       String purePassword = req.getParameter("password");
-      String hashPassword = new ShaUtil().sha256Encodeing(purePassword);
+      String hashPassword = sha.sha256Encodeing(purePassword);
       String email = req.getParameter("email");
       String nickname = req.getParameter("nickname");
       String agegroup = req.getParameter("agegroup");
@@ -98,7 +100,7 @@ public class AuthServlet extends HttpServlet {
     else if(pageCode.equals("Boss_regist")){ // 사장님 회원가입
       String id = req.getParameter("id");
       String password = req.getParameter("password");
-      String sha_password = new ShaUtil().sha256Encodeing(password);
+      String sha_password = sha.sha256Encodeing(password);
       String email = req.getParameter("email");
       String agegroup = req.getParameter("agegroup");
       String buisness_number = req.getParameter("buisness_number");
@@ -120,7 +122,7 @@ public class AuthServlet extends HttpServlet {
 
       String id = req.getParameter("id");
       String password = req.getParameter("password");
-      String sha_password = new ShaUtil().sha256Encodeing(password);
+      String sha_password = sha.sha256Encodeing(password);
       Member user = ldao.getMemberByIdPw(id,sha_password);
       HttpSession session = req.getSession();
       session.setAttribute("Member",user);
@@ -139,7 +141,7 @@ public class AuthServlet extends HttpServlet {
         }
         else if(user.getGubun().equals("A")){
           System.out.println("user : " + user);
-          resp.sendRedirect(req.getContextPath() + "/AdminPage/user");
+          resp.sendRedirect(req.getContextPath() + "/admin");
         }
 
     }
