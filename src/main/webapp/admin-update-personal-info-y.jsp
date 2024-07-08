@@ -49,14 +49,14 @@
   .sidebar {
     display: flex;
     flex-direction: column;
-    height: 100vh; /* Full viewport height */
+    height: 100vh;
   }
   .sidebar-nav {
-    flex: 1; /* Takes up available space */
-    overflow-y: auto; /* Scroll if necessary */
+    flex: 1;
+    overflow-y: auto;
   }
   .sidebar-nav:last-child {
-    margin-top: auto; /* Pushes the last ul to the bottom */
+    margin-top: auto;
   }
   .nav-link {
     display: flex;
@@ -73,6 +73,26 @@
   }
   .form-control {
     border-radius: 5px;
+  }
+   .input-group .btn-custom {
+     border: 1px solid #0056b3;
+     background-color: #fff;
+     color: #0056b3;
+     border-radius: 0 5px 5px 0;
+   }
+
+  .input-group .form-control {
+    border-radius: 5px 0 0 5px;
+  }
+
+  .input-group .btn-custom:hover {
+    background-color: #0056b3;
+    color: #fff;
+  }
+
+  .btn-block {
+    display: block;
+    width: 100%;
   }
 </style>
 
@@ -166,10 +186,10 @@
       var htmlStr = "";
 
       htmlStr += '<div class="mb-3">';
-      htmlStr += '  <label for="email" class="form-label">닉네임</label>';
+      htmlStr += '  <label for="nickname" class="form-label">닉네임</label>';
       htmlStr += '  <div class="input-group">';
       htmlStr += '    <input type="text" id="nickname" class="form-control" value="' + data["nickname"] + '">';
-      htmlStr += '    <button class="btn btn-primary" type="button" onclick="showNicknameModal()">수정</button>';
+      htmlStr += '    <button class="btn btn-custom" type="button" onclick="showNicknameModal()">수정</button>';
       htmlStr += '  </div>';
       htmlStr += '</div>';
 
@@ -182,7 +202,7 @@
       htmlStr += '  <label for="password" class="form-label">비밀번호</label>';
       htmlStr += '  <div class="input-group">';
       htmlStr += '    <input type="password" id="password" class="form-control" value="' + data["password"] + '">';
-      htmlStr += '    <button class="btn btn-primary" type="button" onclick="showPasswordModal()">수정</button>';
+      htmlStr += '    <button class="btn btn-custom" type="button" onclick="showPasswordModal()">수정</button>';
       htmlStr += '  </div>';
       htmlStr += '</div>';
 
@@ -190,7 +210,7 @@
       htmlStr += '  <label for="email" class="form-label">이메일</label>';
       htmlStr += '  <div class="input-group">';
       htmlStr += '    <input type="text" id="email" class="form-control" value="' + data["email"] + '">';
-      htmlStr += '    <button class="btn btn-primary" type="button" onclick="showEmailModal()">수정</button>';
+      htmlStr += '    <button class="btn btn-custom" type="button" onclick="showEmailModal()">수정</button>';
       htmlStr += '  </div>';
       htmlStr += '</div>';
 
@@ -266,6 +286,9 @@
       if (reg.test(inputEmail)) {
         alert("입력하신 이메일에서 인증번호를 확인해주세요");
         let randomFourDigitNumber = Math.random().toString().slice(2, 8);
+
+        $("#verificationCode").prop("disabled", false);
+        $("#verifyCode").prop("disabled", false);
 
         $.ajax({
           method: "post",
@@ -346,7 +369,7 @@
                         <label for="newNickname" class="form-label">새 닉네임</label>
                         <input type="text" class="form-control" id="newNickname" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">확인</button>
+                    <button type="submit" class="btn btn-primary btn-block">완료</button>
                 </form>
             </div>
         </div>
@@ -375,7 +398,7 @@
                         <label for="confirmPassword" class="form-label">비밀번호 확인</label>
                         <input type="password" class="form-control" id="confirmPassword" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">확인</button>
+                    <button type="submit" class="btn btn-primary btn-block">완료</button>
                 </form>
             </div>
         </div>
@@ -402,12 +425,12 @@
                     <div class="mb-3">
                         <label for="verificationCode" class="form-label">인증번호확인</label>
                         <div class="input-group">
-                            <input type="text" class="form-control" id="verificationCode" required>
-                            <button type="button" class="btn btn-outline-primary" id="verifyCode">확인</button>
+                            <input type="text" class="form-control" id="verificationCode" required disabled>
+                            <button type="button" class="btn btn-outline-primary" id="verifyCode" disabled>확인</button>
                         </div>
                     </div>
                     <div class="d-flex justify-content-end">
-                        <button type="button" class="btn btn-primary" id="submitEmailChange">확인</button>
+                        <button type="button" class="btn btn-primary btn-block" id="submitEmailChange">완료</button>
                     </div>
                 </form>
             </div>
