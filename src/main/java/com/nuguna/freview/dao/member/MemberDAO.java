@@ -40,6 +40,26 @@ public class MemberDAO {
     }
   }
 
+  public int updateEmail(int memberSeq, String email) {
+    String sql = "update member set email = ? where member_seq = ?";
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+
+    try {
+      conn = getConnection();
+      pstmt = conn.prepareStatement(sql);
+      pstmt.setString(1, email);
+      pstmt.setInt(2, memberSeq);
+
+      int result = pstmt.executeUpdate();
+      return result;
+    } catch (SQLException e) {
+      throw new RuntimeException("SQLException : 이메일을 업데이트 하는 도중 에러 발생", e);
+    } finally {
+      closeResource(pstmt, conn);
+    }
+  }
+
   public int updatePassword(int memberSeq, String newPw) {
     //TODO: 암호화 필요
 
@@ -53,9 +73,7 @@ public class MemberDAO {
       pstmt.setString(1, newPw);
       pstmt.setInt(2, memberSeq);
 
-      int updateRows = pstmt.executeUpdate();
-
-      return updateRows;
+      return pstmt.executeUpdate();
     } catch (SQLException e) {
       throw new RuntimeException("SQLException : 비밀번호를 업데이트 하는 도중 에러 발생", e);
     } finally {
