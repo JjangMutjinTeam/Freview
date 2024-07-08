@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.nuguna.freview.dao.admin.AdminDAO;
 import com.nuguna.freview.dto.AdminPersonalInfoDTO;
 import com.nuguna.freview.entity.member.Member;
+import com.nuguna.freview.entity.member.MemberGubun;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,10 +38,19 @@ public class UpdatePersonalInfoServlet extends HttpServlet {
 
     request.setAttribute("loginUser", loginUser);
 
-    //TODO: 관리자 외 멤버(사장님, 체험단)에 대한 추가 로직 구현
-    switch(loginUser.getGubun()) {
-      case "A" : request.getRequestDispatcher("/admin-update-personal-info-y.jsp").forward(request, response);
-      break;
+    try {
+      MemberGubun gubun = MemberGubun.from(loginUser.getGubun());
+
+      //TODO: 관리자 외 멤버(사장님, 체험단)에 대한 추가 로직 구현
+      if (gubun.isAdmin()) {
+        request.getRequestDispatcher("/admin-update-personal-info-y.jsp").forward(request, response);
+      } else if (gubun.isCust()) {
+        return;
+      } else if (gubun.isBoss()) {
+        return;
+      }
+    } catch (IllegalArgumentException e) {
+      response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
     }
   }
 
