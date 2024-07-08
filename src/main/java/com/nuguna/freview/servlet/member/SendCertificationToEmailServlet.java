@@ -12,7 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 
 
-@WebServlet("/SendCertification")
+@WebServlet("/send-certification")
 public class SendCertificationToEmailServlet extends HttpServlet{
   @Override
   public void init() throws ServletException {

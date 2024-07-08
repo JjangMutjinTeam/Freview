@@ -95,7 +95,7 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
 
       $.ajax({
         method : "post",
-        url : "/SendCertification",
+        url : "/send-certification",
         data : {"email" : inputEmail,
                 "randomNumber" : randomFourDigitNumber},
         error : function(myval){console.log("에러"+myval)},
@@ -273,7 +273,7 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
 
       $.ajax({
         method : "post",
-        url : "/SendCertification",
+        url : "/send-certification",
         data : {"email" : inputEmail,
           "randomNumber" : randomFourDigitNumber},
         error : function(myval){console.log("에러"+myval)},
