@@ -1,6 +1,5 @@
 package com.nuguna.freview.dto;
 
-import java.sql.Timestamp;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,11 +11,13 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class StoreAndBoss {
+public class MemberRecommendationInfoDTO {
 
-  private String storeName;
-  private String businessNumber;
-  private String mid;
-  private Timestamp createdAt;
+  private Integer memberSeq;
+  private String id;
+  private String nickname;
+  private String profilePhotoUrl;
+  private String foodTypes;
+  private String tags;
 
 }
