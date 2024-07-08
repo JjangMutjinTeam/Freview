@@ -20,7 +20,7 @@
   <dependencies>
 
 
-    <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+    <!-- 데이터 암호화 의존성 -->
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
