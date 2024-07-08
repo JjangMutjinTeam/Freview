@@ -46,8 +46,7 @@ public class BrandPageServlet extends HttpServlet {
             "유효하지 않은 유저입니다.");
         return;
       }
-
-      request.setAttribute("member_seq", memberSeq);
+      
       if (memberGubun.isBoss()) {
         BossMyBrandInfoDto brandInfo = bossMyBrandInfoDAO.getBossBrandInfo(memberSeq);
         log.info("bossBrandInfo = " + brandInfo);

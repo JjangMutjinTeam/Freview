@@ -10,10 +10,11 @@
     BossMyBrandInfoDto brandInfo = (BossMyBrandInfoDto) request.getAttribute("brandInfo");
     Gson gson = new Gson();
     Member member = null;
+    int memberSeq = 0;
     if (session.getAttribute("Member") != null) {
         member = (Member) session.getAttribute("Member");
+        memberSeq = member.getMemberSeq();
     }
-    int memberSeq = member.getMemberSeq();
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -103,7 +104,7 @@
         <a href="/main?seq=<%=memberSeq%>&pagecode=Requester"
            class="logo d-flex align-items-center">
             <img src="assets/img/logo/logo-vertical.png" alt="">
-            <span class="d-none d-lg-block">Freeview</span>
+            <span class="d-none d-lg-block">FReview</span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
@@ -246,7 +247,7 @@
                                     url: '<%=request.getContextPath()%>/api/my-brand/introduce',
                                     method: 'POST',
                                     data: JSON.stringify({
-                                      'member_seq': ${member_seq},
+                                      'member_seq': <%=memberSeq%>,
                                       'to_introduce': newIntroduce
                                     }),
                                     success: function (response) {
@@ -385,7 +386,7 @@
                                   method: 'POST',
                                   contentType: 'application/json',
                                   data: JSON.stringify({
-                                    'member_seq': ${member_seq},
+                                    'member_seq': <%=memberSeq%>,
                                     'to_food_types': selectedFoodTypes
                                   }),
                                   success: function (response) {
@@ -507,7 +508,7 @@
                                     url: '<%=request.getContextPath()%>/api/my-brand/tag',
                                     method: 'POST',
                                     data: JSON.stringify({
-                                      'member_seq': ${member_seq},
+                                      'member_seq': <%=memberSeq%>,
                                       'to_tags': selectedTags
                                     }),
                                     success: function (response) {

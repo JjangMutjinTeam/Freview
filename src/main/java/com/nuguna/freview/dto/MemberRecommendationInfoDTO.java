@@ -11,7 +11,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemberRecommendationInfo {
+public class MemberRecommendationInfoDTO {
 
   private Integer memberSeq;
   private String id;

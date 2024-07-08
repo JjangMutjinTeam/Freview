@@ -93,7 +93,7 @@
             <h5 class="card-title">새로운 공지글을 입력해주세요</h5>
 
             <!-- Form for creating a post -->
-            <form id="createPostForm" action="/notice/createPost" method="post">
+            <form id="createPostForm" action="/notice-create" method="post">
                 <div class="mb-3">
                     <label for="title" class="form-label">제목</label>
                     <input type="text" class="form-control" id="title" name="title" required>
@@ -118,7 +118,7 @@
 
         var formData = new URLSearchParams(new FormData(this));
 
-        fetch('/notice/createPost', {
+        fetch('/notice-create', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'

@@ -1,7 +1,6 @@
 package com.nuguna.freview.servlet.admin;
 
 import static com.nuguna.freview.util.EncodingUtil.setEncodingToUTF8AndJson;
-import static com.nuguna.freview.util.EncodingUtil.setEncodingToUTF8AndText;
 import static com.nuguna.freview.util.JsonResponseUtil.sendJsonResponse;
 
 import com.google.gson.Gson;
@@ -16,10 +15,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-@WebServlet("/admin-member-management")
-public class MemberManagingServlet extends HttpServlet {
+@WebServlet("/admin-member-search")
+public class MemberSearchServlet extends HttpServlet {
 
   private AdminDAO adminDAO = new AdminDAO();
   private Gson gson = new Gson();
@@ -27,30 +25,13 @@ public class MemberManagingServlet extends HttpServlet {
   private final int LIMIT = 30;
 
   @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
-    setEncodingToUTF8AndText(request, response);
-
-    HttpSession session = request.getSession();
-    Member loginUser = (Member) session.getAttribute("Member");
-
-    //TODO: 비로그인 시 로그인페이지로 이동하는 메서드 유틸로 작성하기
-    if (loginUser == null) {
-      response.sendRedirect("common-login.jsp");
-      return;
-    }
-    request.setAttribute("loginUser", loginUser);
-
-    request.getRequestDispatcher("/admin-management-member-y.jsp").forward(request, response);
-  }
-
-  @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     setEncodingToUTF8AndJson(request, response);
 
     int previousMemberSeq = getPreviousMemberSeq(request);
-    List<Member> memberList = loadMemberList(previousMemberSeq);
+    String searchWord = request.getParameter("searchWord");
+    List<Member> memberList = loadMemberList(previousMemberSeq, searchWord);
     boolean hasMore = memberList.size() == LIMIT;
     Map<String, Object> responseMap = new HashMap<>();
     responseMap.put("data", memberList);
@@ -71,7 +52,7 @@ public class MemberManagingServlet extends HttpServlet {
     return previousMemberSeq;
   }
 
-  private List<Member> loadMemberList(int previousMemberSeq) {
-    return adminDAO.getMemberList(previousMemberSeq, LIMIT);
+  private List<Member> loadMemberList(int previousMemberSeq, String searchWord) {
+    return adminDAO.getMemberList(previousMemberSeq, LIMIT, searchWord);
   }
 }

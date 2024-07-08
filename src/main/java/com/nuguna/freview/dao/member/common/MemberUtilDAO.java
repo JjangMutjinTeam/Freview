@@ -70,7 +70,7 @@ public class MemberUtilDAO {
     ResultSet rs = null;
 
     String sql = "SELECT 1 FROM REVIEW "
-        + "WHERE review.cust_seq = ? "
+        + "WHERE review.customer_seq = ? "
         + "AND review.review_seq = ?";
 
     boolean isMatched = false;

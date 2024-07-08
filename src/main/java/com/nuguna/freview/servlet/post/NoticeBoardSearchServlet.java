@@ -32,11 +32,11 @@ public class NoticeBoardSearchServlet extends HttpServlet {
       throws ServletException, IOException {
     setEncodingToUTF8AndJson(reqeust, response);
 
-    String searchStr = reqeust.getParameter("search_str");
+    String searchWord = reqeust.getParameter("searchWord");
     int pageNumber = getPageNumber(reqeust);
     String postGubun = PostGubun.GJ.getCode();
-    List<Post> postList = noticePostDAO.getNoticeByPage(postGubun, pageNumber, LIMIT, searchStr);
-    int totalPosts = postDAO.getTotalPostsCount(postGubun, searchStr);
+    List<Post> postList = noticePostDAO.getNoticeByPage(postGubun, pageNumber, LIMIT, searchWord);
+    int totalPosts = postDAO.getTotalPostsCount(postGubun, searchWord);
     int totalPages = (int) Math.ceil((double) totalPosts / LIMIT);
 
     Map<String, Object> responseMap = new HashMap<>();

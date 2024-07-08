@@ -3,7 +3,7 @@ package com.nuguna.freview.dao.member;
 import static com.nuguna.freview.util.DbUtil.closeResource;
 import static com.nuguna.freview.util.DbUtil.getConnection;
 
-import com.nuguna.freview.dto.MemberRecommendationInfo;
+import com.nuguna.freview.dto.MemberRecommendationInfoDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,12 +13,12 @@ import java.util.List;
 
 public class RecommendationMemberDAO {
 
-  public List<MemberRecommendationInfo> selectMemberByCursorPaging(String gubun, int previousPostSeq, int limit) {
+  public List<MemberRecommendationInfoDTO> selectMemberByCursorPaging(String gubun, int previousPostSeq, int limit) {
     Connection conn = null;
     PreparedStatement pstmt = null;
     ResultSet rs = null;
 
-    List<MemberRecommendationInfo> list = new ArrayList<>();
+    List<MemberRecommendationInfoDTO> list = new ArrayList<>();
 
     String sql = "SELECT " +
         "    m.member_seq, " +
@@ -54,7 +54,7 @@ public class RecommendationMemberDAO {
       rs = pstmt.executeQuery();
 
       while (rs.next()) {
-        MemberRecommendationInfo member = new MemberRecommendationInfo();
+        MemberRecommendationInfoDTO member = new MemberRecommendationInfoDTO();
         member.setMemberSeq(rs.getInt("member_seq"));
         member.setId(rs.getString("id"));
         member.setNickname(rs.getString("nickname"));
@@ -74,12 +74,12 @@ public class RecommendationMemberDAO {
     return list;
   }
 
-  public List<MemberRecommendationInfo> filterMembers(String gubun, int previousMemberSeq, int limit, String[] foodTypes, String[] tags) {
+  public List<MemberRecommendationInfoDTO> filterMembers(String gubun, int previousMemberSeq, int limit, String[] foodTypes, String[] tags) {
     Connection conn = null;
     PreparedStatement pstmt = null;
     ResultSet rs = null;
 
-    List<MemberRecommendationInfo> members = new ArrayList<>();
+    List<MemberRecommendationInfoDTO> members = new ArrayList<>();
     StringBuilder sql = getMemberRecommendationFilteringQuery(foodTypes, tags);
 
     try {
@@ -106,7 +106,7 @@ public class RecommendationMemberDAO {
 
       rs = pstmt.executeQuery();
       while (rs.next()) {
-        MemberRecommendationInfo member = new MemberRecommendationInfo();
+        MemberRecommendationInfoDTO member = new MemberRecommendationInfoDTO();
         member.setMemberSeq(rs.getInt("member_seq"));
         member.setId(rs.getString("id"));
         member.setNickname(rs.getString("nickname"));
