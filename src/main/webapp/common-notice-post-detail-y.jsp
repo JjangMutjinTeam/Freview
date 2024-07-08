@@ -86,6 +86,13 @@
       .button-container div {
         margin: 0 10px;
       }
+
+      .like-button {
+        background-color: #ff79c6 !important;
+        border-color: #ff79c6 !important;
+        color: #fff !important;
+        display: inline-block !important;
+      }
     </style>
     <!-- =======================================================
     * Template Name: NiceAdmin
@@ -178,15 +185,15 @@
                     <c:if test="${gubun == 'C' || gubun == 'B'}">
                         <c:choose>
                             <c:when test="${isLiked}">
-                                <button type="button" class="btn btn-primary"><i
-                                        onclick="cancelLike(${currentPost.postSeq}, ${memberSeq})"><i
-                                        class="bi bi-heart-fill me-1"></i> 좋아요
+                                <button type="button" class="btn btn-primary like-button"
+                                        onclick="cancelLike(${currentPost.postSeq}, ${memberSeq})">
+                                    <i class="bi bi-heart-fill me-1"></i> 좋아요
                                 </button>
                             </c:when>
                             <c:otherwise>
-                                <button type="button" class="btn btn-primary"
-                                        onclick="addLike(${currentPost.postSeq}, ${memberSeq})"><i
-                                        class="bi bi-heart me-1"></i> 좋아요
+                                <button type="button" class="btn btn-primary like-button"
+                                        onclick="addLike(${currentPost.postSeq}, ${memberSeq})">
+                                    <i class="bi bi-heart me-1"></i> 좋아요
                                 </button>
                             </c:otherwise>
                         </c:choose>

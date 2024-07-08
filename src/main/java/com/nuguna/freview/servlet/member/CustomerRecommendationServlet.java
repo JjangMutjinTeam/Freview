@@ -5,7 +5,7 @@ import static com.nuguna.freview.util.EncodingUtil.setEncodingToUTF8AndText;
 
 import com.google.gson.Gson;
 import com.nuguna.freview.dao.member.RecommendationMemberDAO;
-import com.nuguna.freview.dto.MemberRecommendationInfo;
+import com.nuguna.freview.dto.MemberRecommendationInfoDTO;
 import com.nuguna.freview.entity.member.Member;
 import com.nuguna.freview.entity.member.MemberGubun;
 import java.io.IOException;
@@ -32,7 +32,7 @@ public class CustomerRecommendationServlet extends HttpServlet {
 
     int previousPostSeq = getPreviousMemberSeq(request);
     String requestedMemberGubun = MemberGubun.CUSTOMER.getCode();
-    List<MemberRecommendationInfo> customerInfoList = loadRecommendationLists(requestedMemberGubun, previousPostSeq);
+    List<MemberRecommendationInfoDTO> customerInfoList = loadRecommendationLists(requestedMemberGubun, previousPostSeq);
     request.setAttribute("customerInfoList", customerInfoList);
 
     HttpSession session = request.getSession();
@@ -56,7 +56,7 @@ public class CustomerRecommendationServlet extends HttpServlet {
 
     int previousMemberSeq = getPreviousMemberSeq(request);
     String requestedMemberGubun = MemberGubun.CUSTOMER.getCode();
-    List<MemberRecommendationInfo> customerInfoList = loadRecommendationLists(requestedMemberGubun, previousMemberSeq);
+    List<MemberRecommendationInfoDTO> customerInfoList = loadRecommendationLists(requestedMemberGubun, previousMemberSeq);
 
     boolean hasMore = customerInfoList.size() == LIMIT;
     Map<String, Object> responseMap = new HashMap<>();
@@ -81,9 +81,9 @@ public class CustomerRecommendationServlet extends HttpServlet {
     return previousMemberSeq;
   }
 
-  private List<MemberRecommendationInfo> loadRecommendationLists(String memberGubun,
+  private List<MemberRecommendationInfoDTO> loadRecommendationLists(String memberGubun,
       int previousPostSeq) {
-    List<MemberRecommendationInfo> list = recommendationMemberDAO.selectMemberByCursorPaging(
+    List<MemberRecommendationInfoDTO> list = recommendationMemberDAO.selectMemberByCursorPaging(
         memberGubun, previousPostSeq, LIMIT);
     return list;
   }

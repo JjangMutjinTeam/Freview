@@ -6,7 +6,7 @@ import static com.nuguna.freview.util.JsonResponseUtil.sendJsonResponse;
 
 import com.google.gson.Gson;
 import com.nuguna.freview.dao.member.RecommendationMemberDAO;
-import com.nuguna.freview.dto.MemberRecommendationInfo;
+import com.nuguna.freview.dto.MemberRecommendationInfoDTO;
 import com.nuguna.freview.entity.member.Member;
 import com.nuguna.freview.entity.member.MemberGubun;
 import java.io.IOException;
@@ -34,7 +34,7 @@ public class BossRecommendationServlet extends HttpServlet {
 
     int previousPostSeq = getPreviousMemberSeq(request);
     String requestedMemberGubun = MemberGubun.BOSS.getCode();
-    List<MemberRecommendationInfo> bossInfoList = loadRecommendationLists(requestedMemberGubun,
+    List<MemberRecommendationInfoDTO> bossInfoList = loadRecommendationLists(requestedMemberGubun,
         previousPostSeq);
     request.setAttribute("bossInfoList", bossInfoList);
 
@@ -58,7 +58,7 @@ public class BossRecommendationServlet extends HttpServlet {
 
     int previousMemberSeq = getPreviousMemberSeq(request);
     String requestedMemberGubun = MemberGubun.BOSS.getCode();
-    List<MemberRecommendationInfo> bossInfoList = loadRecommendationLists(requestedMemberGubun,
+    List<MemberRecommendationInfoDTO> bossInfoList = loadRecommendationLists(requestedMemberGubun,
         previousMemberSeq);
 
     boolean hasMore = bossInfoList.size() == LIMIT;
@@ -81,7 +81,7 @@ public class BossRecommendationServlet extends HttpServlet {
     return previousPostSeq;
   }
 
-  private List<MemberRecommendationInfo> loadRecommendationLists(String memberGubun,
+  private List<MemberRecommendationInfoDTO> loadRecommendationLists(String memberGubun,
       int previousPostSeq) {
     return recommendationMemberDAO.selectMemberByCursorPaging(
         memberGubun, previousPostSeq, LIMIT);
