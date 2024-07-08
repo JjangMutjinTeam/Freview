@@ -39,7 +39,7 @@ public class BossMyBrandInfoDAO {
         + "FROM\n"
         + "    (SELECT\n"
         + "       m.member_seq as ms,\n"
-        + "       m.introduce,\n" + "m.store_loc, \n"
+        + "       m.introduce,\n" + "m.store_location, \n"
         + "       m.profile_photo_url\n"
         + "    FROM\n"
         + "        member as m\n"
@@ -100,7 +100,7 @@ public class BossMyBrandInfoDAO {
       if (rs.next()) {
         introduce = rs.getString("introduce");
         profilePhotoUrl = rs.getString("profile_photo_url");
-        storeLoc = rs.getString("store_loc");
+        storeLoc = rs.getString("store_location");
         zzimCount = rs.getInt("zzimCount");
       }
 

@@ -8,7 +8,7 @@
 <%
     CustMyBrandInfoDto brandInfo = (CustMyBrandInfoDto) request.getAttribute("brandInfo");
     Gson gson = new Gson();
-    Member member;
+    Member member = null;
     int memberSeq = 0;
     if (session.getAttribute("Member") != null) {
         member = (Member) session.getAttribute("Member");
@@ -111,7 +111,7 @@
                     <img src="assets/img/basic/basic-profile-img.png" alt="Profile"
                          class="rounded-circle">
                     <span id="nickname-holder-head"
-                          class="d-none d-md-block">닉네임 자리(userNickname)</span>
+                          class="d-none d-md-block"><%=member.getNickname()%></span>
                 </a>
             </li>
         </ul>
@@ -128,7 +128,7 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" data-bs-target="#components-nav" href="#">
+            <a class="nav-link collapsed" data-bs-target="#components-nav" href="#">
                 <i class="bi bi-layout-text-window-reverse"></i>
                 <span>활동</span>
             </a>
@@ -142,7 +142,7 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link collapsed"
+            <a class="nav-link"
                href="${pageContext.request.contextPath}/my-personal-info">
                 <i class="ri-edit-box-line"></i>
                 <span>개인정보수정</span>
