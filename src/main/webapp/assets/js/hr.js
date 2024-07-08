@@ -85,6 +85,7 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
 
   $("#COMM_register_emailBtn").click(function(){ // COMM_register 이메일 인증번호 보내기
 
+
     let inputEmail = $("#COMM_register_input_email").val();
     let reg = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
 
@@ -95,7 +96,7 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
 
       $.ajax({
         method : "post",
-        url : "/SendCertification",
+        url : "/send-certification",
         data : {"email" : inputEmail,
                 "randomNumber" : randomFourDigitNumber},
         error : function(myval){console.log("에러"+myval)},
@@ -263,6 +264,7 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
 
   $("#COMM_register_Boss_emailBtn").click(function(){ // COMM_register Boss 이메일 인증번호 보내기
 
+
     let inputEmail = $("#COMM_register_input_Boss_email").val();
     let reg = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
 
@@ -273,7 +275,7 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
 
       $.ajax({
         method : "post",
-        url : "/SendCertification",
+        url : "/send-certification",
         data : {"email" : inputEmail,
           "randomNumber" : randomFourDigitNumber},
         error : function(myval){console.log("에러"+myval)},

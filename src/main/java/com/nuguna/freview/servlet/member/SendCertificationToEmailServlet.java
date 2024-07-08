@@ -12,7 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 
 
-@WebServlet("/SendCertification")
+@WebServlet("/send-certification")
 public class SendCertificationToEmailServlet extends HttpServlet{
   @Override
   public void init() throws ServletException {
@@ -25,6 +25,9 @@ public class SendCertificationToEmailServlet extends HttpServlet{
 
     String ToEmail = req.getParameter("email");
     String randomNumber = req.getParameter("randomNumber");
+
+    System.out.println("servlet email: "+ToEmail);
+    System.out.println("servlet num: "+randomNumber);
 
     String title = "[FReview] 이메일 인증번호 확인";
     String content = "인증번호는 "+randomNumber +" 입니다";
