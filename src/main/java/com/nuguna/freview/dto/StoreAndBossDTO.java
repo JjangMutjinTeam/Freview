@@ -12,11 +12,11 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class StoreAndBoss {
+public class StoreAndBossDTO {
 
   private String storeName;
   private String businessNumber;
-  private String mid;
+  private String id;
   private Timestamp createdAt;
 
 }
