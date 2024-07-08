@@ -31,7 +31,7 @@ public class LoginFilter implements Filter {
 
     String path = ((HttpServletRequest) servletRequest).getRequestURI();
     System.out.println(path);
-    if (!excludeUrls.contains(path)) {
+    if (!excludeUrls.contains(path)&&!path.startsWith("/assets")) {
       System.out.println("doFilter");
       HttpSession session = ((HttpServletRequest) servletRequest).getSession();
       Member member = (Member) session.getAttribute("Member");
