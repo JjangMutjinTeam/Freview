@@ -327,9 +327,18 @@
                 <form id="emailForm">
                     <div class="mb-3">
                         <label for="newEmail" class="form-label">새 이메일</label>
-                        <input type="email" class="form-control" id="newEmail" required>
+                        <div class="input-group">
+                            <input type="email" class="form-control" id="newEmail" required>
+                            <button type="button" class="btn btn-outline-primary">인증번호</button>
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">확인</button>
+                    <div class="mb-3">
+                        <label for="verificationCode" class="form-label">인증번호확인</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="verificationCode" required>
+                            <button type="button" class="btn btn-outline-primary">확인</button>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
