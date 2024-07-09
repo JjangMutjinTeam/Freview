@@ -19,14 +19,14 @@ public class ZzimDAO {
     PreparedStatement deletePstmt = null;
     ResultSet rs = null;
 
-    String selectSql = "SELECT 1 FROM ZZIM "
+    String selectSql = "SELECT 1 FROM zzim "
         + "WHERE from_member_seq = ? "
         + "AND to_member_seq = ?";
 
-    String insertSql = "INSERT INTO ZZIM(from_member_seq, to_member_seq) "
+    String insertSql = "INSERT INTO zzim(from_member_seq, to_member_seq) "
         + "VALUES(?,?)";
 
-    String deleteSql = "DELETE FROM ZZIM "
+    String deleteSql = "DELETE FROM zzim "
         + "WHERE from_member_seq = ? "
         + "AND to_member_seq = ?";
 

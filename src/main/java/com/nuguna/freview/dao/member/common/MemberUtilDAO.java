@@ -17,7 +17,7 @@ public class MemberUtilDAO {
     ResultSet rs = null;
 
     String sql = "SELECT member.gubun "
-        + "FROM MEMBER "
+        + "FROM member "
         + "WHERE member_seq = ?";
 
     String gubun = null;
@@ -30,7 +30,7 @@ public class MemberUtilDAO {
         gubun = rs.getString("gubun");
       }
     } catch (SQLException e) {
-      throw new RuntimeException("SQLException : 소개 변경 도중 예외 발생", e);
+      throw new RuntimeException("SQLException : 멤버의 구분 조회 도중 예외 발생", e);
     } finally {
       closeResource(rs);
       closeResource(pstmt, conn);
@@ -56,7 +56,7 @@ public class MemberUtilDAO {
         return true;
       }
     } catch (SQLException e) {
-      throw new RuntimeException("SQLException : 소개 변경 도중 예외 발생", e);
+      throw new RuntimeException("SQLException : 유효한 멤버인지 인증 도중 예외 발생", e);
     } finally {
       closeResource(rs);
       closeResource(pstmt, conn);
@@ -84,7 +84,7 @@ public class MemberUtilDAO {
         isMatched = true;
       }
     } catch (SQLException e) {
-      throw new RuntimeException("SQLException : 소개 변경 도중 예외 발생", e);
+      throw new RuntimeException("SQLException : 회원이 남긴 리뷰 확인 도중 예외 발생", e);
     } finally {
       closeResource(pstmt, conn, rs);
     }

@@ -43,7 +43,7 @@ public class MemberTagDAO {
     PreparedStatement insertPstmt = null;
     ResultSet rs = null;
 
-    String deleteSql = "DELETE FROM MEMBER_TAG "
+    String deleteSql = "DELETE FROM member_tag "
         + "WHERE member_seq = ?";
 
     // foodTypeGubuns 리스트의 크기만큼 물음표를 생성
@@ -56,7 +56,7 @@ public class MemberTagDAO {
         + "WHERE tag.gubun = '" + memberGubun.getCode() + "' AND "
         + "tag.name IN (" + placeholders + ")";
 
-    String insertSql = "INSERT INTO MEMBER_TAG (member_seq, tag_seq) "
+    String insertSql = "INSERT INTO member_tag (member_seq, tag_seq) "
         + "VALUES (?,?)";
 
     try {

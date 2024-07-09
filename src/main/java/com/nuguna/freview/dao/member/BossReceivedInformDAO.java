@@ -20,10 +20,10 @@ public class BossReceivedInformDAO {
     PreparedStatement pstmt = null;
 
     String sql = "SELECT m.member_seq, m.nickname "
-        + "FROM MEMBER m "
+        + "FROM member m "
         + "INNER JOIN "
         + " ( SELECT z.from_member_seq "
-        + " FROM ZZIM z "
+        + " FROM zzim z "
         + " WHERE z.to_member_seq = ? ) zz"
         + " ON m.member_seq = zz.from_member_seq";
 

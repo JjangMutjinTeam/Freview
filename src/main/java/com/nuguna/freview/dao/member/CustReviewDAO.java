@@ -13,7 +13,7 @@ public class CustReviewDAO {
     Connection conn = null;
     PreparedStatement pstmt = null;
 
-    String sql = "UPDATE REVIEW "
+    String sql = "UPDATE review "
         + "SET review.url = ? "
         + ", review.status = 'WRITTEN' "
         + "WHERE review_seq = ?";
