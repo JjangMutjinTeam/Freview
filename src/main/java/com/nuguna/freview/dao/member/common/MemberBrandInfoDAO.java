@@ -15,7 +15,7 @@ public class MemberBrandInfoDAO {
     Connection conn = null;
     PreparedStatement pstmt = null;
 
-    String sql = "UPDATE MEMBER "
+    String sql = "UPDATE member "
         + "SET introduce = ? "
         + "WHERE member_seq = ?";
 
@@ -38,7 +38,7 @@ public class MemberBrandInfoDAO {
     ResultSet rs = null;
 
     String sql = "SELECT member_seq "
-        + "FROM MEMBER "
+        + "FROM member "
         + "WHERE NICKNAME = ?";
 
     boolean checkResult = false;
@@ -63,7 +63,7 @@ public class MemberBrandInfoDAO {
     Connection conn = null;
     PreparedStatement pstmt = null;
 
-    String sql = "UPDATE MEMBER "
+    String sql = "UPDATE member "
         + "SET nickname = ? "
         + "WHERE member_seq = ?";
     try {

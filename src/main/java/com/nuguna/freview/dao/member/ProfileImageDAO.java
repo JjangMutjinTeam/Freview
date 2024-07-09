@@ -30,7 +30,7 @@ public class ProfileImageDAO {
     Connection conn = null;
     PreparedStatement pstmt = null;
 
-    String sql = "UPDATE MEMBER SET "
+    String sql = "UPDATE member SET "
         + "profile_photo_url = ? "
         + "WHERE member_seq = ?";
 
@@ -50,7 +50,7 @@ public class ProfileImageDAO {
     PreparedStatement pstmt = null;
     ResultSet rs = null;
 
-    String sql = "SELECT profile_photo_url FROM MEMBER "
+    String sql = "SELECT profile_photo_url FROM member "
         + "WHERE member_seq = ?";
 
     String existProfilePath = null;

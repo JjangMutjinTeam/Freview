@@ -51,7 +51,7 @@ public class BossMyBrandInfoDAO {
         + "store_business_info as sbi "
         + "WHERE sbi.business_number "
         + "= (SELECT "
-        + "business_number FROM MEMBER as m "
+        + "business_number FROM member as m "
         + "WHERE m.member_seq = ?)";
 
     // 활동분야 이름들 가져오기 SQL

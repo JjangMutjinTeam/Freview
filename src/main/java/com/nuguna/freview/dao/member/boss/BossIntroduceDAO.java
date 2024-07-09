@@ -13,7 +13,7 @@ public class BossIntroduceDAO {
     Connection conn = null;
     PreparedStatement pstmt = null;
 
-    String sql = "UPDATE MEMBER "
+    String sql = "UPDATE member "
         + "SET introduce = ? "
         + "WHERE member_seq = ?";
 

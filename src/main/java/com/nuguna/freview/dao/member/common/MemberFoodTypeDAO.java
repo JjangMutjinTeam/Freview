@@ -34,7 +34,7 @@ public class MemberFoodTypeDAO {
     PreparedStatement insertPstmt = null;
     ResultSet rs = null;
 
-    String deleteSql = "DELETE FROM MEMBER_FOOD_TYPE "
+    String deleteSql = "DELETE FROM member_food_type "
         + "WHERE member_seq = ?";
 
     // foodTypeGubuns 리스트의 크기만큼 물음표를 생성
@@ -45,7 +45,7 @@ public class MemberFoodTypeDAO {
     String selectSql = "SELECT food_type_seq FROM FOOD_TYPE "
         + "WHERE name IN (" + placeholders + ")";
 
-    String insertSql = "INSERT INTO MEMBER_FOOD_TYPE (member_seq, food_type_seq) "
+    String insertSql = "INSERT INTO member_food_type (member_seq, food_type_seq) "
         + "VALUES (?,?)";
 
     try {

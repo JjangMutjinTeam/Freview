@@ -3,6 +3,7 @@ package com.nuguna.freview.dao.admin;
 import static com.nuguna.freview.util.DbUtil.closeResource;
 import static com.nuguna.freview.util.DbUtil.getConnection;
 
+import com.nuguna.freview.dto.AdminPersonalInfoDTO;
 import com.nuguna.freview.dto.StoreAndBossDTO;
 import com.nuguna.freview.entity.admin.StoreBusinessInfo;
 import com.nuguna.freview.entity.member.Member;
@@ -17,10 +18,36 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AdminDAO {
 
-  private final String DELETE_MEMBER_BY_ID = "DELETE FROM member WHERE id = ?";
-  private final String DELETE_STORE_BY_BUSINESS_NUMBER = "DELETE FROM store_business_info WHERE business_number = ?";
-  private final String INSERT_STORE = "INSERT INTO store_business_info(business_number, store_name) VALUES(?, ?)";
+  public AdminPersonalInfoDTO getAdminPersonalInfo(int memberSeq) {
+    String sql = "select member_seq, gubun, id, nickname, email from member where member_seq = ?";
 
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+
+    try {
+      conn = getConnection();
+      pstmt = conn.prepareStatement(sql);
+      pstmt.setInt(1, memberSeq);
+      rs = pstmt.executeQuery();
+
+      AdminPersonalInfoDTO member = new AdminPersonalInfoDTO();
+
+      if (rs.next()) {
+        member.setMemberSeq(rs.getInt("member_seq"));
+        member.setId(rs.getString("id"));
+        member.setNickname(rs.getString("nickname"));
+        member.setEmail(rs.getString("email"));
+      }
+
+      return member;
+
+    } catch (SQLException e) {
+      throw new RuntimeException("SQLException : 멤버 기본정보를 받아오는 도중 에러 발생", e);
+    } finally {
+      closeResource(pstmt, conn, null);
+    }
+  }
   public boolean getMatchingMember(String memberPw) {
     //TODO: 암호 암호화 메서드 활용
 //    String encryptedPw =
@@ -141,13 +168,15 @@ public class AdminDAO {
   }
 
   public boolean deleteMember(String memberId) {
+    String sql = "DELETE FROM member WHERE id = ?";
+
     boolean isDeleted = false;
     Connection conn = null;
     PreparedStatement pstmt = null;
 
     try {
       conn = getConnection();
-      pstmt = conn.prepareStatement(DELETE_MEMBER_BY_ID);
+      pstmt = conn.prepareStatement(sql);
       pstmt.setString(1, memberId);
 
       int rows = pstmt.executeUpdate();
@@ -162,7 +191,6 @@ public class AdminDAO {
 
     return isDeleted;
   }
-
   public List<StoreAndBossDTO> getStoreBusinessInfo(String previousBusinessNumber, int limit) {
     String sql = "SELECT s.store_name, s.business_number, m.id, m.created_at FROM store_business_info s LEFT JOIN member m ON s.business_number = m.business_number where s.business_number < ? ORDER BY s.business_number DESC LIMIT ?";
 
@@ -214,6 +242,7 @@ public class AdminDAO {
     try {
       conn = getConnection();
       pstmt = conn.prepareStatement(sql);
+      pstmt = conn.prepareStatement(sql);
       int paramIndex = 1;
       pstmt.setString(paramIndex++, previousBusinessNumber);
       pstmt.setString(paramIndex++, searchWord);
@@ -240,13 +269,14 @@ public class AdminDAO {
   }
 
   public boolean deleteStore(String businessNumber) {
+    String sql = "DELETE FROM store_business_info WHERE business_number = ?";
     boolean isDeleted = false;
     Connection conn = null;
     PreparedStatement pstmt = null;
 
     try {
       conn = getConnection();
-      pstmt = conn.prepareStatement(DELETE_STORE_BY_BUSINESS_NUMBER);
+      pstmt = conn.prepareStatement(sql);
       pstmt.setString(1, businessNumber);
 
       int rows = pstmt.executeUpdate();
@@ -263,13 +293,15 @@ public class AdminDAO {
   }
 
   public boolean insertStore(StoreBusinessInfo storeBusinessInfo) {
+    String sql = "INSERT INTO store_business_info(business_number, store_name) VALUES(?, ?)";
+
     boolean isInserted = false;
     Connection conn = null;
     PreparedStatement pstmt = null;
 
     try {
       conn = getConnection();
-      pstmt = conn.prepareStatement(INSERT_STORE);
+      pstmt = conn.prepareStatement(sql);
       pstmt.setString(1, storeBusinessInfo.getBusinessNumber());
       pstmt.setString(2, storeBusinessInfo.getStoreName());
 
