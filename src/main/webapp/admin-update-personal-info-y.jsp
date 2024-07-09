@@ -203,14 +203,7 @@
 
       htmlStr += '<div class="mb-3">';
       htmlStr += '  <label for="nickname" class="form-label">닉네임</label>';
-      htmlStr += '  <div class="input-group">';
-      htmlStr += '    <input type="text" id="nickname" class="form-control" value="' + data["nickname"] + '" readonly>';
-      htmlStr += '    <button class="btn btn-custom" type="button" data-toggle="edit" data-target="nickname-edit">수정</button>';
-      htmlStr += '  </div>';
-      htmlStr += '  <div id="nickname-edit" class="edit-field">';
-      htmlStr += '    <input type="text" id="newNickname" class="form-control" placeholder="새 닉네임">';
-      htmlStr += '    <button class="btn btn-primary" type="button" data-update="nickname">완료</button>';
-      htmlStr += '  </div>';
+      htmlStr += '  <input type="text" id="nickname" class="form-control" value="' + data["nickname"] + '" readonly>';
       htmlStr += '</div>';
 
       htmlStr += '<div class="mb-3">';
@@ -275,28 +268,6 @@
     $(document).on('click', '[data-toggle="edit"]', function () {
       let targetId = $(this).data('target');
       toggleEditField(targetId, this);
-    });
-
-    $(document).on('click', '[data-update="nickname"]', function () {
-      let newNickname = $('#newNickname').val();
-
-      $.ajax({
-        type: 'POST',
-        url: '/nickname-update',
-        data: {
-          memberSeq: ${memberSeq},
-          newNickname: newNickname
-        },
-        success: function (response) {
-          alert('닉네임이 성공적으로 수정되었습니다.');
-          resetButtons();
-          location.replace("/personal-info-update");
-        },
-        error: function (error) {
-          alert('닉네임 수정에 실패했습니다. 다시 시도해 주세요.');
-          console.error(error);
-        }
-      });
     });
 
     $(document).on('click', '[data-update="password"]', function () {
