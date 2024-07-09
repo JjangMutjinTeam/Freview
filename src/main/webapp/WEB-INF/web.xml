@@ -3,4 +3,17 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
   version="5.0">
+  <filter>
+    <filter-name>LoginFilter</filter-name>
+    <filter-class>com.nuguna.freview.util.LoginFilter</filter-class>
+    <init-param>
+      <param-name>excludeUrls</param-name>
+      제외할 Url들
+      <param-value>/,/auth,/main?pagecode=non_member,/index,/common-findid.jsp,/common-findpw.jsp,/common-main-nonmamber.jsp,/common-login.jsp,/common-register.jsp,/common-login-fail.jsp,/common-register-check.jsp,/common-register-fail.jsp,/COMM_logout.jsp,/send-certification,/findpw,/favicon.ico</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>LoginFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
 </web-app>

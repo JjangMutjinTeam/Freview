@@ -3,6 +3,7 @@ package com.nuguna.freview.servlet.member;
 import com.nuguna.freview.dao.member.LoginDAO;
 import com.nuguna.freview.dao.member.RegisterDAO;
 import com.nuguna.freview.entity.member.Member;
+import com.nuguna.freview.util.ShaUtil;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.RequestDispatcher;
@@ -17,8 +18,10 @@ import javax.servlet.http.HttpSession;
 @WebServlet("/auth")
 public class AuthServlet extends HttpServlet {
 
+  private ShaUtil sha;
   @Override
   public void init() throws ServletException {
+    sha = new ShaUtil();
   }
 
   @Override
@@ -71,12 +74,13 @@ public class AuthServlet extends HttpServlet {
       System.out.println("서블릿으로 이동");
 
       String id = req.getParameter("id");
-      String password = req.getParameter("password");
+      String purePassword = req.getParameter("password");
+      String hashPassword = sha.sha256Encodeing(purePassword);
       String email = req.getParameter("email");
       String nickname = req.getParameter("nickname");
       String agegroup = req.getParameter("agegroup");
 
-      int insertRow = rdao.insertReviewer(id,password,email,nickname,agegroup);
+      int insertRow = rdao.insertReviewer(id,hashPassword,email,nickname,agegroup);
       if(insertRow==1){
         RequestDispatcher rd = req.getRequestDispatcher("common-register-check.jsp");
         rd.forward(req,resp);
@@ -96,6 +100,7 @@ public class AuthServlet extends HttpServlet {
     else if(pageCode.equals("Boss_regist")){ // 사장님 회원가입
       String id = req.getParameter("id");
       String password = req.getParameter("password");
+      String sha_password = sha.sha256Encodeing(password);
       String email = req.getParameter("email");
       String agegroup = req.getParameter("agegroup");
       String buisness_number = req.getParameter("buisness_number");
@@ -103,7 +108,7 @@ public class AuthServlet extends HttpServlet {
       String nickname =req.getParameter("nickname");
 
 
-      int insertRow = rdao.insertBoss(id,password,nickname,email,buisness_number,agegroup,store_loc);
+      int insertRow = rdao.insertBoss(id,sha_password,nickname,email,buisness_number,agegroup,store_loc);
       if(insertRow==1){
         RequestDispatcher rd = req.getRequestDispatcher("common-register-check.jsp");
         rd.forward(req,resp);
@@ -113,12 +118,14 @@ public class AuthServlet extends HttpServlet {
       }
     }
 
-    else if(pageCode.equals("login_check")){
+    else if(pageCode.equals("login_check")){ // 로그인
+
       String id = req.getParameter("id");
       String password = req.getParameter("password");
-      Member user = ldao.getMemberByIdPw(id,password);
-      
-
+      String sha_password = sha.sha256Encodeing(password);
+      Member user = ldao.getMemberByIdPw(id,sha_password);
+      HttpSession session = req.getSession();
+      session.setAttribute("Member",user);
       System.out.println(user);
 
         if(user==null){
@@ -126,21 +133,15 @@ public class AuthServlet extends HttpServlet {
           rd.forward(req,resp);
         }
         else if(user.getGubun().equals("B")){
-          HttpSession session = req.getSession();
-          session.setAttribute("Member",user);
           RequestDispatcher rd = req.getRequestDispatcher("common-boss-main.jsp");
           rd.forward(req,resp);
         } else if(user.getGubun().equals("C")){
-          HttpSession session = req.getSession();
-          session.setAttribute("Member",user);
           RequestDispatcher rd = req.getRequestDispatcher("common-reviewer-main.jsp");
           rd.forward(req,resp);
         }
         else if(user.getGubun().equals("A")){
-          HttpSession session = req.getSession();
-          session.setAttribute("Member",user);
           System.out.println("user : " + user);
-          resp.sendRedirect(req.getContextPath() + "/AdminPage/user");
+          resp.sendRedirect(req.getContextPath() + "/admin");
         }
 
     }

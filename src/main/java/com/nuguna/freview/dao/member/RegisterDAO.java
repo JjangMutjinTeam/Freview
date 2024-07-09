@@ -1,5 +1,6 @@
 package com.nuguna.freview.dao.member;
 
+import com.nuguna.freview.util.DbUtil;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -20,14 +21,7 @@ public class RegisterDAO {
   public int getDuplicationResultByID(String id) { //id 중복 확인
     int result = 0;
     System.out.println("dao실행전" + result);
-    try {
-      Class.forName(DB_DRIVER_CLASS);
-      conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-    } catch (ClassNotFoundException e) {
-      throw new RuntimeException(e);
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
+    conn = DbUtil.getConnection();
 
     try {
       String sql = "SELECT * FROM member WHERE id=?";
@@ -40,19 +34,7 @@ public class RegisterDAO {
     } catch (SQLException e) {
       throw new RuntimeException(e);
     } finally {
-      try {
-        if (rs != null) {
-          rs.close();
-        }
-        if (pstmt != null) {
-          pstmt.close();
-        }
-        if (conn != null) {
-          conn.close();
-        }
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
+      DbUtil.closeResource(pstmt, conn, rs);
     }
     System.out.println("dao실행후" + result);
     return result;
@@ -62,14 +44,7 @@ public class RegisterDAO {
 
     int result = 0;
 
-    try {
-      Class.forName(DB_DRIVER_CLASS);
-      conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-    } catch (ClassNotFoundException e) {
-      throw new RuntimeException(e);
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
+    conn = DbUtil.getConnection();
 
     try {
       String sql = "SELECT * FROM member WHERE nickname=?";
@@ -82,19 +57,7 @@ public class RegisterDAO {
     } catch (SQLException e) {
       throw new RuntimeException(e);
     } finally {
-      try {
-        if (rs != null) {
-          rs.close();
-        }
-        if (pstmt != null) {
-          pstmt.close();
-        }
-        if (conn != null) {
-          conn.close();
-        }
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
+      DbUtil.closeResource(pstmt, conn, rs);
     }
 
     return result;
@@ -105,14 +68,8 @@ public class RegisterDAO {
 
     int result = 0;
 
-    try {
-      Class.forName(DB_DRIVER_CLASS);
-      conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-    } catch (ClassNotFoundException e) {
-      throw new RuntimeException(e);
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
+    conn = DbUtil.getConnection();
+
     try {
       String sql = "INSERT INTO member (gubun, id, pw, nickname, email, age_group, introduce, business_number, store_location, profile_photo_url)\n"
           + "VALUES('C', ?, ?, ?, ?, ?, null, null, null, 'http://example.com/photo57.jpg')";
@@ -128,19 +85,7 @@ public class RegisterDAO {
     } catch (SQLException e) {
       throw new RuntimeException(e);
     } finally {
-      try {
-        if (rs != null) {
-          rs.close();
-        }
-        if (pstmt != null) {
-          pstmt.close();
-        }
-        if (conn != null) {
-          conn.close();
-        }
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
+      DbUtil.closeResource(pstmt, conn, rs);
     }
 
     return result;
@@ -149,14 +94,7 @@ public class RegisterDAO {
   public int getCheckCollectBuisnessInfo(String businessInfo) { // 사업자등록번호 확인하기
     int result = 0;
 
-    try {
-      Class.forName(DB_DRIVER_CLASS);
-      conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-    } catch (ClassNotFoundException e) {
-      throw new RuntimeException(e);
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
+    conn = DbUtil.getConnection();
 
     try {
       String sql = "SELECT * FROM store_business_info WHERE business_number=?";
@@ -169,19 +107,7 @@ public class RegisterDAO {
     } catch (SQLException e) {
       throw new RuntimeException(e);
     } finally {
-      try {
-        if (rs != null) {
-          rs.close();
-        }
-        if (pstmt != null) {
-          pstmt.close();
-        }
-        if (conn != null) {
-          conn.close();
-        }
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
+      DbUtil.closeResource(pstmt, conn, rs);
     }
 
     return result;
@@ -190,14 +116,7 @@ public class RegisterDAO {
   public int insertBoss(String id, String password,String nickname ,String email, String buisnessNumber, String agegroup, String storeLoc) { // 사장님 회원가입
     int result = 0;
 
-    try {
-      Class.forName(DB_DRIVER_CLASS);
-      conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-    } catch (ClassNotFoundException e) {
-      throw new RuntimeException(e);
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
+    conn = DbUtil.getConnection();
 
     try {
       String sql = "INSERT INTO member (gubun, id, pw, nickname, email, age_group, introduce, business_number, store_location, profile_photo_url)\n"
@@ -217,19 +136,7 @@ public class RegisterDAO {
     } catch (SQLException e) {
       throw new RuntimeException(e);
     } finally {
-      try {
-        if (rs != null) {
-          rs.close();
-        }
-        if (pstmt != null) {
-          pstmt.close();
-        }
-        if (conn != null) {
-          conn.close();
-        }
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
+      DbUtil.closeResource(pstmt, conn);
     }
     return result;
   }
@@ -237,14 +144,7 @@ public class RegisterDAO {
   public int getCheckDuplicatedInMember(String buisnessInfo) {
     int result = 0;
 
-    try {
-      Class.forName(DB_DRIVER_CLASS);
-      conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-    } catch (ClassNotFoundException e) {
-      throw new RuntimeException(e);
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
+    conn = DbUtil.getConnection();
 
     try {
       String sql = "SELECT * FROM member WHERE business_number=?";
@@ -257,19 +157,7 @@ public class RegisterDAO {
     } catch (SQLException e) {
       throw new RuntimeException(e);
     } finally {
-      try {
-        if (rs != null) {
-          rs.close();
-        }
-        if (pstmt != null) {
-          pstmt.close();
-        }
-        if (conn != null) {
-          conn.close();
-        }
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
+      DbUtil.closeResource(pstmt, conn, rs);
     }
 
     return result;
@@ -278,14 +166,7 @@ public class RegisterDAO {
   public String getFindIdByEmail(String email) {
     String id = null;
 
-    try {
-      Class.forName(DB_DRIVER_CLASS);
-      conn = DriverManager.getConnection(DB_URL,DB_USERNAME,DB_PASSWORD);
-    } catch (ClassNotFoundException e) {
-      throw new RuntimeException(e);
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
+    conn = DbUtil.getConnection();
 
     try {
       String sql = "SELECT id\n"
@@ -300,15 +181,55 @@ public class RegisterDAO {
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }finally {
-      try {
-        if(rs!=null)rs.close();
-        if(pstmt!=null)pstmt.close();
-        if(conn!=null)conn.close();
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
+      DbUtil.closeResource(pstmt, conn, rs);
     }
 
     return id;
+  }
+
+  public int getCheckMemberByEmailAndID(String email, String id) {
+
+    int num = 0;
+
+    conn = DbUtil.getConnection();
+
+    try {
+      String sql = "SELECT *\n"
+          + "FROM member\n"
+          + "WHERE email = ? AND"
+          +" id=?";
+      pstmt = conn.prepareStatement(sql);
+      pstmt.setString(1,email);
+      pstmt.setString(2,id);
+      rs = pstmt.executeQuery();
+      if(rs.next()){
+        num = 1 ;
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }finally {
+      DbUtil.closeResource(pstmt, conn, rs);
+    }
+
+    return num;
+  }
+
+  public void updateUserPW(String shaPw, String userID) {
+
+    conn = DbUtil.getConnection();
+
+    try {
+      String sql = "UPDATE member SET pw = ? WHERE id = ?";
+      pstmt = conn.prepareStatement(sql);
+      pstmt.setString(1,shaPw);
+      pstmt.setString(2,userID);
+      pstmt.executeUpdate();
+      System.out.println("비밀번호 업데이트 성공");
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }finally {
+      DbUtil.closeResource(pstmt,conn);
+    }
+
   }
 }

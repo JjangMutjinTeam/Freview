@@ -7,6 +7,7 @@ import com.nuguna.freview.dto.MainpageRequesterDTO;
 import com.nuguna.freview.entity.member.Member;
 import com.nuguna.freview.entity.post.Post;
 import com.nuguna.freview.entity.post.PostGubun;
+import com.nuguna.freview.util.DbUtil;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -30,14 +31,9 @@ public class MainPageDAO {
 
     ArrayList<MainpageMojipDTO> posts = new ArrayList<MainpageMojipDTO>();
 
-    try {
-      Class.forName(DB_DRIVER_CLASS);
-      conn = DriverManager.getConnection(DB_URL,DB_USERNAME,DB_PASSWORD);
-    } catch (ClassNotFoundException e) {
-      throw new RuntimeException(e);
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
+
+      conn = DbUtil.getConnection();
+
     try {
       String sql = "SELECT  *\n"
           + "FROM post\n"
@@ -67,13 +63,7 @@ public class MainPageDAO {
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }finally {
-      try {
-        if(rs!=null)rs.close();
-        if(pstmt!=null)pstmt.close();
-        if(conn!=null)conn.close();
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
+      DbUtil.closeResource(pstmt,conn,rs);
     }
 
     return posts;
@@ -83,14 +73,7 @@ public class MainPageDAO {
 
     ArrayList<MainpageRequesterDTO> requesters = new ArrayList<>();
 
-    try {
-      Class.forName(DB_DRIVER_CLASS);
-      conn = DriverManager.getConnection(DB_URL,DB_USERNAME,DB_PASSWORD);
-    } catch (ClassNotFoundException e) {
-      throw new RuntimeException(e);
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
+    conn = DbUtil.getConnection();
 
     try{
       String sql ="SELECT *\n"
@@ -116,13 +99,7 @@ public class MainPageDAO {
     }catch (SQLException e) {
       throw new RuntimeException(e);
     }finally {
-      try {
-        if(rs!=null)rs.close();
-        if(pstmt!=null)pstmt.close();
-        if(conn!=null)conn.close();
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
+      DbUtil.closeResource(pstmt,conn,rs);
     }
 
 
@@ -133,14 +110,7 @@ public class MainPageDAO {
 
     ArrayList<MainpageGongjiDTO> gongjis = new ArrayList<>();
 
-    try {
-      Class.forName(DB_DRIVER_CLASS);
-      conn = DriverManager.getConnection(DB_URL,DB_USERNAME,DB_PASSWORD);
-    } catch (ClassNotFoundException e) {
-      throw new RuntimeException(e);
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
+    conn = DbUtil.getConnection();
 
     try{
       String sql ="SELECT  post_seq,title,created_at,updated_at\n"
@@ -166,13 +136,7 @@ public class MainPageDAO {
     }catch (SQLException e) {
       throw new RuntimeException(e);
     }finally {
-      try {
-        if(rs!=null)rs.close();
-        if(pstmt!=null)pstmt.close();
-        if(conn!=null)conn.close();
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
+      DbUtil.closeResource(pstmt,conn,rs);
     }
 
 
@@ -182,14 +146,7 @@ public class MainPageDAO {
   public MainpageMemberInfoDTO getMemberInfoForMainPageHeader(int seq) {
     MainpageMemberInfoDTO minfodto = new MainpageMemberInfoDTO();
 
-    try {
-      Class.forName(DB_DRIVER_CLASS);
-      conn = DriverManager.getConnection(DB_URL,DB_USERNAME,DB_PASSWORD);
-    } catch (ClassNotFoundException e) {
-      throw new RuntimeException(e);
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
+    conn = DbUtil.getConnection();
 
     try{
       String sql ="SELECT nickname,profile_photo_url FROM member WHERE member_seq = ?";
@@ -206,13 +163,7 @@ public class MainPageDAO {
     }catch (SQLException e) {
       throw new RuntimeException(e);
     }finally {
-      try {
-        if(rs!=null)rs.close();
-        if(pstmt!=null)pstmt.close();
-        if(conn!=null)conn.close();
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
+      DbUtil.closeResource(pstmt,conn,rs);
     }
 
 

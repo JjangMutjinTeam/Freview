@@ -72,35 +72,28 @@
                             <div class="card-body">
 
                                 <div class="pt-4 pb-2">
-                                    <h5 class="card-title text-center pb-0 fs-4">비밀번호 재발급</h5>
-                                    <p class="text-center small">본인의 아이디와 이메일을 입력해주세요</p>
+                                    <h5 class="card-title text-center pb-0 fs-4">아이디찾기</h5>
+                                    <p class="text-center small">본인의 이메일을 입력해주세요</p>
                                 </div>
 
                                 <form class="row g-3 needs-validation" novalidate>
 
                                     <div class="col-12">
-                                        <label for="findpwEmail" class="form-label">이메일</label>
+                                        <label for="findidEmail" class="form-label">이메일</label>
                                         <div class="input-group has-validation">
-                                            <input type="text" name="userEmail" class="form-control" id="findpwEmail" required>
+                                            <input type="text" name="userEmail" class="form-control" id="findidEmail" required>
                                             <div class="invalid-feedback">이메일을 입력해주세요.</div>
                                         </div>
                                     </div>
                                     <div class="col-12">
-                                        <label for="findpw_ID" class="form-label">아이디</label>
-                                        <div class="input-group has-validation">
-                                            <input type="text" name="userEmail" class="form-control" id="findpw_ID" required>
-                                            <div class="invalid-feedback">아이디를 입력해주세요.</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <button class="btn btn-primary w-100" id="common_findpw_btn" type="button">비밀번호 재발급</button>
+                                        <button class="btn btn-primary w-100" id="common_findid_btn" type="button">아이디찾기</button>
                                     </div>
                                     <div class="col-12" id="common_findid_div_findid" style="display: none">
                                         <div class="modal fade show" id="basicModal" tabindex="-1" aria-modal="true" role="dialog" style="display: block;">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title">비밀번호 재발급</h5>
+                                                        <h5 class="modal-title">아이디찾기</h5>
                                                         <button type="button"  class="btn-close common_findid_modalcancelbtn" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body" id="common_findid_div_Idcheck">
@@ -155,4 +148,5 @@
 <script src="assets/js/main.js"></script>
 <script src="assets/js/hr.js"></script>
 </body>
+
 </html>
