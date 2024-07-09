@@ -1,6 +1,5 @@
-package com.nuguna.freview.entity.member.interaction;
+package com.nuguna.freview.dto;
 
-import java.sql.Timestamp;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,10 +11,13 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class Apply {
+public class MemberRecommendationInfoDTO {
 
-  private Integer seq;
   private Integer memberSeq;
-  private Integer postSeq;
-  private Timestamp createdAt;
+  private String id;
+  private String nickname;
+  private String profilePhotoUrl;
+  private String foodTypes;
+  private String tags;
+
 }

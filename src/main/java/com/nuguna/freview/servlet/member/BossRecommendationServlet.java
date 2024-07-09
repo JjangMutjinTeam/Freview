@@ -1,8 +1,12 @@
 package com.nuguna.freview.servlet.member;
 
+import static com.nuguna.freview.util.EncodingUtil.setEncodingToUTF8AndJson;
+import static com.nuguna.freview.util.EncodingUtil.setEncodingToUTF8AndText;
+import static com.nuguna.freview.util.JsonResponseUtil.sendJsonResponse;
+
 import com.google.gson.Gson;
 import com.nuguna.freview.dao.member.RecommendationMemberDAO;
-import com.nuguna.freview.dto.MemberRecommendationInfo;
+import com.nuguna.freview.dto.MemberRecommendationInfoDTO;
 import com.nuguna.freview.entity.member.Member;
 import com.nuguna.freview.entity.member.MemberGubun;
 import java.io.IOException;
@@ -21,58 +25,55 @@ public class BossRecommendationServlet extends HttpServlet {
 
   private final RecommendationMemberDAO recommendationMemberDAO = new RecommendationMemberDAO();
   private final int LIMIT = 20;
+  private Gson gson = new Gson();
 
   @Override
   protected void doGet(
-      HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    req.setCharacterEncoding("UTF-8");
-    resp.setContentType("text/html;charset=UTF-8");
+      HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    setEncodingToUTF8AndText(request, response);
 
-    int previousPostSeq = getPreviousPostSeq(req);
+    int previousPostSeq = getPreviousMemberSeq(request);
     String requestedMemberGubun = MemberGubun.BOSS.getCode();
-    List<MemberRecommendationInfo> bossInfoList = loadRecommendationLists(requestedMemberGubun, previousPostSeq);
-    req.setAttribute("bossInfoList", bossInfoList);
+    List<MemberRecommendationInfoDTO> bossInfoList = loadRecommendationLists(requestedMemberGubun,
+        previousPostSeq);
+    request.setAttribute("bossInfoList", bossInfoList);
 
-    HttpSession session = req.getSession();
+    HttpSession session = request.getSession();
     Member loginUser = (Member) session.getAttribute("Member");
 
     //TODO: 비로그인 시 로그인페이지로 이동하는 메서드 유틸로 작성하기
     if (loginUser == null) {
-      resp.sendRedirect("common-login.jsp");
+      response.sendRedirect("common-login.jsp");
       return;
     }
 
-    req.setAttribute("loginUser", loginUser);
-
-    req.getRequestDispatcher("/boss-recommendation-board-y.jsp").forward(req, resp);
+    request.setAttribute("loginUser", loginUser);
+    request.getRequestDispatcher("/boss-recommendation-board-y.jsp").forward(request, response);
   }
 
   @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    req.setCharacterEncoding("UTF-8");
-    resp.setContentType("application/json;charset=utf-8");
+    setEncodingToUTF8AndJson(request, response);
 
-    int previousPostSeq = getPreviousPostSeq(req);
+    int previousMemberSeq = getPreviousMemberSeq(request);
     String requestedMemberGubun = MemberGubun.BOSS.getCode();
-    List<MemberRecommendationInfo> bossInfoList = loadRecommendationLists(requestedMemberGubun, previousPostSeq);
+    List<MemberRecommendationInfoDTO> bossInfoList = loadRecommendationLists(requestedMemberGubun,
+        previousMemberSeq);
 
     boolean hasMore = bossInfoList.size() == LIMIT;
     Map<String, Object> responseMap = new HashMap<>();
     responseMap.put("data", bossInfoList);
     responseMap.put("hasMore", hasMore);
 
-    Gson gson = new Gson();
-    String str = gson.toJson(responseMap);
-
-    resp.getWriter().write(str);
+    sendJsonResponse(responseMap, response, gson);
   }
 
-  private int getPreviousPostSeq(HttpServletRequest req) {
+  private int getPreviousMemberSeq(HttpServletRequest request) {
     int previousPostSeq = Integer.MAX_VALUE;
-    if (req.getParameter("previousPostSeq") != null) {
+    if (request.getParameter("previousMemberSeq") != null) {
       try {
-        previousPostSeq = Integer.parseInt(req.getParameter("previousPostSeq"));
+        previousPostSeq = Integer.parseInt(request.getParameter("previousMemberSeq"));
       } catch (NumberFormatException e) {
         previousPostSeq = Integer.MAX_VALUE;
       }
@@ -80,10 +81,9 @@ public class BossRecommendationServlet extends HttpServlet {
     return previousPostSeq;
   }
 
-  private List<MemberRecommendationInfo> loadRecommendationLists(String memberGubun,
+  private List<MemberRecommendationInfoDTO> loadRecommendationLists(String memberGubun,
       int previousPostSeq) {
-    List<MemberRecommendationInfo> list = recommendationMemberDAO.selectMemberByCursorPaging(
+    return recommendationMemberDAO.selectMemberByCursorPaging(
         memberGubun, previousPostSeq, LIMIT);
-    return list;
   }
 }

@@ -1,13 +1,11 @@
 package com.nuguna.freview.servlet.admin;
 
 import static com.nuguna.freview.util.EncodingUtil.setEncodingToUTF8AndJson;
-import static com.nuguna.freview.util.EncodingUtil.setEncodingToUTF8AndText;
 import static com.nuguna.freview.util.JsonResponseUtil.sendJsonResponse;
 
 import com.google.gson.Gson;
 import com.nuguna.freview.dao.admin.AdminDAO;
 import com.nuguna.freview.dto.StoreAndBossDTO;
-import com.nuguna.freview.entity.member.Member;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -17,34 +15,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
-@WebServlet("/admin-store-management")
-public class StoreManagingServlet extends HttpServlet {
-
+@WebServlet("/admin-store-search")
+public class StoreSearchServlet extends HttpServlet {
   private AdminDAO adminDAO = new AdminDAO();
   private Gson gson = new Gson();
 
   private final int LIMIT = 30;
-  @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
-    setEncodingToUTF8AndText(request, response);
-
-    HttpSession session = request.getSession();
-    Member loginUser = (Member) session.getAttribute("Member");
-
-    //TODO: 비로그인 시 로그인페이지로 이동하는 메서드 유틸로 작성하기
-    if (loginUser == null) {
-      response.sendRedirect("common-login.jsp");
-      return;
-    }
-    request.setAttribute("loginUser", loginUser);
-
-    request.getRequestDispatcher("/admin-management-store-y.jsp").forward(request, response);
-  }
 
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -52,7 +29,8 @@ public class StoreManagingServlet extends HttpServlet {
     setEncodingToUTF8AndJson(request, response);
 
     String previousStoreNumber = getPreviousBusinessNumber(request);
-    List<StoreAndBossDTO> storeAndBossList = loadStoreList(previousStoreNumber);
+    String searchWord = request.getParameter("searchWord");
+    List<StoreAndBossDTO> storeAndBossList = loadStoreList(previousStoreNumber, searchWord);
     boolean hasMore = storeAndBossList.size() == LIMIT;
     Map<String, Object> responseMap = new HashMap<>();
     responseMap.put("data", storeAndBossList);
@@ -73,7 +51,7 @@ public class StoreManagingServlet extends HttpServlet {
     return previousBusinessNumber;
   }
 
-  private List<StoreAndBossDTO> loadStoreList(String previousStoreNumber) {
-    return adminDAO.getStoreBusinessInfo(previousStoreNumber, LIMIT);
+  private List<StoreAndBossDTO> loadStoreList(String previousStoreNumber, String searchWord) {
+    return adminDAO.getStoreBusinessInfo(previousStoreNumber, LIMIT, searchWord);
   }
 }

@@ -10,7 +10,7 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 public class CustMyBrandInfoDto {
-  
+
   private String profilePhotoUrl;
   private String nickname;
   private String ageGroup;

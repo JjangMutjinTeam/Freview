@@ -21,11 +21,12 @@ public class MojipPostDTO {
   private String codeName;
   private String name;
   private String storeName;
+  private String storeLocation;
   private String title;
   private Date applyStartDate;
   private Date applyEndDate;
   private Date experienceDate;
   private String content;
-  private Integer numberOfDdabong;
+  private Integer numberOfLikes;
 
 }

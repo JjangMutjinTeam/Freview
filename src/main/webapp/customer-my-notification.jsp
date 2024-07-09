@@ -8,7 +8,7 @@
 <%
     CustMyBrandInfoDto brandInfo = (CustMyBrandInfoDto) request.getAttribute("brandInfo");
     Gson gson = new Gson();
-    Member member;
+    Member member = null;
     int memberSeq = 0;
     if (session.getAttribute("Member") != null) {
         member = (Member) session.getAttribute("Member");
@@ -111,7 +111,7 @@
                     <img src="assets/img/basic/basic-profile-img.png" alt="Profile"
                          class="rounded-circle">
                     <span id="nickname-holder-head"
-                          class="d-none d-md-block">닉네임 자리(userNickname)</span>
+                          class="d-none d-md-block"><%=member.getNickname()%></span>
                 </a><!-- End Profile Iamge Icon -->
             </li><!-- End Profile Nav -->
         </ul>

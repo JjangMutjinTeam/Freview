@@ -1,5 +1,7 @@
 package com.nuguna.freview.servlet.admin;
 
+import static com.nuguna.freview.util.EncodingUtil.setEncodingToUTF8AndJson;
+
 import com.nuguna.freview.dao.admin.AdminDAO;
 import com.nuguna.freview.entity.admin.StoreBusinessInfo;
 import java.io.IOException;
@@ -9,26 +11,25 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/AdminPage/addStore")
+@WebServlet("/admin-store-add")
 public class StoreAddServlet extends HttpServlet {
 
   AdminDAO adminDAO = new AdminDAO();
 
   @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    req.setCharacterEncoding("UTF-8");
-    resp.setCharacterEncoding("UTF-8");
-    resp.setContentType("application/json; charset=UTF-8");
+    setEncodingToUTF8AndJson(request, response);
+
     StoreBusinessInfo storeBusinessInfo = new StoreBusinessInfo();
-    storeBusinessInfo.setBusinessNumber(req.getParameter("addBusinessNumber"));
-    storeBusinessInfo.setStoreName(req.getParameter("addStoreName"));
+    storeBusinessInfo.setBusinessNumber(request.getParameter("addBusinessNumber"));
+    storeBusinessInfo.setStoreName(request.getParameter("addStoreName"));
     boolean insertStore = adminDAO.insertStore(storeBusinessInfo);
 
     if (insertStore) {
-      resp.setStatus(HttpServletResponse.SC_OK);
+      response.setStatus(HttpServletResponse.SC_OK);
     } else {
-      resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
   }
 }

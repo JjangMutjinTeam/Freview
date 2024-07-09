@@ -1,15 +1,12 @@
-<%@ page import="com.nuguna.freview.entity.member.Member" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<%
-    Member loginUser = (Member) session.getAttribute("Member");
-    Integer memberSeq = loginUser.getMemberSeq();
-    String gubun = loginUser.getGubun();
-    request.setAttribute("gubun", gubun);
-    request.setAttribute("memberSeq", memberSeq);
-%>
+<c:set var="loginUser" value="${requestScope.loginUser}"/>
+<c:set var="memberSeq" value="${loginUser.memberSeq}"/>
+<c:set var="nickname" value="${loginUser.nickname}"/>
+<c:set var="gubun" value="${loginUser.gubun}"/>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,7 +14,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>모집 글 등록하기</title>
+    <title>모집 등록하기</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -41,6 +38,8 @@
 
     <!-- Template Main CSS File -->
     <link href="assets/css/style.css" rel="stylesheet">
+    <link href="/assets/css/hr.css" rel="stylesheet">
+
     <style>
       /* Custom CSS to make all table rows white */
       table tbody tr {
@@ -59,53 +58,38 @@
 <body>
 
 <!-- ======= Header ======= -->
-<header id="header" class="header fixed-top d-flex align-items-center">
-    <div class="d-flex align-items-center justify-content-between">
-        <a href="/main?seq=<%=memberSeq%>&pagecode=Requester"
+<header id="header" class="header fixed-top d-flex align-items-center header-hr">
+    <div class="d-flex align-items-center justify-content-between ">
+        <a href="/main?seq=${memberSeq}&pagecode=Requester"
            class="logo d-flex align-items-center">
-            <img src="assets/img/logo/logo-vertical.png" alt="">
-            <span class="d-none d-lg-block">Freeview</span>
+            <img src="assets/img/logo/logo-vertical.png" alt=""
+                 style="  width: 50px; margin-top: 20px;">
+            <span class="d-none d-lg-block">Freview</span>
         </a>
-        <i class="bi bi-list toggle-sidebar-btn"></i>
-    </div><!-- End Logo -->
+    </div>
+    <div class="header-hr-right">
+        <a href="/my-info?member_seq=${memberSeq}" style="margin-right: 20px">
+            ${nickname}
+            <img src="assets/img/basic/basic-profile-img.png" alt=" " style="width: 30px;
+                margin-top: 15px;">
+            <%--            <img src="<%=profileURL()%>" alt=" " style="width: 30px;--%>
+            <%--    margin-top: 15px;"> TODO: 세션의 프로필 url을 적용할 것--%>
+        </a>
+        <a href="/COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
+    </div>
+</header>
 
-    <nav class="header-nav ms-auto">
-        <ul class="d-flex align-items-center">
-            <li class="nav-item dropdown pe-3">
-                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
-                    <img src="assets/img/basic/basic-profile-img.png" alt="Profile"
-                         class="rounded-circle">
-                    <span id="store-name-holder-head"
-                          class="d-none d-md-block">${brandInfo.storeName}</span>
-                </a><!-- End Profile Iamge Icon -->
-            </li><!-- End Profile Nav -->
-        </ul>
-    </nav><!-- End Icons Navigation -->
-</header><!-- End Header -->
-
-<main id="main" class="main">
-
+<main id="main" style="margin:auto; margin-top:50px">
     <div class="pagetitle">
-        <h1>모집게시판</h1>
-        <nav>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                <li class="breadcrumb-item">Pages</li>
-                <li class="breadcrumb-item active">Blank</li>
-            </ol>
-        </nav>
-    </div><!-- End Page Title -->
-
-    <%
-        request.setAttribute("memberSeq", memberSeq);
-    %>
+        <h1>모집</h1>
+    </div>
 
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">새로운 모집글을 입력해주세요</h5>
 
             <!-- Form for creating a post -->
-            <form id="createPostForm" action="/mojipBoard/createPost" method="post">
+            <form id="createPostForm" action="/mojip-create" method="post">
                 <div class="mb-3">
                     <label for="title" class="form-label">제목</label>
                     <input type="text" class="form-control" id="title" name="title" required>
@@ -135,12 +119,12 @@
                 <input type="hidden" id="memberSeq" name="memberSeq" value="${memberSeq}">
                 <div class="d-flex justify-content-between">
                     <button type="button" class="btn btn-secondary"
-                            onclick="location.href='/mojipBoard'">이전
+                            onclick="location.href='/mojip'">이전
                     </button>
+
                     <button type="submit" class="btn btn-primary">등록</button>
                 </div>
             </form>
-            <!-- End Form for creating a post -->
         </div>
     </div>
 
@@ -154,7 +138,6 @@
         applyStartDateInput.value = today;
         applyEndDateInput.min = today;
 
-        // Add event listener to applyEndDate to set the minimum date for experienceDate
         applyEndDateInput.addEventListener('change', function () {
           experienceDateInput.setAttribute('min', applyEndDateInput.value);
         });
@@ -185,7 +168,7 @@
 
         var formData = new URLSearchParams(new FormData(this));
 
-        fetch("/mojipBoard/createPost", {
+        fetch("/mojip-create", {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -197,7 +180,7 @@
             return response.text().then(data => {
               console.log(data);
               alert('게시글이 성공적으로 등록되었습니다.');
-              location.replace("/mojipBoard");
+              location.replace("/mojip");
             });
           } else {
             response.text().then(data => {
