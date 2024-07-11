@@ -10,12 +10,37 @@ import java.sql.SQLException;
 
 public class MemberDAO {
 
+  //TODO: member_seq에 대한 외래키 제약을 없애서 member는 탈퇴되어도 작성한 데이터는 남아있게끔 설계해야 함
+  public boolean deleteMember(int memberSeq) {
+    String deleteMemberSql = "DELETE FROM member WHERE member_seq = ?";
+
+    boolean isDeleted = false;
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+
+    try {
+      conn = getConnection();
+
+      pstmt = conn.prepareStatement(deleteMemberSql);
+      pstmt.setInt(1, memberSeq);
+
+      int rows = pstmt.executeUpdate();
+      if (rows > 0) {
+        isDeleted = true;
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    } finally {
+      closeResource(pstmt, conn);
+    }
+
+    return isDeleted;
+  }
+
   public boolean isMatchingMember(int memberSeq, String pw) {
 
     String sql = "select count(*) from member where member_seq = ? and pw = ?";
 
-    //TODO: 암호 암호화 메서드 활용
-//    String encryptedPw =
     Connection conn = null;
     PreparedStatement pstmt = null;
     ResultSet rs = null;
