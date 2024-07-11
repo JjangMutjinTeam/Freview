@@ -59,8 +59,9 @@ public class BrandPageServlet extends HttpServlet {
         request.setAttribute("brandInfo", brandInfo);
         RequestDispatcher dispatcher = request.getRequestDispatcher("/customer-my-brand-info.jsp");
         dispatcher.forward(request, response);
+      } else if (memberGubun.isAdmin()) {
+        response.sendRedirect("/admin");
       }
-
 
     } catch (Exception e) {
       response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
