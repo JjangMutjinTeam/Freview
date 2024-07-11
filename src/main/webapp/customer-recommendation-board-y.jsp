@@ -7,6 +7,7 @@
 <c:set var="memberSeq" value="${loginUser.memberSeq}" />
 <c:set var="nickname" value="${loginUser.nickname}" />
 <c:set var="gubun" value="${loginUser.gubun}" />
+<c:set var="profileUrl" value="${loginUser.profilePhotoUrl}" />
 
 <!DOCTYPE html>
 <html lang="en">
@@ -79,16 +80,13 @@
         <a href="/main?seq=${memberSeq}&pagecode=Requester"
        class="logo d-flex align-items-center">
             <img src="assets/img/logo/logo-vertical.png" alt="" style="  width: 50px; margin-top: 20px;">
-            <span class="d-none d-lg-block">Freview</span>
+            <span class="d-none d-lg-block">FReview</span>
         </a>
     </div>
     <div class="header-hr-right">
         <a href="/my-info?member_seq=${memberSeq}" style="margin-right: 20px">
             ${nickname}
-            <img src="assets/img/basic/basic-profile-img.png" alt=" " style="width: 30px;
-                margin-top: 15px;">
-<%--            <img src="<%=profileURL()%>" alt=" " style="width: 30px;--%>
-<%--    margin-top: 15px;"> TODO: 세션의 프로필 url을 적용할 것--%>
+            <img src="${profileUrl}" alt=" " style="width: 30px; margin-top: 15px;">
         </a>
         <a href="COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
     </div>
