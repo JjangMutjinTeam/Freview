@@ -75,7 +75,7 @@ public class AuthServlet extends HttpServlet {
 
       String id = req.getParameter("id");
       String purePassword = req.getParameter("password");
-      String hashPassword = sha.sha256Encodeing(purePassword);
+      String hashPassword = sha.sha256Encoding(purePassword);
       String email = req.getParameter("email");
       String nickname = req.getParameter("nickname");
       String agegroup = req.getParameter("agegroup");
@@ -100,7 +100,7 @@ public class AuthServlet extends HttpServlet {
     else if(pageCode.equals("Boss_regist")){ // 사장님 회원가입
       String id = req.getParameter("id");
       String password = req.getParameter("password");
-      String sha_password = sha.sha256Encodeing(password);
+      String sha_password = sha.sha256Encoding(password);
       String email = req.getParameter("email");
       String agegroup = req.getParameter("agegroup");
       String buisness_number = req.getParameter("buisness_number");
@@ -122,7 +122,7 @@ public class AuthServlet extends HttpServlet {
 
       String id = req.getParameter("id");
       String password = req.getParameter("password");
-      String sha_password = sha.sha256Encodeing(password);
+      String sha_password = sha.sha256Encoding(password);
       Member user = ldao.getMemberByIdPw(id,sha_password);
       HttpSession session = req.getSession();
       session.setAttribute("Member",user);

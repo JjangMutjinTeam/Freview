@@ -60,7 +60,7 @@ public class FindUserPwServlet extends HttpServlet{
       SendMailUtil mail = new SendMailUtil();
       mail.goMail(mail.setting(new Properties()),title,content,userEmail);
 
-      String shaPw = new ShaUtil().sha256Encodeing(changedPw.toString());
+      String shaPw = new ShaUtil().sha256Encoding(changedPw.toString());
       rdao.updateUserPW(shaPw,userID);
 
       PrintWriter out = resp.getWriter();
