@@ -31,11 +31,6 @@ public class UpdatePersonalInfoServlet extends HttpServlet {
     HttpSession session = request.getSession();
     Member loginUser = (Member) session.getAttribute("Member");
 
-    if (loginUser == null) {
-      response.sendRedirect("common-login.jsp");
-      return;
-    }
-
     request.setAttribute("loginUser", loginUser);
 
     try {
