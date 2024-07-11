@@ -21,7 +21,7 @@ public class UpdatePasswordServlet extends HttpServlet {
 
     int memberSeq = Integer.parseInt(request.getParameter("memberSeq"));
     String currentPassword = sha256Encoding(request.getParameter("currentPassword"));
-    String newPassword = request.getParameter("newPassword");
+    String newPassword = sha256Encoding(request.getParameter("newPassword"));
 
     boolean isMatching = memberDAO.isMatchingMember(memberSeq, currentPassword);
 
