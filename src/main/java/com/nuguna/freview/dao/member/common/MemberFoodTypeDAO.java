@@ -42,7 +42,7 @@ public class MemberFoodTypeDAO {
         .map(g -> "?")
         .collect(Collectors.joining(", "));
 
-    String selectSql = "SELECT food_type_seq FROM FOOD_TYPE "
+    String selectSql = "SELECT food_type_seq FROM food_type "
         + "WHERE name IN (" + placeholders + ")";
 
     String insertSql = "INSERT INTO member_food_type (member_seq, food_type_seq) "

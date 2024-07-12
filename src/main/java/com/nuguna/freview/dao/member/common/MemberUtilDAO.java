@@ -44,7 +44,7 @@ public class MemberUtilDAO {
     ResultSet rs = null;
 
     String sql = "SELECT 1 "
-        + "FROM MEMBER "
+        + "FROM member "
         + "WHERE member_seq = ?";
 
     try {
