@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="loginUser" value="${requestScope.loginUser}"/>
 <c:set var="memberSeq" value="${loginUser.memberSeq}"/>
-<c:set var="nickname" value="${loginUser.nickname}" />
+<c:set var="nickname" value="${loginUser.nickname}"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -20,7 +20,8 @@
 
     <!-- Google Fonts -->
     <link href="https://fonts.gstatic.com" rel="preconnect">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+          rel="stylesheet">
 
     <!-- Vendor CSS Files -->
     <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -52,65 +53,93 @@
     flex-direction: column;
     height: 100vh;
   }
+
   .sidebar-nav {
     flex: 1;
     overflow-y: auto;
   }
+
   .sidebar-nav:last-child {
     margin-top: auto;
   }
+
   .nav-link {
     display: flex;
     align-items: center;
   }
+
   .card {
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 20px;
   }
+
   .form-label {
     font-weight: bold;
     color: #333;
   }
+
   .form-control {
     border-radius: 5px;
   }
+
+  .text-center {
+    text-align: center;
+  }
+
   .input-group .btn-custom {
     border: 1px solid #0056b3;
     background-color: #fff;
     color: #0056b3;
     border-radius: 0 5px 5px 0;
   }
+
   .input-group .form-control {
     border-radius: 5px 0 0 5px;
   }
+
   .input-group .btn-custom:hover {
     background-color: #0056b3;
     color: #fff;
   }
+
   .btn-block {
     display: block;
     width: 100%;
   }
+
   .edit-field {
     display: none;
     margin-top: 10px;
   }
+
   .edit-field .form-control {
     margin-bottom: 10px;
   }
+
   .email-input-group {
     display: flex;
   }
+
   .email-input-group input {
     margin-right: 10px;
   }
+
   .email-input-group .btn {
     margin-right: 10px;
     height: 38px;
     width: auto;
     white-space: nowrap;
   }
+
+  #deleteAccountBtn {
+    display: block;
+    margin-top: 10px;
+    font-size: small;
+    color: gray;
+    text-align: center;
+  }
+
 </style>
 
 <body>
@@ -119,7 +148,8 @@
 <header id="header" class="header fixed-top d-flex align-items-center header-hr">
     <div class="d-flex align-items-center justify-content-between">
         <a href="/main?seq=${memberSeq}&pagecode=Requester" class="logo d-flex align-items-center">
-            <img src="assets/img/logo/logo-vertical.png" alt="" style="width: 50px; margin-top: 20px;">
+            <img src="assets/img/logo/logo-vertical.png" alt=""
+                 style="width: 50px; margin-top: 20px;">
             <span class="d-none d-lg-block">FReview</span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
@@ -127,7 +157,8 @@
     <div class="header-hr-right">
         <a href="/my-info?member_seq=${memberSeq}" style="margin-right: 20px">
             ${nickname}
-            <img src="assets/img/basic/basic-profile-img.png" alt=" " style="width: 30px; margin-top: 15px;">
+            <img src="assets/img/basic/basic-profile-img.png" alt=" "
+                 style="width: 30px; margin-top: 15px;">
         </a>
         <a href="/COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
     </div>
@@ -137,8 +168,10 @@
 <aside id="sidebar" class="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
         <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-layout-text-window-reverse"></i><span>관리</span><i class="bi bi-chevron-down ms-auto"></i>
+            <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse"
+               href="#">
+                <i class="bi bi-layout-text-window-reverse"></i><span>관리</span><i
+                    class="bi bi-chevron-down ms-auto"></i>
             </a>
             <ul id="tables-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
                 <li>
@@ -185,7 +218,7 @@
         method: "POST",
         url: "/personal-info-update",
         data: {
-          memberSeq : ${memberSeq}
+          memberSeq: ${memberSeq}
         },
         dataType: "json",
         success: function (response) {
@@ -203,18 +236,21 @@
 
       htmlStr += '<div class="mb-3">';
       htmlStr += '  <label for="nickname" class="form-label">닉네임</label>';
-      htmlStr += '  <input type="text" id="nickname" class="form-control" value="' + data["nickname"] + '" readonly>';
+      htmlStr += '  <input type="text" id="nickname" class="form-control" value="'
+          + data["nickname"] + '" readonly>';
       htmlStr += '</div>';
 
       htmlStr += '<div class="mb-3">';
       htmlStr += '  <label for="id" class="form-label">아이디</label>';
-      htmlStr += '  <input type="text" id="id" class="form-control" value="' + data["id"] + '" readonly>';
+      htmlStr += '  <input type="text" id="id" class="form-control" value="' + data["id"]
+          + '" readonly>';
       htmlStr += '</div>';
 
       htmlStr += '<div class="mb-3">';
       htmlStr += '  <label for="password" class="form-label">비밀번호</label>';
       htmlStr += '  <div class="input-group">';
-      htmlStr += '    <input type="password" id="password" class="form-control" value="' + data["password"] + '" readonly>';
+      htmlStr += '    <input type="password" id="password" class="form-control" value="'
+          + data["password"] + '" readonly>';
       htmlStr += '    <button class="btn btn-custom" type="button" data-toggle="edit" data-target="password-edit">수정</button>';
       htmlStr += '  </div>';
       htmlStr += '  <div id="password-edit" class="edit-field">';
@@ -228,7 +264,8 @@
       htmlStr += '<div class="mb-3">';
       htmlStr += '  <label for="email" class="form-label">이메일</label>';
       htmlStr += '  <div class="input-group">';
-      htmlStr += "    <input type='text' id='email' class='form-control' value='" + data["email"] + "' readonly>";
+      htmlStr += "    <input type='text' id='email' class='form-control' value='" + data["email"]
+          + "' readonly>";
       htmlStr += '    <button class="btn btn-custom" type="button" data-toggle="edit" data-target="email-edit">수정</button>';
       htmlStr += '  </div>';
       htmlStr += '  <div id="email-edit" class="edit-field">';
@@ -241,6 +278,9 @@
       htmlStr += '      <button class="btn btn-outline-primary" type="button" id="verifyCode" disabled>확인</button>';
       htmlStr += '    </div>';
       htmlStr += '    <button class="btn btn-primary" type="button" data-update="email">완료</button>';
+      htmlStr += '  </div>';
+      htmlStr += '  <div class="text-center">';
+      htmlStr += '    <button class="btn btn-link text-muted" type="button" id="deleteAccountBtn" style="font-size: small;">탈퇴하기</button>';
       htmlStr += '  </div>';
       htmlStr += '</div>';
 
@@ -259,7 +299,7 @@
 
     function resetButtons() {
       $('.btn-custom').prop('disabled', false).removeClass('active');
-      $('.edit-field').each(function() {
+      $('.edit-field').each(function () {
         $(this).hide();
         $(this).find('input').val('');
       });
@@ -367,6 +407,31 @@
         }
       });
     });
+
+    $(document).on('click', '#deleteAccountBtn', function () {
+      if (confirm("정말로 탈퇴하시겠습니까?")) {
+        $.ajax({
+          type: 'POST',
+          url: '/api/member-withdrawal',
+          data: {
+            memberSeq: ${memberSeq}
+          },
+          success: function (response, textStatus, jqXHR) {
+            if (jqXHR.status === 200) {
+              alert('계정이 성공적으로 삭제되었습니다.');
+              window.location.href = '/';  // 탈퇴 후 리디렉션
+            } else {
+              alert('계정 삭제에 실패했습니다. 다시 시도해 주세요.');
+            }
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            alert('계정 삭제에 실패했습니다. 다시 시도해 주세요.');
+            console.error('Error:', jqXHR.responseText);
+          }
+        });
+      }
+    });
+
   });
 </script>
 
@@ -380,7 +445,8 @@
     </div>
 </footer><!-- End Footer -->
 
-<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+        class="bi bi-arrow-up-short"></i></a>
 
 <!-- Vendor JS Files -->
 <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

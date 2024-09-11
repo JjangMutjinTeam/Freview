@@ -18,8 +18,6 @@ public class UpdateEmailServlet extends HttpServlet {
       throws ServletException, IOException {
     int memberSeq = Integer.parseInt(request.getParameter("memberSeq"));
     String newEmail = request.getParameter("email");
-    System.out.println("memberSeq" + memberSeq);
-    System.out.println("newEmail " + newEmail);
 
     try {
       memberDAO.updateEmail(memberSeq, newEmail);

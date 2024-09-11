@@ -1,5 +1,7 @@
 package com.nuguna.freview.servlet.member;
 
+import static com.nuguna.freview.util.ShaUtil.sha256Encoding;
+
 import com.nuguna.freview.dao.member.MemberDAO;
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -18,8 +20,8 @@ public class UpdatePasswordServlet extends HttpServlet {
       throws ServletException, IOException {
 
     int memberSeq = Integer.parseInt(request.getParameter("memberSeq"));
-    String currentPassword = request.getParameter("currentPassword");
-    String newPassword = request.getParameter("newPassword");
+    String currentPassword = sha256Encoding(request.getParameter("currentPassword"));
+    String newPassword = sha256Encoding(request.getParameter("newPassword"));
 
     boolean isMatching = memberDAO.isMatchingMember(memberSeq, currentPassword);
 

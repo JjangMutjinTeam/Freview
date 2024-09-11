@@ -167,30 +167,6 @@ public class AdminDAO {
     return list;
   }
 
-  public boolean deleteMember(String memberId) {
-    String sql = "DELETE FROM member WHERE id = ?";
-
-    boolean isDeleted = false;
-    Connection conn = null;
-    PreparedStatement pstmt = null;
-
-    try {
-      conn = getConnection();
-      pstmt = conn.prepareStatement(sql);
-      pstmt.setString(1, memberId);
-
-      int rows = pstmt.executeUpdate();
-      if (rows > 0) {
-        isDeleted = true;
-      }
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    } finally {
-      closeResource(pstmt, conn);
-    }
-
-    return isDeleted;
-  }
   public List<StoreAndBossDTO> getStoreBusinessInfo(String previousBusinessNumber, int limit) {
     String sql = "SELECT s.store_name, s.business_number, m.id, m.created_at FROM store_business_info s LEFT JOIN member m ON s.business_number = m.business_number where s.business_number < ? ORDER BY s.business_number DESC LIMIT ?";
 

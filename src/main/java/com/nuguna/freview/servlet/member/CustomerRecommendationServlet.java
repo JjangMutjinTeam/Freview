@@ -38,12 +38,6 @@ public class CustomerRecommendationServlet extends HttpServlet {
     HttpSession session = request.getSession();
     Member loginUser = (Member) session.getAttribute("Member");
 
-    //TODO: 비로그인 시 로그인페이지로 이동하는 메서드 유틸로 작성하기
-    if (loginUser == null) {
-      response.sendRedirect("common-login.jsp");
-      return;
-    }
-
     request.setAttribute("loginUser", loginUser);
 
     request.getRequestDispatcher("/customer-recommendation-board-y.jsp").forward(request, response);

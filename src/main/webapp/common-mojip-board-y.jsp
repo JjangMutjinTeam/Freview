@@ -115,7 +115,7 @@
            class="logo d-flex align-items-center">
             <img src="assets/img/logo/logo-vertical.png" alt=""
                  style="  width: 50px; margin-top: 20px;">
-            <span class="d-none d-lg-block">Freview</span>
+            <span class="d-none d-lg-block">FReview</span>
         </a>
     </div>
     <div class="header-hr-right">

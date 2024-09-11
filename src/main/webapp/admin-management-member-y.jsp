@@ -86,7 +86,7 @@
        class="logo d-flex align-items-center">
       <img src="assets/img/logo/logo-vertical.png" alt=""
            style="  width: 50px; margin-top: 20px;">
-      <span class="d-none d-lg-block">Freview</span>
+      <span class="d-none d-lg-block">FReview</span>
     </a>
     <i class="bi bi-list toggle-sidebar-btn"></i>
   </div>
@@ -260,7 +260,7 @@
         htmlStr += "<td>" + member["nickname"] + "</td>";
         htmlStr += "<td><a href='/brand-page?member_seq=" + member["memberSeq"] + "'>" + member["id"] + "</a></td>";
         htmlStr += "<td>" + formattedCreatedAt + "</td>";
-        htmlStr += "<td><button class='btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#deleteModal' data-id='" + member["id"] + "'>x</button></td>";
+        htmlStr += "<td><button class='btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#deleteModal' data-id='" + member["id"] + "' data-seq='" + member["memberSeq"] + "'>x</button></td>";
         htmlStr += "</tr>";
       });
       $('#memberList').append(htmlStr);
@@ -272,6 +272,7 @@
   deleteModal.addEventListener('show.bs.modal', function (event) {
     var button = event.relatedTarget;
     var deleteMemberId = button.getAttribute('data-id');
+    var deleteMemberSeq = button.getAttribute('data-seq');
     var modalTitle = deleteModal.querySelector('.modal-title');
     var modalBodyInput = deleteModal.querySelector('.modal-body input');
 
@@ -287,7 +288,7 @@
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         },
-        body: 'deleteMemberId=' + encodeURIComponent(deleteMemberId) + '&adminVerificationPW=' + encodeURIComponent(adminVerificationPW)
+        body: 'deleteMemberSeq=' + encodeURIComponent(deleteMemberSeq) + '&adminVerificationPW=' + encodeURIComponent(adminVerificationPW)
       })
       .then(response => {
         if (response.status === 200) {
@@ -317,6 +318,7 @@
       .catch(error => console.error('Error:', error));
     };
   });
+
 </script>
 
 <!-- ======= Footer ======= -->

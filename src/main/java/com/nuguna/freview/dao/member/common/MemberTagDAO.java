@@ -52,7 +52,7 @@ public class MemberTagDAO {
         .collect(Collectors.joining(", "));
 
     log.info("memberGubun.getCode() = " + memberGubun.getCode());
-    String selectSql = "SELECT tag_seq FROM TAG "
+    String selectSql = "SELECT tag_seq FROM tag "
         + "WHERE tag.gubun = '" + memberGubun.getCode() + "' AND "
         + "tag.name IN (" + placeholders + ")";
 
